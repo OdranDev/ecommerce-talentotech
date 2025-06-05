@@ -1,0 +1,25 @@
+.testimonials-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  width: 90%;
+  margin: 3rem auto;
+
+  .testimonial {
+    background-color: #333;
+    padding: 1.5rem;
+    border-radius: 8px;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+    p {
+      font-style: italic;
+    }
+
+    h4 {
+      margin-top: 1rem;
+      font-weight: normal;
+      text-align: right;
+    }
+  }
+}

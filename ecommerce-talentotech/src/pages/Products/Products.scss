@@ -1,0 +1,144 @@
+.products-page {
+  padding: 2rem;
+  text-align: center;
+  min-width: 320px;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .category-filter {
+    margin-bottom: 2rem;
+  }
+
+  .category-select {
+    display: block;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+
+  .category-chips {
+    display: none; // Oculto por defecto
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+
+    .chip {
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      background-color: #f0f0f0;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s, border 0.3s;
+
+      &:hover {
+        background-color: #d9eaff;
+        border-color: #00bcd4;
+        color: #00bcd4;
+      }
+
+      &.active {
+        background-color: #00bcd4;
+        color: white;
+        border-color: #00bcd4;
+        font-weight: bold;
+      }
+    }
+  }
+
+  // Media queries
+  @media (max-width: 800px) {
+    .category-select {
+      display: none;
+    }
+
+    .category-chips {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .product-card {
+    height: 350px;
+    background-color: #fff;
+    color: #333;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    img {
+      width: 100px;
+      height: 130px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .btn-detail {
+      background-color: transparent;
+      color: #00bcd4;
+      border: 1px solid #00bcd4;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        background-color: #00bcd4;
+        color: white;
+      }
+    }
+
+    .button-container {
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+      .btn-add {
+        background-color: #00bcd4;
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #0097a7;
+        }
+      }
+    }
+
+    &:hover {
+      transform: translateY(-12px);
+    }
+  }
+}

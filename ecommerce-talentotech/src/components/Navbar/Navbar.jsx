@@ -1,0 +1,71 @@
+import React, { useContext, useState } from "react";
+import { GlobalContext } from "../../context/GlobalContext";
+import { CartContext } from "../../context/CartContext";
+import { NavLink } from "react-router-dom";
+import {
+  FaShoppingCart,
+  FaUserCircle,
+  FaHome,
+  FaBoxOpen,
+  FaPhoneAlt,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
+import "./Navbar.scss";
+
+export default function Navbar() {
+  const { titulo } = useContext(GlobalContext);
+  const { cartItems } = useContext(CartContext);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const closeMenu = () => setMenuOpen(false);
+
+  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  return (
+    <header>
+      <nav className="navbar">
+        <h1 className="navbar-title">{titulo}</h1>
+
+        <button className="menu-toggle" onClick={toggleMenu}>
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
+        <ul className={`nav-actions ${menuOpen ? "open" : ""}`}>
+          <li>
+            <NavLink to="/" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaHome />
+              <span className="nav-text">Home</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/products" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaBoxOpen />
+              <span className="nav-text">Products</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/contact" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaPhoneAlt />
+              <span className="nav-text">Contact</span>
+            </NavLink>
+          </li>
+          <li className="cart-icon">
+            <NavLink to="/cart" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaShoppingCart />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+              <span className="nav-text">Cart</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/profile" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
+              <FaUserCircle />
+              <span className="nav-text">User</span>
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}

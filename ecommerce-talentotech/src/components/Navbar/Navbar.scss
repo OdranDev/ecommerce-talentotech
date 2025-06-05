@@ -1,0 +1,116 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  background-color: #1a1a1a;
+  color: #fdfeff;
+  box-shadow: 0 2px 4px #0000001a;
+
+  .navbar-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+
+    li a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: #fff;
+      transition: color 0.3s;
+      padding: 3px 9px;
+
+      &:hover,
+      &.active {
+        border-radius: 6px;
+        background-color: #c6daff;
+        color: #00bcd4;
+        font-weight: bold;
+      }
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .nav-actions {
+    gap: 1rem;
+    .cart-icon {
+      position: relative;
+
+      .cart-badge {
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        background-color: #ff5252;
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: bold;
+        border-radius: 50%;
+        padding: 3px;
+        min-width: 12px;
+        text-align: center;
+      }
+    }
+  }
+
+  // Responsive
+  @media (max-width: 800px) {
+    .menu-toggle {
+      transition: transform 1s ease-in-out;
+      display: block;
+    }
+
+    .nav-actions {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-links,
+    .nav-actions {
+      position: absolute;
+      top: 44px;
+      right: 0;
+      padding: 1rem;
+      background-color: #1a1a1a;
+      border-radius: 0 0 0 9px;
+      opacity: 0;
+      transform: translateY(-12px);
+      pointer-events: none;
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+
+    .nav-links.open,
+    .nav-actions.open {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      width: auto;
+    }
+
+    .nav-text {
+      display: none;
+    }
+  }
+}

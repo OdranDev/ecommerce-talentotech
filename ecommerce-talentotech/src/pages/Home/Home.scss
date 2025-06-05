@@ -1,0 +1,154 @@
+.home {
+  padding: 0 1rem;
+  text-align: center;
+
+  .hero {
+    background: linear-gradient(to right, #00bcd4, #2196f3);
+    color: white;
+    padding: 4rem 2rem;
+    border-radius: 12px;
+    margin: 3rem 0;
+
+    .hero-content {
+      max-width: 700px;
+      margin: 0 auto;
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .cta-button {
+        background: white;
+        color: #2196f3;
+        font-weight: bold;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+
+        &:hover {
+          background: #e0f7fa;
+        }
+      }
+    }
+  }
+
+  .featured-products {
+    padding: 2rem 0;
+    position: relative;
+
+    h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .swiper {
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    .product-slider {
+      padding: 1rem 2.5rem; // espacio lateral para no chocar con flechas
+      // display: grid;
+      // grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      // gap: 25px;
+
+      .slider-card {
+        width: 100%;
+        max-width: 260px;
+        height: 340px;
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.3s;
+        color: #333;
+        margin-bottom: 3rem;
+        text-decoration: none;
+        color: inherit;
+
+        &:hover {
+          transform: translateY(-12px);
+        }
+
+        img {
+          height: 140px;
+          object-fit: contain;
+          margin-bottom: 1rem;
+          max-width: 240px;
+        }
+
+        h4 {
+          font-size: 0.95rem;
+          margin-bottom: 0.5rem;
+          line-height: 1.2;
+          min-height: 2.4em; // asegura dos líneas mínimas
+        }
+
+        p {
+          font-weight: bold;
+          color: #333;
+        }
+      }
+    }
+
+    // Estilos para flechas del Swiper
+    .swiper-button-prev,
+    .swiper-button-next {
+      color: #2196f3;
+      // top: 45%;
+      width: 40px;
+      height: 40px;
+      padding: 1rem;
+      background-color: transparent;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      transform: translateY(-50%);
+      transition: background 0.3s;
+
+      &:hover {
+        background: #e3f2fd;
+      }
+    }
+
+    .swiper-button-prev {
+      left: -10px;
+    }
+
+    .swiper-button-next {
+      right: -10px;
+    }
+  }
+
+  .testimonials {
+    padding: 3rem 1rem;
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+}
+
+/* Ocultar flechas en pantallas pequeñas */
+@media (max-width: 800px) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    display: none !important;
+  }
+}
