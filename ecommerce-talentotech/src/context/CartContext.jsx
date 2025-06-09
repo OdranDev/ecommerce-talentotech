@@ -4,17 +4,14 @@ export const CartContext = createContext();
 
 export default function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState(() => {
-    // Cargar del localStorage al iniciar
     const stored = localStorage.getItem("cart");
     return stored ? JSON.parse(stored) : [];
   });
 
-  // Guardar en localStorage cuando cambia el carrito
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Agregar producto
   const addToCart = (product) => {
     setCartItems((prev) => {
       const exists = prev.find((item) => item.id === product.id);
@@ -29,17 +26,23 @@ export default function CartProvider({ children }) {
     });
   };
 
-  // Quitar producto
   const removeFromCart = (id) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // Vaciar carrito
   const clearCart = () => setCartItems([]);
+
+  const updateQuantity = (id, newQuantity) => {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, clearCart }}
+      value={{ cartItems, addToCart, removeFromCart, clearCart, updateQuantity }}
     >
       {children}
     </CartContext.Provider>
