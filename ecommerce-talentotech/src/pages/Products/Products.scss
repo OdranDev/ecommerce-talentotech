@@ -10,9 +10,13 @@
 
   .category-filter {
     margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   .category-select {
+    margin-inline: 1rem;
     display: block;
     padding: 0.5rem 1rem;
     border-radius: 6px;
@@ -20,6 +24,9 @@
     border: 1px solid #ccc;
     background-color: #f9f9f9;
     color: #333;
+    option {
+      border: none;
+    }
   }
 
   .category-chips {
@@ -54,6 +61,9 @@
 
   // Media queries
   @media (max-width: 800px) {
+    .category-filter {
+      display: block;
+    }
     .category-select {
       display: none;
     }
@@ -66,7 +76,7 @@
 
   .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
     gap: 2rem;
     padding: 2rem;
     width: 100%;
@@ -75,7 +85,7 @@
 
   .product-card {
     height: 350px;
-    background-color: #fff;
+    background-color: #feefdd;
     color: #333;
     border-radius: 12px;
     padding: 1rem;
@@ -87,10 +97,9 @@
     justify-content: space-between;
 
     img {
-      width: 100px;
+      max-width: 240px;
       height: 130px;
       object-fit: contain;
-      margin-bottom: 1rem;
     }
 
     h3 {
@@ -101,6 +110,9 @@
     p {
       font-weight: bold;
       margin-bottom: 1rem;
+      span {
+        margin-inline: 3rem;
+      }
     }
 
     .btn-detail {
@@ -130,10 +142,38 @@
         border-radius: 6px;
         cursor: pointer;
         transition: background-color 0.3s;
+        transition: all 0.3s ease;
+        transform-origin: center;
 
         &:hover {
           background-color: #0097a7;
         }
+      }
+      .btn-add:disabled {
+        background-color: #198754;
+        cursor: not-allowed;
+      }
+    }
+    /*Estado agregado: escala y fade */
+    .btn-add.added {
+      animation: scaleFade 0.5s ease forwards;
+      background-color: #198754;
+      color: white;
+      cursor: not-allowed;
+    }
+
+    @keyframes scaleFade {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
       }
     }
 

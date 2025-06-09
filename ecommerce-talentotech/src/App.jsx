@@ -8,6 +8,8 @@ import Cart from './pages/Cart/Cart';
 import Profile from './pages/Profile/Profile';
 import NotFound from './pages/NotFound/NotFound';
 import PrivateRoute from './routes/PrivateRoute';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import './App.css';
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ToastContainer position="top-right" autoClose={2000} />
       </main>
       <Footer />
     </div>

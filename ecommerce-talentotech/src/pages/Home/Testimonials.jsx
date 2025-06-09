@@ -6,6 +6,8 @@ export default function Testimonials() {
     { id: 1, name: 'Ana López', comment: 'Increíble calidad y servicio. Mi negocio ha mejorado mucho.' },
     { id: 2, name: 'Carlos Rivera', comment: 'La atención al cliente fue excelente y el producto llegó muy rápido.' },
     { id: 3, name: 'Sofía Gómez', comment: 'Los recomiendo al 100%. Productos modernos y eficientes.' },
+    { id: 4, name: 'Aurelio Villalba', comment: 'Cumplen con lo ofrecido y el servicio de calidad hacen que todo sea una buena experiencia' },
+
   ];
 
   return (

@@ -76,12 +76,12 @@ function Home() {
           navigation
           pagination={{ clickable: true }}
           autoplay={{
-            delay: 10000,
+            delay: 3000,
             disableOnInteraction: false,
           }}
           loop={topProductos.length > 4}
           loopedslides={topProductos.length}
-          speed={800}
+          speed={900}
           className="product-slider"
         >
           {topProductos.map((producto) => (

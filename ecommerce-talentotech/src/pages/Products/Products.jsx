@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { CartContext } from "../../context/CartContext.jsx";
 import "./Products.scss";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Products() {
   const [productos, setProductos] = useState([]);
@@ -10,6 +11,7 @@ function Products() {
   const { addToCart } = useContext(CartContext);
   const [categorias, setCategorias] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("all");
+  const [agregadoId, setAgregadoId] = useState(null); // 👈 nuevo estado
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products/categories")
@@ -28,7 +30,19 @@ function Products() {
     fetch(url)
       .then((respuesta) => respuesta.json())
       .then((datos) => {
-        setProductos(datos);
+        const productosUnicos = datos.filter(
+          (producto, index, self) =>
+            index === self.findIndex((p) => p.id === producto.id)
+        );
+
+        if (productosUnicos.length < datos.length) {
+          console.warn(
+            "⚠️ Productos duplicados eliminados:",
+            datos.length - productosUnicos.length
+          );
+        }
+
+        setProductos(productosUnicos);
         setCargando(false);
       })
       .catch(() => {
@@ -44,7 +58,15 @@ function Products() {
         <p>Cargando productos...</p>
       </div>
     );
+
   if (error) return <p>{error}</p>;
+
+  const handleAddToCart = (producto) => {
+    addToCart(producto);
+    toast.success("Producto agregado al carrito 🛒");
+    setAgregadoId(producto.id);
+    setTimeout(() => setAgregadoId(null), 2000);
+  };
 
   return (
     <div className="products-page">
@@ -52,7 +74,6 @@ function Products() {
 
       <div className="category-filter">
         <label htmlFor="categoria">Filtrar por categoría:</label>
-        {/* Select para desktop */}
         <select
           value={categoriaSeleccionada}
           onChange={(e) => setCategoriaSeleccionada(e.target.value)}
@@ -66,7 +87,6 @@ function Products() {
           ))}
         </select>
 
-        {/* Chips para mobile */}
         <div className="category-chips">
           <button
             className={categoriaSeleccionada === "all" ? "chip active" : "chip"}
@@ -100,8 +120,16 @@ function Products() {
               <Link to={`/products/${producto.id}`} className="btn-detail">
                 Ver más
               </Link>
-              <button className="btn-add" onClick={() => addToCart(producto)}>
-                Agregar al carrito
+              <button
+                className={`btn-add ${
+                  agregadoId === producto.id ? "added" : ""
+                }`}
+                onClick={() => handleAddToCart(producto)}
+                disabled={agregadoId === producto.id}
+              >
+                {agregadoId === producto.id
+                  ? "Agregado ✅"
+                  : "Agregar al carrito"}
               </button>
             </div>
           </div>
