@@ -2,7 +2,9 @@ import React, { useEffect, useState, useContext } from "react";
 import { CartContext } from "../../context/CartContext.jsx";
 import "./Products.scss";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { BsCartPlus } from "react-icons/bs"; // ✅ icono agregado
 
 function Products() {
   const [productos, setProductos] = useState([]);
@@ -11,7 +13,7 @@ function Products() {
   const { addToCart } = useContext(CartContext);
   const [categorias, setCategorias] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("all");
-  const [agregadoId, setAgregadoId] = useState(null); // 👈 nuevo estado
+  const [agregadoId, setAgregadoId] = useState(null);
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products/categories")
@@ -51,6 +53,13 @@ function Products() {
       });
   }, [categoriaSeleccionada]);
 
+  const handleAddToCart = (producto) => {
+    addToCart(producto);
+    toast.success("Producto agregado al carrito 🛒");
+    setAgregadoId(producto.id);
+    setTimeout(() => setAgregadoId(null), 2000);
+  };
+
   if (cargando)
     return (
       <div className="products-page">
@@ -60,13 +69,6 @@ function Products() {
     );
 
   if (error) return <p>{error}</p>;
-
-  const handleAddToCart = (producto) => {
-    addToCart(producto);
-    toast.success("Producto agregado al carrito 🛒");
-    setAgregadoId(producto.id);
-    setTimeout(() => setAgregadoId(null), 2000);
-  };
 
   return (
     <div className="products-page">
@@ -127,14 +129,21 @@ function Products() {
                 onClick={() => handleAddToCart(producto)}
                 disabled={agregadoId === producto.id}
               >
-                {agregadoId === producto.id
-                  ? "Agregado ✅"
-                  : "Agregar al carrito"}
+                {agregadoId === producto.id ? (
+                  "Agregado ✅"
+                ) : (
+                  <>
+                    <BsCartPlus style={{ marginRight: "6px" }} />
+                    Agregar al carrito
+                  </>
+                )}
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

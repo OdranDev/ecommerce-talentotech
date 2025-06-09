@@ -72,12 +72,14 @@ function Cart() {
       if (result.isConfirmed) {
         setIsClearingAll(true);
         setRemovingItemIds(cartItems.map((item) => item.id));
+
         setTimeout(() => {
           clearCart();
           setRemovingItemIds([]);
           setIsClearingAll(false);
-          toast.success("Carrito vaciado con éxito");
-        }, 300);
+        }, 3000);
+
+        toast.success("Carrito vaciado con éxito");
       }
     });
   };
