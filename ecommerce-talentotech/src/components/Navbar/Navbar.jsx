@@ -3,11 +3,11 @@ import { GlobalContext } from "../../context/GlobalContext";
 import { CartContext } from "../../context/CartContext";
 import { NavLink } from "react-router-dom";
 import {
-  FaShoppingCart,
-  FaUserCircle,
   FaHome,
-  FaBoxOpen,
-  FaPhoneAlt,
+  FaBox,
+  FaEnvelope,
+  FaShoppingBag,
+  FaUser,
   FaBars,
   FaTimes,
 } from "react-icons/fa";
@@ -34,33 +34,53 @@ export default function Navbar() {
 
         <ul className={`nav-actions ${menuOpen ? "open" : ""}`}>
           <li>
-            <NavLink to="/" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink
+              to="/"
+              onClick={closeMenu}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
               <FaHome />
               <span className="nav-text">Home</span>
             </NavLink>
           </li>
           <li>
-            <NavLink to="/products" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaBoxOpen />
+            <NavLink
+              to="/products"
+              onClick={closeMenu}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <FaBox />
               <span className="nav-text">Products</span>
             </NavLink>
           </li>
           <li>
-            <NavLink to="/contact" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaPhoneAlt />
+            <NavLink
+              to="/contact"
+              onClick={closeMenu}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <FaEnvelope />
               <span className="nav-text">Contact</span>
             </NavLink>
           </li>
           <li className="cart-icon">
-            <NavLink to="/cart" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaShoppingCart />
+            <NavLink
+              to="/cart"
+              onClick={closeMenu}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <FaShoppingBag />
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
               <span className="nav-text">Cart</span>
             </NavLink>
           </li>
           <li>
-            <NavLink to="/profile" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaUserCircle />
+            <NavLink
+              to="/profile"
+              onClick={closeMenu}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <FaUser />
               <span className="nav-text">User</span>
             </NavLink>
           </li>
