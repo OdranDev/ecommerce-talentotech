@@ -4,7 +4,9 @@ import "./Products.scss";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { BsCartPlus } from "react-icons/bs"; // ✅ icono agregado
+import { BsCartPlus } from "react-icons/bs";
+import Loader from "../../components/loader/Loader.jsx";
+import {GlobalContext} from "../../context/GlobalContext.jsx";
 
 function Products() {
   const [productos, setProductos] = useState([]);
@@ -14,6 +16,8 @@ function Products() {
   const [categorias, setCategorias] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("all");
   const [agregadoId, setAgregadoId] = useState(null);
+  const { titulo } = useContext(GlobalContext);
+  
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products/categories")
@@ -60,13 +64,23 @@ function Products() {
     setTimeout(() => setAgregadoId(null), 2000);
   };
 
-  if (cargando)
+  if (cargando) {
     return (
-      <div className="products-page">
-        <h2>Productos</h2>
+      <div className="home">
+        <section className="hero">
+          <div className="hero-content">
+            <h1>{titulo}</h1>
+            <p>Branding, diseño y productos inteligentes.</p>
+            <Link to="/products">
+              <button className="cta-button">Ver productos</button>
+            </Link>
+          </div>
+        </section>
+        <Loader />
         <p>Cargando productos...</p>
       </div>
     );
+  }
 
   if (error) return <p>{error}</p>;
 
@@ -143,7 +157,7 @@ function Products() {
         ))}
       </div>
 
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={1500} />
     </div>
   );
 }

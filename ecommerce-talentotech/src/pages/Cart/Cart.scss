@@ -222,3 +222,62 @@ button.qty-btn {
     font-size: 1rem;
   }
 }
+
+// Carrito vacio
+.cart-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  padding: 2rem;
+
+  .empty-state {
+    text-align: center;
+    max-width: 500px;
+    background-color: #fff;
+    padding: 3rem 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.4s ease-in;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      color: #666;
+    }
+
+    .cta-button {
+      // background-color: #3498db;
+      background-color: #00bcd4;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: darken(#3498db, 10%);
+      }
+    }
+  }
+}
+
+// Animación de entrada suave
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

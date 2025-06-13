@@ -5,7 +5,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
-
+import Loader from "../../components/loader/Loader";
 import Testimonials from "./Testimonials";
 import "./Home.scss";
 
@@ -30,7 +30,7 @@ function Home() {
       });
   }, []);
 
-  if (cargando)
+  if (cargando) {
     return (
       <div className="home">
         <section className="hero">
@@ -42,9 +42,11 @@ function Home() {
             </Link>
           </div>
         </section>
+        <Loader />
         <p>Cargando productos...</p>
       </div>
     );
+  }
 
   if (error) return <p>{error}</p>;
 
@@ -106,5 +108,4 @@ function Home() {
     </div>
   );
 }
-
-export default Home;
+export default Home

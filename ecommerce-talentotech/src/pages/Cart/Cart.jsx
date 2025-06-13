@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Cart.scss";
+import { Link } from "react-router-dom";
 
 function Cart() {
   const { cartItems, removeFromCart, clearCart, updateQuantity } =
@@ -13,7 +14,20 @@ function Cart() {
   const [removingItemIds, setRemovingItemIds] = useState([]);
   const [isClearingAll, setIsClearingAll] = useState(false);
 
-  if (cartItems.length === 0) return <p>Tu carrito está vacío.</p>;
+  if (cartItems.length === 0) {
+  return (
+    <div className="cart-empty">
+      <section className="empty-state">
+        <h2>Tu carrito está vacío</h2>
+        <p>¡Explora nuestros productos y encuentra lo que más te gusta!</p>
+        <Link to="/products">
+          <button className="cta-button">Ver productos</button>
+        </Link>
+      </section>
+    </div>
+  );
+}
+
 
   const total = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -77,7 +91,7 @@ function Cart() {
           clearCart();
           setRemovingItemIds([]);
           setIsClearingAll(false);
-        }, 3000);
+        }, 2000);
 
         toast.success("Carrito vaciado con éxito");
       }
@@ -143,7 +157,7 @@ function Cart() {
         Vaciar carrito
       </button>
 
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={1500} />
     </div>
   );
 }
