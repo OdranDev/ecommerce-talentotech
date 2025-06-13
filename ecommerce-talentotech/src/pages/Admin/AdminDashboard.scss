@@ -1,0 +1,57 @@
+/* src/pages/Admin/AdminDashboard.css */
+.admin-dashboard {
+  padding: 2rem;
+  text-align: left;
+}
+
+.admin-dashboard h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.admin-dashboard p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.admin-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.admin-card {
+  flex: 1 1 300px;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.admin-card h3 {
+  margin-bottom: 0.5rem;
+}
+
+.admin-card p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.admin-card button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-card button:hover {
+  background-color: #0056b3;
+}
+
+.admin-card:hover {
+  transform: translateY(-3px);
+}

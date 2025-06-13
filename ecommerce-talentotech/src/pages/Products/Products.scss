@@ -182,3 +182,18 @@
     }
   }
 }
+
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+
+  p {
+    margin-top: 16px;
+    font-size: 18px;
+    color: #555;
+  }
+}

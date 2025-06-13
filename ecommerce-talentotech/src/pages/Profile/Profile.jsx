@@ -6,12 +6,6 @@ export default function Profile() {
     <div>
       <h2>Perfil del usuario</h2>
       <p>Esta es una ruta protegida.</p>
-      <button onClick={() => localStorage.setItem("auth", "true")}>
-        Iniciar sesión
-      </button>
-      <button onClick={() => localStorage.removeItem("auth")}>
-        Cerrar sesión
-      </button>
     </div>
   );
 }

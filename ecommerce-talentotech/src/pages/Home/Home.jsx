@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -8,27 +8,14 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import Loader from "../../components/loader/Loader";
 import Testimonials from "./Testimonials";
 import "./Home.scss";
+import useFetch from "../../hooks/useFetch";
 
 function Home() {
-  const [topProductos, setTopProductos] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const { data, cargando, error } = useFetch("https://fakestoreapi.com/products");
 
-  useEffect(() => {
-    fetch("https://fakestoreapi.com/products")
-      .then((res) => res.json())
-      .then((data) => {
-        const mejores = [...data]
-          .sort((a, b) => b.rating.rate - a.rating.rate)
-          .slice(0, 12);
-        setTopProductos(mejores);
-        setCargando(false);
-      })
-      .catch(() => {
-        setError("Hubo un problema al cargar los productos.");
-        setCargando(false);
-      });
-  }, []);
+  const topProductos = data
+    ? [...data].sort((a, b) => b.rating.rate - a.rating.rate).slice(0, 12)
+    : [];
 
   if (cargando) {
     return (
@@ -108,4 +95,5 @@ function Home() {
     </div>
   );
 }
-export default Home
+
+export default Home;

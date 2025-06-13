@@ -12,6 +12,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import "./Navbar.scss";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Navbar() {
   const { titulo } = useContext(GlobalContext);
@@ -22,6 +23,8 @@ export default function Navbar() {
   const closeMenu = () => setMenuOpen(false);
 
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const { user, logout } = useContext(AuthContext); // ✅ Ya no da error
 
   return (
     <header>
@@ -74,16 +77,41 @@ export default function Navbar() {
               <span className="nav-text">Cart</span>
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/profile"
-              onClick={closeMenu}
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUser />
-              <span className="nav-text">User</span>
-            </NavLink>
-          </li>
+          {user ? (
+            <li className="user-menu">
+              <div className="user-dropdown">
+                <span className="nav-text">Hola, {user?.nombre}</span>
+                <ul className="dropdown">
+                  <li>
+                    <NavLink to="/profile" onClick={closeMenu}>
+                      Perfil
+                    </NavLink>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        logout();
+                        closeMenu();
+                      }}
+                    >
+                      Cerrar sesión
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          ) : (
+            <li>
+              <NavLink
+                to="/login"
+                onClick={closeMenu}
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                <FaUser />
+                <span className="nav-text">Login</span>
+              </NavLink>
+            </li>
+          )}
         </ul>
       </nav>
     </header>

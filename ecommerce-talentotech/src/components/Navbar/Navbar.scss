@@ -114,3 +114,36 @@
     }
   }
 }
+
+.user-dropdown {
+  position: relative;
+  cursor: pointer;
+
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    padding: 0.5rem;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    z-index: 10;
+
+    li {
+      list-style: none;
+      padding: 0.3rem 0;
+
+      a, button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #333;
+      }
+
+      a:hover, button:hover {
+        color: #007bff;
+      }
+    }
+  }
+}
