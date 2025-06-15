@@ -1,6 +1,6 @@
 // src/pages/Login/Login.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./Login.scss";
 
@@ -29,7 +29,9 @@ const Login = () => {
   return (
     <div className="login-container">
       <h2>Iniciar sesión</h2>
+
       {error && <p className="error-msg">{error}</p>}
+
       <form onSubmit={handleSubmit} className="login-form">
         <label>
           Correo electrónico:
@@ -40,6 +42,7 @@ const Login = () => {
             required
           />
         </label>
+
         <label>
           Contraseña:
           <input
@@ -49,12 +52,17 @@ const Login = () => {
             required
           />
         </label>
+
         <button type="submit">Iniciar sesión</button>
       </form>
 
       <div className="demo-info">
         <p><strong>Admin:</strong> admin@demo.com / admin123</p>
         <p><strong>Cliente:</strong> cliente@demo.com / cliente123</p>
+      </div>
+
+      <div className="register-redirect">
+        ¿No tienes una cuenta? <Link to="/register">Regístrate</Link>
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       <h2>Panel de Administración</h2>
-      <p>Bienvenido, <strong>{user?.nombre}</strong> 👋</p>
+      <p>Bienvenido, {user?.nombre} 👋</p>
 
       <div className="admin-cards">
         <div className="admin-card">
