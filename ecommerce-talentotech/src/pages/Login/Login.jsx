@@ -1,69 +1,95 @@
 // src/pages/Login/Login.jsx
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../auth/Firebase";
+import { getAuth } from "firebase/auth";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Login.scss";
 
 const Login = () => {
-  const { login } = useAuth();
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (email === "admin@demo.com" && password === "admin123") {
-      login({ nombre: "Admin", rol: "admin" });
-      navigate("/admin");
-    } else if (email === "cliente@demo.com" && password === "cliente123") {
-      login({ nombre: "Cliente", rol: "cliente" });
-      navigate("/profile");
-    } else {
-      setError("Credenciales inválidas");
+    setIsLoading(true);
+    
+    try {
+      await loginUser(email, password);
+      
+      // Mostrar toast de éxito
+      toast.success("✅ Inicio de sesión exitoso", { 
+        autoClose: 1500,
+        position: "top-right"
+      });
+      
+      // Esperar un poco para el toast y luego obtener el rol para redirigir
+      setTimeout(async () => {
+        try {
+          const currentUser = getAuth().currentUser;
+          if (currentUser) {
+            const tokenResult = await currentUser.getIdTokenResult(true);
+            const role = tokenResult.claims.role;
+            
+            if (role === "admin") {
+              navigate("/admin");
+            } else {
+              navigate("/products");
+            }
+          }
+        } catch (error) {
+          console.error('Error al obtener rol:', error);
+          // En caso de error, redirigir a products por defecto
+          navigate("/products");
+        }
+      }, 1500);
+      
+    } catch (err) {
+      toast.error("❌ Credenciales incorrectas", { 
+        autoClose: 3000,
+        position: "top-right"
+      });
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="login-container">
       <h2>Iniciar sesión</h2>
-
-      {error && <p className="error-msg">{error}</p>}
-
       <form onSubmit={handleSubmit} className="login-form">
         <label>
           Correo electrónico:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+          <input 
+            type="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+            required 
+            disabled={isLoading}
           />
         </label>
-
         <label>
           Contraseña:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+          <input 
+            type="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+            disabled={isLoading}
           />
         </label>
-
-        <button type="submit">Iniciar sesión</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
+        </button>
       </form>
-
-      <div className="demo-info">
-        <p><strong>Admin:</strong> admin@demo.com / admin123</p>
-        <p><strong>Cliente:</strong> cliente@demo.com / cliente123</p>
+      <div className="login-redirect">
+        ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
       </div>
-
-      <div className="register-redirect">
-        ¿No tienes una cuenta? <Link to="/register">Regístrate</Link>
-      </div>
+      <ToastContainer />
     </div>
   );
 };

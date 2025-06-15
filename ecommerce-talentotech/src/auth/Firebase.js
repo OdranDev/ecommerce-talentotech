@@ -1,40 +1,31 @@
-// Import the functions you need from the SDKs you need
+// src/auth/Firebase.js
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Configuración de tu proyecto Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBS8goBTfY3jUT_x08AVB3F5h7L7M0brsQ",
   authDomain: "ecommerce-talentotech.firebaseapp.com",
   projectId: "ecommerce-talentotech",
-  storageBucket: "ecommerce-talentotech.firebasestorage.app",
+  storageBucket: "ecommerce-talentotech.appspot.com", // Corregido (debería ser .appspot.com)
   messagingSenderId: "962389753420",
   appId: "1:962389753420:web:741408a20d3b3b805f7ee9",
   measurementId: "G-CJ7NNGTPR7",
 };
 
-// Initialize Firebase
+// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const auth = getAuth(app);
 
-const auth = getAuth();
+// Crear nuevo usuario
+export const createUser = async (email, password) => {
+  return await createUserWithEmailAndPassword(auth, email, password);
+};
 
-export function createUser(email, password) {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed up
-      console.log("Credenciales:" + userCredential);
-      const user = userCredential.user;
-      console.log(user);
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // ..
-    });
-}
+// Iniciar sesión
+export const loginUser = async (email, password) => {
+  return await signInWithEmailAndPassword(auth, email, password);
+};
+
+// Exportar auth si se necesita en otros contextos
+export { auth };

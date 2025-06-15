@@ -9,7 +9,8 @@ import Profile from "./pages/Profile/Profile";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import NotFound from "./pages/NotFound/NotFound";
 import Unauthorized from "./pages/Unauthorized/Unauthorized";
-import ProtectedRoute from "./routes/ProtectedRoute"; // Nuevo componente
+import ProtectedRoute from "./routes/ProtectedRoute";
+import PublicRoute from "./routes/PublicRoute"; // Nuevo componente
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login/Login";
@@ -27,9 +28,25 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/register" element={<Register />} />
+
+          {/* Rutas públicas - solo accesibles si NO está autenticado */}
+          <Route 
+            path="/login" 
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            } 
+          />
+          <Route 
+            path="/register" 
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            } 
+          />
 
           {/* Ruta protegida para CLIENTE */}
           <Route

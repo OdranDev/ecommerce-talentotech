@@ -1,89 +1,71 @@
 // src/pages/Register/Register.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { createUser } from "../../auth/Firebase";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Register.scss";
 
 const Register = () => {
-  const { login } = useAuth(); // simulamos login tras registro
-  const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    nombre: "",
-    email: "",
-    password: "",
-    rol: "cliente", // predeterminado
-  });
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    const { nombre, email, password } = formData;
-
-    if (!nombre || !email || !password) {
-      setError("Por favor, completa todos los campos.");
-      return;
+    try {
+      await createUser(email, password);
+      toast.success("🎉 Registro exitoso, ahora puedes iniciar sesión", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setTimeout(() => navigate("/login"), 3000);
+    } catch (err) {
+      console.error(err);
+      setError("Hubo un error al registrarse");
+      toast.error("❌ " + err.message, {
+        position: "top-right",
+        autoClose: 4000,
+      });
     }
-
-    // Simulamos registro exitoso y login automático
-    login({ nombre, rol: formData.rol });
-    navigate("/profile");
   };
 
   return (
     <div className="register-container">
-      <form className="register-form" onSubmit={handleSubmit}>
-        <h2>Crear una cuenta</h2>
-
-        {error && <p className="error-message">{error}</p>}
-
-        <input
-          type="text"
-          name="nombre"
-          placeholder="Nombre completo"
-          value={formData.nombre}
-          onChange={handleChange}
-        />
-
-        <input
-          type="email"
-          name="email"
-          placeholder="Correo electrónico"
-          value={formData.email}
-          onChange={handleChange}
-        />
-
-        <input
-          type="password"
-          name="password"
-          placeholder="Contraseña"
-          value={formData.password}
-          onChange={handleChange}
-        />
-
-        {/* Podrías dejar visible este select solo si es para pruebas */}
-        {/* 
-        <select name="rol" value={formData.rol} onChange={handleChange}>
-          <option value="cliente">Cliente</option>
-          <option value="admin">Admin</option>
-        </select>
-        */}
-
+      <h2>Registrarse</h2>
+      {error && <p className="error-msg">{error}</p>}
+      <form onSubmit={handleSubmit} className="register-form">
+        <label>
+          Correo electrónico:
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          Contraseña:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </label>
         <button type="submit">Registrarse</button>
-
-        <div className="login-redirect">
-          ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión</Link>
-        </div>
       </form>
+
+      <div className="register-redirect">
+        ¿Ya tienes una cuenta? <Link to="/login">Iniciar sesión</Link>
+      </div>
+
+      {/* Toast container */}
+      <ToastContainer />
     </div>
   );
 };
