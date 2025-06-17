@@ -10,12 +10,13 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import NotFound from "./pages/NotFound/NotFound";
 import Unauthorized from "./pages/Unauthorized/Unauthorized";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import PublicRoute from "./routes/PublicRoute"; // Nuevo componente
+import PublicRoute from "./routes/PublicRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login/Login";
 import Contact from "./pages/Contact/Contact";
 import Register from "./pages/Register/Register";
+import RequireAdmin from "./components/RequireAdmin/RequireAdmin"; // ✅ Importación del nuevo guardia
 import "./App.css";
 
 function App() {
@@ -31,21 +32,21 @@ function App() {
           <Route path="/contact" element={<Contact />} />
 
           {/* Rutas públicas - solo accesibles si NO está autenticado */}
-          <Route 
-            path="/login" 
+          <Route
+            path="/login"
             element={
               <PublicRoute>
                 <Login />
               </PublicRoute>
-            } 
+            }
           />
-          <Route 
-            path="/register" 
+          <Route
+            path="/register"
             element={
               <PublicRoute>
                 <Register />
               </PublicRoute>
-            } 
+            }
           />
 
           {/* Ruta protegida para CLIENTE */}
@@ -58,13 +59,13 @@ function App() {
             }
           />
 
-          {/* Ruta protegida para ADMIN */}
+          {/* Ruta protegida para ADMIN con lógica avanzada */}
           <Route
             path="/admin"
             element={
-              <ProtectedRoute rolesPermitidos={["admin"]}>
+              <RequireAdmin>
                 <AdminDashboard />
-              </ProtectedRoute>
+              </RequireAdmin>
             }
           />
 
@@ -75,7 +76,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
 
-        <ToastContainer position="top-right" autoClose={2000} />
+        <ToastContainer position="top-right" autoClose={3000} />
       </main>
       <Footer />
     </div>

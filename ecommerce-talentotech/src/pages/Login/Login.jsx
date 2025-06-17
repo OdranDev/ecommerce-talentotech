@@ -1,9 +1,10 @@
-// src/pages/Login/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../auth/Firebase";
 import { getAuth } from "firebase/auth";
 import { toast, ToastContainer } from "react-toastify";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../auth/Firebase";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.scss";
 
@@ -16,41 +17,46 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       await loginUser(email, password);
-      
-      // Mostrar toast de éxito
-      toast.success("✅ Inicio de sesión exitoso", { 
+      toast.success("✅ Inicio de sesión exitoso", {
         autoClose: 1500,
-        position: "top-right"
+        position: "top-right",
       });
-      
-      // Esperar un poco para el toast y luego obtener el rol para redirigir
+
       setTimeout(async () => {
         try {
           const currentUser = getAuth().currentUser;
-          if (currentUser) {
-            const tokenResult = await currentUser.getIdTokenResult(true);
-            const role = tokenResult.claims.role;
-            
+          if (!currentUser) throw new Error("Usuario no autenticado");
+
+          const uid = currentUser.uid;
+          const userDoc = await getDoc(doc(db, "usuarios", uid));
+
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const role = userData.role;
+
             if (role === "admin") {
               navigate("/admin");
-            } else {
+            } else if (role === "user") {
               navigate("/products");
+            } else {
+              navigate("/esperando-aprobacion");
             }
+          } else {
+            console.warn("No se encontró el documento del usuario");
+            navigate("/esperando-aprobacion");
           }
-        } catch (error) {
-          console.error('Error al obtener rol:', error);
-          // En caso de error, redirigir a products por defecto
-          navigate("/products");
+        } catch (err) {
+          console.error("Error obteniendo rol:", err);
+          navigate("/esperando-aprobacion");
         }
       }, 1500);
-      
     } catch (err) {
-      toast.error("❌ Credenciales incorrectas", { 
+      toast.error("❌ Credenciales incorrectas", {
         autoClose: 3000,
-        position: "top-right"
+        position: "top-right",
       });
       console.error(err);
     } finally {
@@ -64,21 +70,21 @@ const Login = () => {
       <form onSubmit={handleSubmit} className="login-form">
         <label>
           Correo electrónico:
-          <input 
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
             disabled={isLoading}
           />
         </label>
         <label>
           Contraseña:
-          <input 
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
             disabled={isLoading}
           />
         </label>

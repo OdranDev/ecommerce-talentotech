@@ -1,4 +1,3 @@
-// src/pages/Register/Register.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { createUser } from "../../auth/Firebase";
@@ -19,10 +18,11 @@ const Register = () => {
 
     try {
       await createUser(email, password);
-      toast.success("🎉 Registro exitoso, ahora puedes iniciar sesión", {
+      toast.success("🎉 Registro exitoso. Espera aprobación.", {
         position: "top-right",
         autoClose: 3000,
       });
+
       setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
       console.error(err);
@@ -38,6 +38,7 @@ const Register = () => {
     <div className="register-container">
       <h2>Registrarse</h2>
       {error && <p className="error-msg">{error}</p>}
+
       <form onSubmit={handleSubmit} className="register-form">
         <label>
           Correo electrónico:
@@ -48,6 +49,7 @@ const Register = () => {
             required
           />
         </label>
+
         <label>
           Contraseña:
           <input
@@ -57,6 +59,7 @@ const Register = () => {
             required
           />
         </label>
+
         <button type="submit">Registrarse</button>
       </form>
 
@@ -64,7 +67,6 @@ const Register = () => {
         ¿Ya tienes una cuenta? <Link to="/login">Iniciar sesión</Link>
       </div>
 
-      {/* Toast container */}
       <ToastContainer />
     </div>
   );
