@@ -1,0 +1,38 @@
+.products-admin {
+  padding: 2rem;
+
+  .form-agregar,
+  .lista-productos {
+    margin-top: 2rem;
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  input,
+  textarea {
+    display: block;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    width: 100%;
+  }
+
+  button {
+    margin: 0.5rem 0.25rem;
+    padding: 0.4rem 1rem;
+    border: none;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+
+    &:hover {
+      background-color: #555;
+    }
+  }
+
+  .producto-item {
+    border-bottom: 1px solid #ddd;
+    padding: 1rem 0;
+  }
+}

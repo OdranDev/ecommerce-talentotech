@@ -1,11 +1,13 @@
-import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-// Simulación simple de autenticación
-const isAuthenticated = () => {
-  return localStorage.getItem('auth') === 'true';
-};
+function PrivateRoute({ children, adminOnly = false }) {
+  const { user, role } = useAuth();
 
-export default function PrivateRoute({ children }) {
-  return isAuthenticated() ? children : <Navigate to="/" />;
+  if (!user) return <Navigate to="/login" />;
+  if (adminOnly && role !== 'admin') return <Navigate to="/" />;
+
+  return children;
 }
+
+export default PrivateRoute;

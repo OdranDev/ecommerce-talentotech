@@ -11,12 +11,16 @@ import NotFound from "./pages/NotFound/NotFound";
 import Unauthorized from "./pages/Unauthorized/Unauthorized";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
+import PrivateRoute from "./routes/PrivateRoute"; // ✅ ESTE FALTABA
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login/Login";
 import Contact from "./pages/Contact/Contact";
 import Register from "./pages/Register/Register";
-import RequireAdmin from "./components/RequireAdmin/RequireAdmin"; // ✅ Importación del nuevo guardia
+import UserList from "./pages/Admin/UserList/UserList";
+import ProductsListAdmin from "./pages/Admin/ProductsListAdmin/ProductsListAdmin";
+// import RequireAdmin from "./pages/Admin/RequireAdmin/RequireAdmin";
+// import UsuariosAdmin from "./pages/Admin/Usuarios/UsuariosAdmin";
 import "./App.css";
 
 function App() {
@@ -31,7 +35,6 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/contact" element={<Contact />} />
 
-          {/* Rutas públicas - solo accesibles si NO está autenticado */}
           <Route
             path="/login"
             element={
@@ -49,7 +52,6 @@ function App() {
             }
           />
 
-          {/* Ruta protegida para CLIENTE */}
           <Route
             path="/profile"
             element={
@@ -59,20 +61,34 @@ function App() {
             }
           />
 
-          {/* Ruta protegida para ADMIN con lógica avanzada */}
           <Route
             path="/admin"
             element={
-              <RequireAdmin>
+              <PrivateRoute adminOnly={true}>
                 <AdminDashboard />
-              </RequireAdmin>
+              </PrivateRoute>
             }
           />
 
-          {/* Acceso denegado */}
-          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route
+            path="/admin/users"
+            element={
+              <PrivateRoute adminOnly={true}>
+                <UserList />
+              </PrivateRoute>
+            }
+          />
 
-          {/* Página no encontrada */}
+          <Route
+            path="/admin/products"
+            element={
+              <PrivateRoute adminOnly={true}>
+                <ProductsListAdmin />
+              </PrivateRoute>
+            }
+          />
+
+          <Route path="/unauthorized" element={<Unauthorized />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
 

@@ -1,75 +1,31 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { createUser } from "../../auth/Firebase";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "./Register.scss";
+import { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
+function Register() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
     try {
-      await createUser(email, password);
-      toast.success("🎉 Registro exitoso. Espera aprobación.", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-
-      setTimeout(() => navigate("/login"), 3000);
+      await register(email, password);
+      navigate('/');
     } catch (err) {
-      console.error(err);
-      setError("Hubo un error al registrarse");
-      toast.error("❌ " + err.message, {
-        position: "top-right",
-        autoClose: 4000,
-      });
+      alert(err.message);
     }
   };
 
   return (
-    <div className="register-container">
-      <h2>Registrarse</h2>
-      {error && <p className="error-msg">{error}</p>}
-
-      <form onSubmit={handleSubmit} className="register-form">
-        <label>
-          Correo electrónico:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-
-        <label>
-          Contraseña:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-
-        <button type="submit">Registrarse</button>
-      </form>
-
-      <div className="register-redirect">
-        ¿Ya tienes una cuenta? <Link to="/login">Iniciar sesión</Link>
-      </div>
-
-      <ToastContainer />
-    </div>
+    <form onSubmit={handleSubmit}>
+      <h2>Registro</h2>
+      <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Correo" />
+      <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Contraseña" />
+      <button type="submit">Registrarse</button>
+    </form>
   );
-};
+}
 
 export default Register;

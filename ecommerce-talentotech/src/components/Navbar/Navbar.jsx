@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { GlobalContext } from "../../context/GlobalContext";
 import { CartContext } from "../../context/CartContext";
 import { NavLink } from "react-router-dom";
@@ -12,7 +12,8 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import "./Navbar.scss";
-import { AuthContext } from "../../context/AuthContext";
+import { useContext } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Navbar() {
   const { titulo } = useContext(GlobalContext);
@@ -24,7 +25,7 @@ export default function Navbar() {
 
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  const { user, logout } = useContext(AuthContext); // ✅ Ya no da error
+  const { user, role, logout } = useAuth();
 
   return (
     <header>
@@ -80,13 +81,21 @@ export default function Navbar() {
           {user ? (
             <li className="user-menu">
               <div className="user-dropdown">
-                <span className="nav-text">Hola, {user?.nombre}</span>
+                <span className="nav-text">{user.email}</span>
                 <ul className="dropdown">
-                  <li>
-                    <NavLink to="/profile" onClick={closeMenu}>
-                      Perfil
-                    </NavLink>
-                  </li>
+                  {role === "admin" ? (
+                    <li>
+                      <NavLink to="/admin" onClick={closeMenu}>
+                        Admin
+                      </NavLink>
+                    </li>
+                  ) : (
+                    <li>
+                      <NavLink to="/profile" onClick={closeMenu}>
+                        Perfil
+                      </NavLink>
+                    </li>
+                  )}
                   <li>
                     <button
                       onClick={() => {
