@@ -1,19 +1,17 @@
+// Estilos base del navbar
 .navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
-  background-color: #1a1a1a;
-  color: #fdfeff;
-  box-shadow: 0 2px 4px #0000001a;
+  padding: 1rem;
+  background-color: #333;
+  color: white;
+  position: relative;
 
   .navbar-title {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: bold;
+    margin: 0;
   }
 
   .menu-toggle {
@@ -23,149 +21,249 @@
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
-  }
 
-  ul {
-    display: flex;
-    gap: 1.5rem;
-    list-style: none;
-
-    li a {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      color: #fff;
-      transition: color 0.3s;
-      padding: 3px 9px;
-
-      &:hover,
-      &.active {
-        border-radius: 6px;
-        background-color: #c6daff;
-        color: #00bcd4;
-        font-weight: bold;
-      }
-      &:hover {
-        text-decoration: underline;
-      }
+    @media (max-width: 768px) {
+      display: block;
     }
   }
 
   .nav-actions {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
     gap: 1rem;
-    .cart-icon {
+    align-items: center;
+
+    li {
       position: relative;
 
-      .cart-badge {
-        position: absolute;
-        top: -8px;
-        right: -10px;
-        background-color: #ff5252;
-        color: #fff;
-        font-size: 0.7rem;
-        font-weight: bold;
-        border-radius: 50%;
-        padding: 3px;
-        min-width: 12px;
-        text-align: center;
+      a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+
+        &:hover, &.active {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-text {
+          font-size: 0.9rem;
+        }
       }
     }
-  }
 
-  .user-dropdown {
-    position: relative;
-    cursor: pointer;
-    .dropdown {
-      display: none;
+    .cart-icon {
+      a {
+        position: relative;
+
+        .cart-badge {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background-color: #ff4444;
+          color: white;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.7rem;
+          font-weight: bold;
+        }
+      }
     }
 
-    &:hover {
-      display: block;
-      .dropdown {
+    // Estilos del menú de usuario
+    .user-menu {
+      position: relative;
+
+      .user-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-text {
+          font-size: 0.9rem;
+        }
+      }
+
+      .user-dropdown {
         position: absolute;
         top: 100%;
-        left: 0;
-        background-color: white;
+        right: 0;
+        background-color: #fff;
         padding: 0.5rem;
         box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
         border-radius: 5px;
-        z-index: 10;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        z-index: 1000;
+        min-width: 150px;
+        border: 1px solid #e0e0e0;
 
-        li {
+        .user-email {
+          font-size: 0.9rem;
+          color: #666;
+          display: block;
+          margin-bottom: 0.5rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 1px solid #e0e0e0;
+        }
+
+        .dropdown {
+          display: flex;
+          flex-direction: column;
           list-style: none;
-          padding: 0.3rem 0;
+          margin: 0;
+          padding: 0;
 
-          a,
-          button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: #333;
+          li {
+            padding: 0.3rem 0;
+
+            a,
+            button {
+              background: none;
+              border: none;
+              cursor: pointer;
+              font-size: 0.9rem;
+              color: #333;
+              text-align: left;
+              width: 100%;
+              padding: 0.5rem;
+              border-radius: 3px;
+              transition: background-color 0.3s, color 0.3s;
+              text-decoration: none;
+              display: block;
+
+              &:hover {
+                background-color: #f5f5f5;
+                color: #007bff;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Responsive - Mobile
+    @media (max-width: 768px) {
+      position: fixed;
+      top: 60px; // Ajusta según la altura de tu navbar
+      right: 0;
+      width: 30%;
+      min-width: 200px;
+      background-color: #333;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 1rem;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      max-height: calc(100vh - 70px);
+      overflow-y: auto;
+
+      &.open {
+        transform: translateX(0%);
+      }
+
+      li {
+        width: 100%;
+        margin-bottom: 0.5rem;
+
+        a {
+          width: 100%;
+          justify-content: flex-start;
+          padding: 1rem;
+          border-radius: 4px;
+
+          .nav-text {
+            margin-left: 0.5rem;
+          }
+        }
+      }
+
+      // Estilos específicos del menú de usuario en móvil
+      .user-menu {
+        width: 100%;
+
+        .user-btn {
+          width: 100%;
+          justify-content: flex-start;
+          padding: 1rem;
+          text-align: left;
+
+          .nav-text {
+            margin-left: 0.5rem;
+          }
+        }
+
+        .user-dropdown {
+          position: static;
+          width: 100%;
+          margin-top: 0.5rem;
+          margin-inline: auto;
+          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+          background-color: #444;
+          border: 1px solid #555;
+          max-width: 90%;
+
+
+          .user-email {
+            color: #ccc;
+            border-bottom-color: #555;
           }
 
-          a:hover,
-          button:hover {
-            color: #007bff;
+          .dropdown {
+            li {
+              margin-bottom: 0;
+
+              a,
+              button {
+                color: #fff;
+                padding: 0.75rem 1rem;
+
+                &:hover {
+                  background-color: #555;
+                  color: #007bff;
+                }
+              }
+            }
           }
         }
       }
     }
   }
+}
 
-  // Responsive
-  @media (max-width: 800px) {
-    .menu-toggle {
-      transition: transform 1s ease-in-out;
-      display: block;
-    }
+// Asegurar que el header tenga el z-index correcto
+header {
+  position: fixed;
+  z-index: 100;
+  width: 100%;
+}
 
-    .nav-actions {
-      display: flex;
-      flex-direction: column;
-    }
+// Prevenir scroll del body cuando el menú está abierto en móvil
+body.menu-open {
+  overflow: hidden;
 
-    .nav-links,
-    .nav-actions {
-      position: absolute;
-      top: 44px;
-      right: 0;
-      padding: 1rem;
-      background-color: #1a1a1a;
-      border-radius: 0 0 0 9px;
-      opacity: 0;
-      transform: translateY(-12px);
-      pointer-events: none;
-      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    }
-
-    .nav-links.open,
-    .nav-actions.open {
-      display: flex;
-      flex-direction: column;
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-      width: auto;
-    }
-
-    .nav-text {
-      display: none;
-    }
-
-    .user-dropdown {
-      // display: flex;
-      .dropdown {
-        // display: flex;
-        flex-direction: column;
-        align-content: center;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-    }
+  @media (min-width: 769px) {
+    overflow: auto;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { GlobalContext } from "../../context/GlobalContext";
 import { CartContext } from "../../context/CartContext";
 import { NavLink } from "react-router-dom";
@@ -6,27 +6,71 @@ import {
   FaHome,
   FaBox,
   FaEnvelope,
-  FaShoppingBag,
   FaUser,
   FaBars,
   FaTimes,
-  FaRegUser,
 } from "react-icons/fa";
+import { RiShoppingCartFill } from "react-icons/ri";
 import "./Navbar.scss";
-import { useContext } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 export default function Navbar() {
   const { titulo } = useContext(GlobalContext);
   const { cartItems } = useContext(CartContext);
+  const { user, role, logout } = useAuth();
+
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setDropdownOpen(false); // También cierra el dropdown
+  };
+  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
+  const closeDropdown = () => setDropdownOpen(false);
+
+  const dropdownRef = useRef(null);
 
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  const { user, role, logout } = useAuth();
+  // Cierra dropdown si clic fuera
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Cierra el menú cuando se redimensiona la ventana
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setMenuOpen(false);
+        setDropdownOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    closeMenu();
+    closeDropdown();
+  };
+
+  const handleUserAction = (action) => {
+    action();
+    closeMenu();
+    closeDropdown();
+  };
 
   return (
     <header>
@@ -39,93 +83,72 @@ export default function Navbar() {
 
         <ul className={`nav-actions ${menuOpen ? "open" : ""}`}>
           <li>
-            <NavLink
-              to="/"
-              onClick={closeMenu}
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
+            <NavLink to="/" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
               <FaHome />
               <span className="nav-text">Home</span>
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/products"
-              onClick={closeMenu}
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
+            <NavLink to="/products" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
               <FaBox />
               <span className="nav-text">Products</span>
             </NavLink>
           </li>
           <li>
-            <NavLink
-              to="/contact"
-              onClick={closeMenu}
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
+            <NavLink to="/contact" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
               <FaEnvelope />
               <span className="nav-text">Contact</span>
             </NavLink>
           </li>
           <li className="cart-icon">
-            <NavLink
-              to="/cart"
-              onClick={closeMenu}
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaShoppingBag />
+            <NavLink to="/cart" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
+              <RiShoppingCartFill />
               {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
               <span className="nav-text">Cart</span>
             </NavLink>
           </li>
+
           {user ? (
-            <li className="user-menu">
-              <NavLink
-              to="/admin"
-              onClick={closeMenu}
-              className={({ isActive }) => (isActive ? "active" : "")}
-            >
-              <FaUser />
-              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-              <span className="nav-text">Cart</span>
-            </NavLink>
-              <div className="user-dropdown">
-                <span className="nav-text">{user.email}</span>
-                <ul className="dropdown">
-                  {role === "admin" ? (
+            <li className="user-menu" ref={dropdownRef}>
+              <button className="user-btn" onClick={toggleDropdown}>
+                <FaUser />
+                <span className="nav-text">Usuario</span>
+              </button>
+              {dropdownOpen && (
+                <div className="user-dropdown">
+                  <span className="nav-text user-email">{user.email}</span>
+                  <ul className="dropdown">
+                    {role === "admin" ? (
+                      <li>
+                        <NavLink 
+                          to="/admin" 
+                          onClick={() => handleUserAction(() => {})}
+                        >
+                          Admin
+                        </NavLink>
+                      </li>
+                    ) : (
+                      <li>
+                        <NavLink 
+                          to="/profile" 
+                          onClick={() => handleUserAction(() => {})}
+                        >
+                          Perfil
+                        </NavLink>
+                      </li>
+                    )}
                     <li>
-                      <NavLink to="/admin" onClick={closeMenu}>
-                        Admin
-                      </NavLink>
+                      <button onClick={handleLogout}>
+                        Cerrar sesión
+                      </button>
                     </li>
-                  ) : (
-                    <li>
-                      <NavLink to="/profile" onClick={closeMenu}>
-                        Perfil
-                      </NavLink>
-                    </li>
-                  )}
-                  <li>
-                    <button
-                      onClick={() => {
-                        logout();
-                        closeMenu();
-                      }}
-                    >
-                      Cerrar sesión
-                    </button>
-                  </li>
-                </ul>
-              </div>
+                  </ul>
+                </div>
+              )}
             </li>
           ) : (
             <li>
-              <NavLink
-                to="/login"
-                onClick={closeMenu}
-                className={({ isActive }) => (isActive ? "active" : "")}
-              >
+              <NavLink to="/login" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
                 <FaUser />
                 <span className="nav-text">Login</span>
               </NavLink>
