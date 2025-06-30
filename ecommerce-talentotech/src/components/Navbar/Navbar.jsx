@@ -4,13 +4,13 @@ import { CartContext } from "../../context/CartContext";
 import { NavLink } from "react-router-dom";
 import {
   FaHome,
-  FaBox,
   FaEnvelope,
   FaUser,
   FaBars,
   FaTimes,
 } from "react-icons/fa";
-import { RiShoppingCartFill } from "react-icons/ri";
+import { RiShoppingCartFill,  } from "react-icons/ri";
+import { AiTwotoneShop } from "react-icons/ai";
 import "./Navbar.scss";
 import { useAuth } from "../../context/AuthContext";
 
@@ -90,7 +90,7 @@ export default function Navbar() {
           </li>
           <li>
             <NavLink to="/products" onClick={closeMenu} className={({ isActive }) => (isActive ? "active" : "")}>
-              <FaBox />
+              <AiTwotoneShop />
               <span className="nav-text">Products</span>
             </NavLink>
           </li>
