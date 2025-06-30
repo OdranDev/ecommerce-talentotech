@@ -9,8 +9,9 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../../../auth/Firebase";
-import "./ProductsListAdmin.scss";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import "./ProductsListAdmin.scss";
 
 const ProductsListAdmin = () => {
   const [productos, setProductos] = useState([]);
@@ -24,7 +25,41 @@ const ProductsListAdmin = () => {
   const [editando, setEditando] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Traer productos al iniciar
+  // ------------------------------
+  // FUNCIONES DE VALIDACIÓN
+  // ------------------------------
+
+  const validarCampos = ({ title, price, description, category, image }) => {
+    if (!title || !price || !description || !category || !image) {
+      toast.warn("Todos los campos son obligatorios");
+      return false;
+    }
+
+    if (isNaN(price) || parseFloat(price) <= 0) {
+      toast.warn("El precio debe ser un número mayor a 0");
+      return false;
+    }
+
+    if (description.length < 10) {
+      toast.warn("La descripción debe tener al menos 10 caracteres");
+      return false;
+    }
+
+    if (!/^https?:\/\/.+\.(jpg|jpeg|png|webp|gif)$/i.test(image)) {
+      toast.warn("La URL de la imagen debe ser válida");
+      return false;
+    }
+
+    return true;
+  };
+
+  const validarProducto = () => validarCampos(nuevoProducto);
+  const validarProductoEditado = () => validarCampos(editando);
+
+  // ------------------------------
+  // FETCH
+  // ------------------------------
+
   useEffect(() => {
     const fetchProductos = async () => {
       try {
@@ -44,57 +79,102 @@ const ProductsListAdmin = () => {
     fetchProductos();
   }, []);
 
-  // Crear nuevo producto
+  // ------------------------------
+  // AGREGAR PRODUCTO
+  // ------------------------------
+
   const handleAgregar = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "products"), {
-        ...nuevoProducto,
-        price: parseFloat(nuevoProducto.price),
-        rating: { average: 0, count: 0 },
-        createdAt: serverTimestamp(),
-      });
-      toast.success("Producto agregado");
-      setProductos([...productos, { id: docRef.id, ...nuevoProducto }]);
-      setNuevoProducto({
-        title: "",
-        price: "",
-        description: "",
-        category: "",
-        image: "",
-      });
-    } catch (error) {
-      toast.error("Error al agregar producto");
+    if (!validarProducto()) return;
+
+    const confirm = await Swal.fire({
+      title: "¿Agregar producto?",
+      text: "¿Deseas agregar este nuevo producto al inventario?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, agregar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        const docRef = await addDoc(collection(db, "products"), {
+          ...nuevoProducto,
+          price: parseFloat(nuevoProducto.price),
+          rating: { average: 0, count: 0 },
+          createdAt: serverTimestamp(),
+        });
+
+        setProductos([...productos, { id: docRef.id, ...nuevoProducto }]);
+        setNuevoProducto({
+          title: "",
+          price: "",
+          description: "",
+          category: "",
+          image: "",
+        });
+
+        Swal.fire("Agregado", "El producto fue agregado con éxito", "success");
+      } catch (error) {
+        toast.error("Error al agregar producto");
+      }
     }
   };
 
-  // Eliminar producto
-  const handleEliminar = async (id) => {
-    try {
-      await deleteDoc(doc(db, "products", id));
-      toast.success("Producto eliminado");
-      setProductos(productos.filter((p) => p.id !== id));
-    } catch (error) {
-      toast.error("Error al eliminar");
-    }
-  };
+  // ------------------------------
+  // GUARDAR EDICIÓN
+  // ------------------------------
 
-  // Guardar cambios en edición
   const handleGuardarEdicion = async (id) => {
+    if (!validarProductoEditado()) return;
+
     try {
       const ref = doc(db, "products", id);
       await updateDoc(ref, {
         ...editando,
         price: parseFloat(editando.price),
       });
-      toast.success("Producto actualizado");
+
       setProductos((prev) =>
         prev.map((p) => (p.id === id ? { ...p, ...editando } : p))
       );
+
+      toast.success("Producto actualizado");
       setEditando(null);
     } catch (error) {
       toast.error("Error al actualizar");
     }
   };
+
+  // ------------------------------
+  // ELIMINAR
+  // ------------------------------
+
+  const handleEliminar = async (id) => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará el producto permanentemente.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteDoc(doc(db, "products", id));
+        setProductos(productos.filter((p) => p.id !== id));
+        Swal.fire("Eliminado", "El producto ha sido eliminado.", "success");
+      } catch (error) {
+        toast.error("Error al eliminar el producto");
+      }
+    }
+  };
+
+  // ------------------------------
+  // UI
+  // ------------------------------
 
   if (loading) return <p>Cargando productos...</p>;
 
@@ -149,65 +229,71 @@ const ProductsListAdmin = () => {
 
       {/* LISTA DE PRODUCTOS */}
       <div className="lista-productos">
-        <h3>Productos existentes</h3>
-        {productos.map((producto) => (
-          <div key={producto.id} className="producto-item">
-            {editando?.id === producto.id ? (
-              <>
-                <input
-                  value={editando.title}
-                  onChange={(e) =>
-                    setEditando({ ...editando, title: e.target.value })
-                  }
-                />
-                <input
-                  value={editando.price}
-                  onChange={(e) =>
-                    setEditando({ ...editando, price: e.target.value })
-                  }
-                />
-                <input
-                  value={editando.category}
-                  onChange={(e) =>
-                    setEditando({ ...editando, category: e.target.value })
-                  }
-                />
-                <input
-                  value={editando.image}
-                  onChange={(e) =>
-                    setEditando({ ...editando, image: e.target.value })
-                  }
-                />
-                <textarea
-                  value={editando.description}
-                  onChange={(e) =>
-                    setEditando({ ...editando, description: e.target.value })
-                  }
-                />
-                <button onClick={() => handleGuardarEdicion(producto.id)}>
-                  Guardar
-                </button>
-                <button onClick={() => setEditando(null)}>Cancelar</button>
-              </>
-            ) : (
-              <>
-                <h4>{producto.title}</h4>
-                <p>${producto.price}</p>
-                <p>{producto.category}</p>
-                <img src={producto.image} alt={producto.title} width={80} />
-                <p>{producto.description.slice(0, 100)}...</p>
-                <p>
-                  ⭐ {producto.rating?.average || 0} ({producto.rating?.count || 0})
-                </p>
-                <button onClick={() => setEditando(producto)}>Editar</button>
-                <button onClick={() => handleEliminar(producto.id)}>Eliminar</button>
-              </>
-            )}
-          </div>
-        ))}
+        <h3 className="productosExistentes">Productos existentes</h3>
+        <div className="productsContainer">
+          {productos.map((producto) => (
+            <div key={producto.id} className="producto-item">
+              {editando?.id === producto.id ? (
+                <>
+                  <input
+                    value={editando.title}
+                    onChange={(e) =>
+                      setEditando({ ...editando, title: e.target.value })
+                    }
+                  />
+                  <input
+                    value={editando.price}
+                    onChange={(e) =>
+                      setEditando({ ...editando, price: e.target.value })
+                    }
+                  />
+                  <input
+                    value={editando.category}
+                    onChange={(e) =>
+                      setEditando({ ...editando, category: e.target.value })
+                    }
+                  />
+                  <input
+                    value={editando.image}
+                    onChange={(e) =>
+                      setEditando({ ...editando, image: e.target.value })
+                    }
+                  />
+                  <textarea
+                    value={editando.description}
+                    onChange={(e) =>
+                      setEditando({ ...editando, description: e.target.value })
+                    }
+                  />
+                  <button onClick={() => handleGuardarEdicion(producto.id)}>
+                    Guardar
+                  </button>
+                  <button onClick={() => setEditando(null)}>Cancelar</button>
+                </>
+              ) : (
+                <>
+                  <h4>{producto.title}</h4>
+                  <p>${producto.price}</p>
+                  <p>{producto.category}</p>
+                  <img src={producto.image} alt={producto.title} width={80} />
+                  <p>{producto.description.slice(0, 100)}...</p>
+                  <p>
+                    ⭐ {producto.rating?.average || 0} (
+                    {producto.rating?.count || 0})
+                  </p>
+                  <button onClick={() => setEditando(producto)}>Editar</button>
+                  <button onClick={() => handleEliminar(producto.id)}>
+                    Eliminar
+                  </button>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
 export default ProductsListAdmin;
+

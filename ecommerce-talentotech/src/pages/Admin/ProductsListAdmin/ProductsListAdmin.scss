@@ -11,10 +11,13 @@
 
   input,
   textarea {
+    max-width: 96%;
+    margin-inline: auto;
+    margin-block: 0.5rem;
     display: block;
-    margin: 0.5rem 0;
     padding: 0.5rem;
     width: 100%;
+
   }
 
   button {
@@ -31,8 +34,19 @@
     }
   }
 
-  .producto-item {
-    border-bottom: 1px solid #ddd;
-    padding: 1rem 0;
+  // .productosExistentes {
+  //   display: flex;
+  // }
+  .lista-productos {
+    .productsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      justify-items: center;
+      .producto-item {
+        max-width: 320px;
+        border-bottom: 1px solid #ddd;
+        padding: 1rem 0;
+      }
+    }
   }
 }

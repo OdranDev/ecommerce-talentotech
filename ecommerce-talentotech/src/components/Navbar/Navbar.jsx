@@ -10,6 +10,7 @@ import {
   FaUser,
   FaBars,
   FaTimes,
+  FaRegUser,
 } from "react-icons/fa";
 import "./Navbar.scss";
 import { useContext } from "react";
@@ -80,6 +81,15 @@ export default function Navbar() {
           </li>
           {user ? (
             <li className="user-menu">
+              <NavLink
+              to="/admin"
+              onClick={closeMenu}
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <FaUser />
+              {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+              <span className="nav-text">Cart</span>
+            </NavLink>
               <div className="user-dropdown">
                 <span className="nav-text">{user.email}</span>
                 <ul className="dropdown">
