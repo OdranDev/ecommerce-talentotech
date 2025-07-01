@@ -33,7 +33,7 @@ function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        © {year} {titulo}. Todos los derechos reservados.
+        © {year} {titulo}. Made with love Odran.
       </div>
     </footer>
   );

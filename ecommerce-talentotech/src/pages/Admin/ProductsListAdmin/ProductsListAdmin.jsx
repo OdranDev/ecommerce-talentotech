@@ -12,6 +12,7 @@ import { db } from "../../../auth/Firebase";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import "./ProductsListAdmin.scss";
+import Loader from "../../../components/loader/Loader.jsx";
 
 const ProductsListAdmin = () => {
   const [productos, setProductos] = useState([]);
@@ -56,10 +57,28 @@ const ProductsListAdmin = () => {
   const validarProducto = () => validarCampos(nuevoProducto);
   const validarProductoEditado = () => validarCampos(editando);
 
+  // Función para validar y formatear precio en tiempo real
+  const handlePriceChange = (value, isEditing = false) => {
+    // Remover caracteres no numéricos excepto punto decimal
+    const cleanValue = value.replace(/[^0-9.]/g, "");
+
+    // Prevenir múltiples puntos decimales
+    const parts = cleanValue.split(".");
+    if (parts.length > 2) {
+      return parts[0] + "." + parts.slice(1).join("");
+    }
+
+    // Limitar a 2 decimales
+    if (parts[1] && parts[1].length > 2) {
+      return parts[0] + "." + parts[1].substring(0, 2);
+    }
+
+    return cleanValue;
+  };
+
   // ------------------------------
   // FETCH
   // ------------------------------
-
   useEffect(() => {
     const fetchProductos = async () => {
       try {
@@ -69,8 +88,12 @@ const ProductsListAdmin = () => {
           ...doc.data(),
         }));
         setProductos(productosData);
+        toast.dismiss(); // Elimina cualquier toast anterior
+        toast.success(`${productosData.length} productos cargados exitosamente`);
       } catch (error) {
-        toast.error("Error al cargar productos");
+        // Mostrar solo un toast de error
+        toast.dismiss(); // Elimina cualquier toast anterior
+        toast.error("Error al cargar productos. Intenta recargar la página.");
       } finally {
         setLoading(false);
       }
@@ -78,6 +101,30 @@ const ProductsListAdmin = () => {
 
     fetchProductos();
   }, []);
+
+  // PARA USAR CUANDO NO TENGA LOADER
+
+  // useEffect(() => {
+  //   const fetchProductos = async () => {
+  //     try {
+  //       toast.info("Cargando productos...", { autoClose: 2000 });
+  //       const querySnapshot = await getDocs(collection(db, "products"));
+  //       const productosData = querySnapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }));
+  //       setProductos(productosData);
+  //       toast.success(`${productosData.length} productos cargados exitosamente`);
+  //     } catch (error) {
+  //       console.error("Error al cargar productos:", error);
+  //       toast.error("Error al cargar productos");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchProductos();
+  // }, []);
 
   // ------------------------------
   // AGREGAR PRODUCTO
@@ -97,6 +144,9 @@ const ProductsListAdmin = () => {
 
     if (confirm.isConfirmed) {
       try {
+        // Mostrar toast de carga
+        const loadingToast = toast.loading("Agregando producto...");
+
         const docRef = await addDoc(collection(db, "products"), {
           ...nuevoProducto,
           price: parseFloat(nuevoProducto.price),
@@ -104,7 +154,14 @@ const ProductsListAdmin = () => {
           createdAt: serverTimestamp(),
         });
 
-        setProductos([...productos, { id: docRef.id, ...nuevoProducto }]);
+        const nuevoProductoCompleto = {
+          id: docRef.id,
+          ...nuevoProducto,
+          price: parseFloat(nuevoProducto.price),
+          rating: { average: 0, count: 0 },
+        };
+
+        setProductos([...productos, nuevoProductoCompleto]);
         setNuevoProducto({
           title: "",
           price: "",
@@ -113,9 +170,16 @@ const ProductsListAdmin = () => {
           image: "",
         });
 
+        // Cerrar toast de carga y mostrar éxito
+        toast.dismiss(loadingToast);
+        toast.success(
+          `Producto "${nuevoProducto.title}" agregado exitosamente`
+        );
+
         Swal.fire("Agregado", "El producto fue agregado con éxito", "success");
       } catch (error) {
-        toast.error("Error al agregar producto");
+        console.error("Error al agregar producto:", error);
+        toast.error("Error al agregar producto. Inténtalo nuevamente.");
       }
     }
   };
@@ -128,20 +192,28 @@ const ProductsListAdmin = () => {
     if (!validarProductoEditado()) return;
 
     try {
+      // Mostrar toast de carga
+      const loadingToast = toast.loading("Actualizando producto...");
+
       const ref = doc(db, "products", id);
-      await updateDoc(ref, {
+      const productToUpdate = {
         ...editando,
         price: parseFloat(editando.price),
-      });
+      };
+
+      await updateDoc(ref, productToUpdate);
 
       setProductos((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, ...editando } : p))
+        prev.map((p) => (p.id === id ? { ...p, ...productToUpdate } : p))
       );
 
-      toast.success("Producto actualizado");
+      // Cerrar toast de carga y mostrar éxito
+      toast.dismiss(loadingToast);
+      toast.success(`Producto "${editando.title}" actualizado exitosamente`);
       setEditando(null);
     } catch (error) {
-      toast.error("Error al actualizar");
+      console.error("Error al actualizar producto:", error);
+      toast.error("Error al actualizar el producto. Inténtalo nuevamente.");
     }
   };
 
@@ -150,9 +222,11 @@ const ProductsListAdmin = () => {
   // ------------------------------
 
   const handleEliminar = async (id) => {
+    const producto = productos.find((p) => p.id === id);
+
     const result = await Swal.fire({
       title: "¿Estás seguro?",
-      text: "Esta acción eliminará el producto permanentemente.",
+      text: `Esta acción eliminará "${producto?.title}" permanentemente.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -163,11 +237,20 @@ const ProductsListAdmin = () => {
 
     if (result.isConfirmed) {
       try {
+        // Mostrar toast de carga
+        const loadingToast = toast.loading("Eliminando producto...");
+
         await deleteDoc(doc(db, "products", id));
         setProductos(productos.filter((p) => p.id !== id));
+
+        // Cerrar toast de carga y mostrar éxito
+        toast.dismiss(loadingToast);
+        toast.success(`Producto "${producto?.title}" eliminado exitosamente`);
+
         Swal.fire("Eliminado", "El producto ha sido eliminado.", "success");
       } catch (error) {
-        toast.error("Error al eliminar el producto");
+        console.error("Error al eliminar producto:", error);
+        toast.error("Error al eliminar el producto. Inténtalo nuevamente.");
       }
     }
   };
@@ -176,7 +259,14 @@ const ProductsListAdmin = () => {
   // UI
   // ------------------------------
 
-  if (loading) return <p>Cargando productos...</p>;
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <Loader />
+        <p>Cargando productos...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="products-admin">
@@ -195,11 +285,22 @@ const ProductsListAdmin = () => {
         />
         <input
           type="text"
-          placeholder="Precio"
+          placeholder="Precio (solo números)"
           value={nuevoProducto.price}
-          onChange={(e) =>
-            setNuevoProducto({ ...nuevoProducto, price: e.target.value })
-          }
+          onChange={(e) => {
+            const formattedPrice = handlePriceChange(e.target.value);
+            setNuevoProducto({ ...nuevoProducto, price: formattedPrice });
+          }}
+          onKeyPress={(e) => {
+            // Permitir solo números, punto decimal y teclas de control
+            if (
+              !/[0-9.]/.test(e.key) &&
+              !["Backspace", "Delete", "Tab", "Enter"].includes(e.key)
+            ) {
+              e.preventDefault();
+              toast.warn("Solo se permiten números en el precio");
+            }
+          }}
         />
         <input
           type="text"
@@ -218,7 +319,7 @@ const ProductsListAdmin = () => {
           }
         />
         <textarea
-          placeholder="Descripción"
+          placeholder="Descripción (mínimo 10 caracteres)"
           value={nuevoProducto.description}
           onChange={(e) =>
             setNuevoProducto({ ...nuevoProducto, description: e.target.value })
@@ -229,37 +330,57 @@ const ProductsListAdmin = () => {
 
       {/* LISTA DE PRODUCTOS */}
       <div className="lista-productos">
-        <h3 className="productosExistentes">Productos existentes</h3>
+        <h3 className="productosExistentes">
+          Productos existentes ({productos.length})
+        </h3>
         <div className="productsContainer">
           {productos.map((producto) => (
             <div key={producto.id} className="producto-item">
               {editando?.id === producto.id ? (
                 <>
                   <input
+                    placeholder="Título"
                     value={editando.title}
                     onChange={(e) =>
                       setEditando({ ...editando, title: e.target.value })
                     }
                   />
                   <input
+                    placeholder="Precio (solo números)"
                     value={editando.price}
-                    onChange={(e) =>
-                      setEditando({ ...editando, price: e.target.value })
-                    }
+                    onChange={(e) => {
+                      const formattedPrice = handlePriceChange(
+                        e.target.value,
+                        true
+                      );
+                      setEditando({ ...editando, price: formattedPrice });
+                    }}
+                    onKeyPress={(e) => {
+                      if (
+                        !/[0-9.]/.test(e.key) &&
+                        !["Backspace", "Delete", "Tab", "Enter"].includes(e.key)
+                      ) {
+                        e.preventDefault();
+                        toast.warn("Solo se permiten números en el precio");
+                      }
+                    }}
                   />
                   <input
+                    placeholder="Categoría"
                     value={editando.category}
                     onChange={(e) =>
                       setEditando({ ...editando, category: e.target.value })
                     }
                   />
                   <input
+                    placeholder="URL de imagen"
                     value={editando.image}
                     onChange={(e) =>
                       setEditando({ ...editando, image: e.target.value })
                     }
                   />
                   <textarea
+                    placeholder="Descripción (mínimo 10 caracteres)"
                     value={editando.description}
                     onChange={(e) =>
                       setEditando({ ...editando, description: e.target.value })
@@ -273,7 +394,7 @@ const ProductsListAdmin = () => {
               ) : (
                 <>
                   <h4>{producto.title}</h4>
-                  <p>${producto.price}</p>
+                  <p>${parseFloat(producto.price).toFixed(2)}</p>
                   <p>{producto.category}</p>
                   <img src={producto.image} alt={producto.title} width={80} />
                   <p>{producto.description.slice(0, 100)}...</p>
@@ -296,4 +417,3 @@ const ProductsListAdmin = () => {
 };
 
 export default ProductsListAdmin;
-

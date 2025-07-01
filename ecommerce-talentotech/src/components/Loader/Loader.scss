@@ -1,4 +1,18 @@
 // src/components/Loader.scss
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.8); // o transparente si prefieres
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .loader {
   position: relative;
   transform: rotateZ(45deg);
@@ -7,7 +21,7 @@
   width: 48px;
   height: 48px;
   color: #00bcd4;
-  margin: 2rem auto;
+  margin: 3rem auto;
   display: block;
 }
 

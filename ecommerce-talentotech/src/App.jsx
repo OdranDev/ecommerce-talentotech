@@ -11,7 +11,7 @@ import NotFound from "./pages/NotFound/NotFound";
 import Unauthorized from "./pages/Unauthorized/Unauthorized";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
-import PrivateRoute from "./routes/PrivateRoute"; // ✅ ESTE FALTABA
+import PrivateRoute from "./routes/PrivateRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login/Login";

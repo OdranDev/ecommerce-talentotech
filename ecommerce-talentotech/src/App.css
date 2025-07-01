@@ -13,5 +13,6 @@ html, body, #root {
 }
 
 .main-content {
+  margin-top: 60px;
   min-width: 320px;
 }
