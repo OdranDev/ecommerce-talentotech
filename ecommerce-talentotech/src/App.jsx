@@ -19,8 +19,6 @@ import Contact from "./pages/Contact/Contact";
 import Register from "./pages/Register/Register";
 import UserList from "./pages/Admin/UserList/UserList";
 import ProductsListAdmin from "./pages/Admin/ProductsListAdmin/ProductsListAdmin";
-// import RequireAdmin from "./pages/Admin/RequireAdmin/RequireAdmin";
-// import UsuariosAdmin from "./pages/Admin/Usuarios/UsuariosAdmin";
 import "./App.css";
 
 function App() {
@@ -55,7 +53,7 @@ function App() {
           <Route
             path="/profile"
             element={
-              <ProtectedRoute rolesPermitidos={["cliente"]}>
+              <ProtectedRoute rolesPermitidos={["user", "cliente", "basic"]}>
                 <Profile />
               </ProtectedRoute>
             }

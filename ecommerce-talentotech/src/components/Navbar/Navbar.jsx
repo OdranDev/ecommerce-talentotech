@@ -9,7 +9,7 @@ import {
   FaBars,
   FaTimes,
 } from "react-icons/fa";
-import { RiShoppingCartFill,  } from "react-icons/ri";
+import { RiShoppingCartFill } from "react-icons/ri";
 import { AiTwotoneShop } from "react-icons/ai";
 import "./Navbar.scss";
 import { useAuth } from "../../context/AuthContext";
@@ -25,22 +25,17 @@ export default function Navbar() {
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => {
     setMenuOpen(false);
-    setDropdownOpen(false); // También cierra el dropdown
+    setDropdownOpen(false);
   };
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
   const closeDropdown = () => setDropdownOpen(false);
 
   const dropdownRef = useRef(null);
-
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  // Cierra dropdown si clic fuera
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setDropdownOpen(false);
       }
     };
@@ -48,7 +43,6 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Cierra el menú cuando se redimensiona la ventana
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
@@ -62,12 +56,6 @@ export default function Navbar() {
 
   const handleLogout = () => {
     logout();
-    closeMenu();
-    closeDropdown();
-  };
-
-  const handleUserAction = (action) => {
-    action();
     closeMenu();
     closeDropdown();
   };
@@ -120,27 +108,15 @@ export default function Navbar() {
                   <ul className="dropdown">
                     {role === "admin" ? (
                       <li>
-                        <NavLink 
-                          to="/admin" 
-                          onClick={() => handleUserAction(() => {})}
-                        >
-                          Admin
-                        </NavLink>
+                        <NavLink to="/admin" onClick={closeMenu}>Admin</NavLink>
                       </li>
                     ) : (
                       <li>
-                        <NavLink 
-                          to="/profile" 
-                          onClick={() => handleUserAction(() => {})}
-                        >
-                          Perfil
-                        </NavLink>
+                        <NavLink to="/profile" onClick={closeMenu}>Perfil</NavLink>
                       </li>
                     )}
                     <li>
-                      <button onClick={handleLogout}>
-                        Cerrar sesión
-                      </button>
+                      <button onClick={handleLogout}>Cerrar sesión</button>
                     </li>
                   </ul>
                 </div>
