@@ -46,10 +46,10 @@ const Home = () => {
     fetchProductos();
   }, []);
 
-  // Productos mejor calificados
+  // ✅ Filtrar y ordenar por promedio de calificación (`rating.average`)
   const topProductos = productos
-    .filter((p) => p.rating && typeof p.rating.rate === "number")
-    .sort((a, b) => b.rating.rate - a.rating.rate)
+    .filter((p) => p.rating?.average && p.rating.count >= 1)
+    .sort((a, b) => b.rating.average - a.rating.average)
     .slice(0, 8);
 
   if (cargando) {
@@ -98,6 +98,7 @@ const Home = () => {
               480: { slidesPerView: 2 },
               768: { slidesPerView: 3 },
               1024: { slidesPerView: 4 },
+              1200: { slidesPerView: 5 },
             }}
             navigation
             pagination={{ clickable: true }}
@@ -115,7 +116,7 @@ const Home = () => {
                   <img src={producto.image} alt={producto.title} />
                   <h4>{producto.title.slice(0, 30)}...</h4>
                   <p>
-                    ⭐ {producto.rating?.rate || 0} (${producto.price})
+                    ⭐ {producto.rating?.average?.toFixed(1) || 0} (${producto.price})
                   </p>
                 </Link>
               </SwiperSlide>

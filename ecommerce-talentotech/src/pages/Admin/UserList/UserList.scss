@@ -1,0 +1,146 @@
+.user-list-container {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: auto;
+  font-family: "Segoe UI", sans-serif;
+
+  .user-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    .btn-back {
+      padding: 0.6rem 1rem;
+      background-color: #e0e0e0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover {
+        background-color: #ccc;
+      }
+    }
+  }
+
+  .user-table {
+    .table-desktop {
+      display: block;
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+          padding: 1rem;
+          border-bottom: 1px solid #ddd;
+          text-align: left;
+        }
+
+        th {
+          background-color: #f5f5f5;
+        }
+
+        tr.current-user {
+          background-color: #f0f9ff;
+          font-weight: bold;
+
+          td {
+            color: #007acc;
+          }
+        }
+
+        button {
+          padding: 0.4rem 0.8rem;
+          background-color: #007acc;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #005fa3;
+          }
+        }
+      }
+    }
+
+    .table-mobile {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .table-desktop {
+        display: none;
+      }
+
+      .table-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .user-card {
+          background: #f9f9f9;
+          padding: 1rem;
+          border-radius: 10px;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+          &.current-user {
+            border: 2px solid #00ff40;
+            background: #eef8ff;
+          }
+
+          p {
+            margin: 0.3rem 0;
+          }
+
+          button {
+            margin-top: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            font-weight: 500;
+
+            &:hover {
+              background-color: #005fa3;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+
+  input,
+  select {
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+
+  input {
+    flex: 1;
+    min-width: 220px;
+  }
+
+  select {
+    min-width: 150px;
+  }
+}

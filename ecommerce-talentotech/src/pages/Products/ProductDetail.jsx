@@ -6,6 +6,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../auth/Firebase";
 import useUser from "../../hooks/useUser";
 import "./ProductDetail.scss";
+import { useProducts } from "../../context/ProductsContext";
 
 function ProductDetail() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ function ProductDetail() {
   const [userRating, setUserRating] = useState(null);
 
   const { user, role, loading: userLoading } = useUser();
+  const { addVotedProduct } = useProducts();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -23,7 +25,7 @@ function ProductDetail() {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
-          setProducto(data);
+          setProducto({ ...data, id }); // Agregamos el id al objeto
           if (user && data.ratings && data.ratings[user.uid]) {
             setUserRating(data.ratings[user.uid]);
           }
@@ -82,7 +84,12 @@ function ProductDetail() {
           count: ratingValues.length,
         },
       }));
+
       setUserRating(ratingValue);
+
+      // 💾 Guardar en productos favoritos del usuario (votados)
+      addVotedProduct({ ...producto, id }, ratingValue);
+
       toast.success("Gracias por tu calificación ⭐");
     } catch (err) {
       console.error(err);
@@ -111,7 +118,6 @@ function ProductDetail() {
             : "Sin calificaciones"}
         </p>
 
-        {/* CALIFICACIÓN SOLO PARA USUARIOS */}
         {role === "user" && (
           <div className="rating-input">
             <p><strong>Tu calificación:</strong></p>
