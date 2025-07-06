@@ -11,8 +11,8 @@ import {
 } from "react-icons/fa";
 import { RiShoppingCartFill } from "react-icons/ri";
 import { AiTwotoneShop } from "react-icons/ai";
-import "./Navbar.scss";
 import { useAuth } from "../../context/AuthContext";
+import "./Navbar.scss";
 
 export default function Navbar() {
   const { titulo } = useContext(GlobalContext);

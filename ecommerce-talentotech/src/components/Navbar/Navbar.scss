@@ -1,10 +1,11 @@
+
 // Estilos base del navbar
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: #333;
+  background-color: $primary-color;
   color: white;
   position: relative;
 
