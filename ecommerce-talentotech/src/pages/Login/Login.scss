@@ -1,76 +1,462 @@
-// src/pages/Login/Login.scss
+// Variables
+$primary-color: #10b981;
+$primary-hover: #059669;
+$primary-light: #e0e7ff;
+$secondary-color: #f8fafc;
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+$text-muted: #94a3b8;
+$border-color: #e2e8f0;
+$error-color: #ef4444;
+$success-color: #10b981;
+$warning-color: #f59e0b;
+$white: #ffffff;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
-.login-container {
-  max-width: 300px;
-  margin: 2rem auto;
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  color: #333;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+// Breakpoints
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
+$large: 1280px;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+@mixin transition($property: all, $duration: 0.3s, $timing: ease-in-out) {
+  transition: $property $duration $timing;
+}
+
+@mixin button-hover {
+  transform: translateY(-2px);
+  box-shadow: $shadow-lg;
+}
+
+@mixin input-focus {
+  outline: none;
+  border-color: $primary-color;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+// Estilos del contenedor principal
+.login-container {
+  min-height: 100vh;
+  @include flex-center;
+  background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+
+  // Efecto de fondo animado
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"/><circle cx="800" cy="300" r="150" fill="url(%23a)"/><circle cx="400" cy="700" r="120" fill="url(%23a)"/></svg>');
+    animation: float 20s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+  }
+
+  // Responsive
+  @media (max-width: $mobile) {
+    padding: 0.5rem;
+  }
+}
+
+// Estilos del formulario
 .login-form {
-  display: flex;
-  flex-direction: column;
+  background: $white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: $shadow-xl;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 
-  label {
-    margin-bottom: 1rem;
-    font-weight: 600;
-    display: flex;
-    flex-direction: column;
+  // Animación de entrada
+  animation: slideUp 0.6s ease-out;
 
-    input {
-      padding: 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      margin-top: 0.3rem;
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
+
+  // Título
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: $text-primary;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, $primary-color, $primary-hover);
+      border-radius: 2px;
+    }
+  }
+
+  // Contenedor de inputs
+  .input-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+
+    // Input
+    input {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      border: 2px solid $border-color;
+      border-radius: 12px;
+      font-size: 1rem;
+      color: $text-primary;
+      background: $white;
+      @include transition(all, 0.3s, ease);
+
+      &::placeholder {
+        color: $text-muted;
+        @include transition(opacity, 0.3s, ease);
+      }
+
+      &:focus {
+        @include input-focus;
+        
+        &::placeholder {
+          opacity: 0.7;
+        }
+      }
+
+      &:hover {
+        border-color: darken($border-color, 10%);
+      }
+
+      // Estados de validación
+      &.error {
+        border-color: $error-color;
+        background: rgba($error-color, 0.05);
+      }
+
+      &.success {
+        border-color: $success-color;
+        background: rgba($success-color, 0.05);
+      }
+    }
+
+    // Icono de input
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: $text-muted;
+      font-size: 1.125rem;
+      pointer-events: none;
+      @include transition(color, 0.3s, ease);
+    }
+
+    // Input con icono
+    &.has-icon input {
+      padding-left: 3rem;
+    }
+
+    // Cuando el input está enfocado
+    &:focus-within .input-icon {
+      color: $primary-color;
+    }
+  }
+
+  // Botón principal
+  .btn-primary {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, $primary-color, $primary-hover);
+    color: $white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    @include transition(all, 0.3s, ease);
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+
+    // Efecto de hover
+    &:hover {
+      @include button-hover;
+      background: linear-gradient(135deg, $primary-hover, darken($primary-hover, 10%));
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: $shadow-md;
+    }
+
+    // Estado de carga
+    &.loading {
+      pointer-events: none;
+      opacity: 0.8;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba($white, 0.3);
+        border-radius: 50%;
+        border-top-color: $white;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+    }
+
+    // Estado deshabilitado
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  // Enlace de registro
+  .register-link {
+    text-align: center;
+    
+    p {
+      color: $text-secondary;
+      margin-bottom: 0.5rem;
+    }
+    
+    a {
+      color: $primary-color;
+      text-decoration: none;
+      font-weight: 600;
+      @include transition(all, 0.3s, ease);
+      
+      &:hover {
+        color: $primary-hover;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // Divider
+  .divider {
+    position: relative;
+    text-align: center;
+    margin: 2rem 0;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: $border-color;
+    }
+
+  }
+  .notienesunacuenta {
+    // margin-top: 1rem;
+    background: $white;
+    padding: 1rem;
+    color: $text-muted;
+    font-size: 0.875rem;
+  }
+
+  // Mensajes de error/éxito
+  .message {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    @include transition(all, 0.3s, ease);
+
+    &.error {
+      background: rgba($error-color, 0.1);
+      color: $error-color;
+      border: 1px solid rgba($error-color, 0.2);
+    }
+
+    &.success {
+      background: rgba($success-color, 0.1);
+      color: $success-color;
+      border: 1px solid rgba($success-color, 0.2);
+    }
+
+    &.warning {
+      background: rgba($warning-color, 0.1);
+      color: $warning-color;
+      border: 1px solid rgba($warning-color, 0.2);
+    }
+  }
+
+  // Responsive
+  @media (max-width: $tablet) {
+    padding: 2rem;
+    max-width: 350px;
+    
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: $mobile) {
+    padding: 1.5rem;
+    max-width: 320px;
+    border-radius: 12px;
+    
+    h2 {
+      font-size: 1.375rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .input-group {
+      margin-bottom: 1.25rem;
+      
+      input {
+        padding: 0.875rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+    
+    .btn-primary {
+      padding: 0.875rem 1.25rem;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Animaciones adicionales
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Utilidades de animación
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
 
   button {
-    margin-top: 1rem;
-    padding: 0.7rem;
-    background-color: #007bff;
-    color: white;
+    background: none;
     border: none;
-    font-weight: bold;
+    color: $primary-color;
+    font-size: 0.875rem;
     cursor: pointer;
-    border-radius: 5px;
+    text-decoration: underline;
+    padding: 0;
+    @include transition(color);
 
     &:hover {
-      background-color: #0056b3;
+      color: $primary-hover;
     }
   }
 }
 
-.error-msg {
-  color: red;
-  font-weight: 500;
-  margin-bottom: 1rem;
-}
+.reset-password {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 
-.demo-info {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  background: #f1f1f1;
-  padding: 0.5rem;
-  border-radius: 6px;
-  color: #333;
-}
+  input {
+    padding: 0.75rem 1rem;
+    border: 2px solid $border-color;
+    border-radius: 10px;
+    font-size: 0.95rem;
 
-.register-redirect {
-  margin-top: 1.5rem;
-  font-size: 0.95rem;
-  text-align: center;
+    &:focus {
+      @include input-focus;
+    }
+  }
 
-  a {
-    color: #007bff;
+  .btn-secondary {
+    background: $primary-light;
+    border: 2px solid $primary-color;
+    color: $primary-color;
     font-weight: 600;
-    text-decoration: none;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    @include transition(all);
 
     &:hover {
-      text-decoration: underline;
+      background: lighten($primary-light, 5%);
+      border-color: $primary-hover;
+      color: $primary-hover;
     }
   }
 }

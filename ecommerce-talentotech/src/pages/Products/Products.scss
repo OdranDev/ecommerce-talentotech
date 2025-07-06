@@ -1,8 +1,9 @@
 .products-page {
-  margin-top: 60px;
+  // margin-top: 60px;
   padding: 2rem;
   text-align: center;
   min-width: 320px;
+  color: $font-color;
 
   h2 {
     font-size: 2rem;
@@ -80,6 +81,7 @@
   // Grid de productos
   .products-grid {
     display: grid;
+    justify-items: center;
     grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
     gap: 2rem;
     padding: 1rem;
@@ -90,7 +92,7 @@
   // Tarjeta de producto
   .product-card {
     height: 100%;
-    background-color: #fefefe;
+    background-color: #f8f6ff;
     color: #333;
     border-radius: 12px;
     padding: 1rem;
@@ -144,7 +146,7 @@
       }
 
       .btn-add {
-        background-color: #00bcd4;
+        background-color: #198754;//#00bcd4;
         color: #fff;
         border: none;
         padding: 0.5rem 1rem;

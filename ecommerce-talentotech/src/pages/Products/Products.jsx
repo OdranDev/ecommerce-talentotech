@@ -12,8 +12,7 @@ import { db } from "../../auth/Firebase.js";
 import { CartContext } from "../../context/CartContext.jsx";
 import { GlobalContext } from "../../context/GlobalContext.jsx";
 import { Link } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify"; // Solo importar toast, no ToastContainer
 import { BsCartPlus } from "react-icons/bs";
 import Loader from "../../components/loader/Loader.jsx";
 import "./Products.scss";
@@ -33,14 +32,16 @@ function Products() {
   const [lastVisible, setLastVisible] = useState(null);
   const [pageStack, setPageStack] = useState([]);
   const [totalProductos, setTotalProductos] = useState(0);
+  const [initialized, setInitialized] = useState(false);
 
-  const paginaActual = pageStack.length;
+  // Corregir la lógica de paginación
+  const paginaActual = pageStack.length > 0 ? pageStack.length : 1;
   const totalPaginas = Math.ceil(totalProductos / PRODUCTS_PER_PAGE);
 
   const fetchProductos = async (direction = "next") => {
     try {
       setLoading(true);
-      toast.dismiss();
+      toast.dismiss(); // Limpiar todos los toasts previos
 
       let q = query(
         collection(db, "products"),
@@ -91,14 +92,15 @@ function Products() {
         setPageStack((prev) => prev.slice(0, -1));
       }
 
-      // Carga total de productos y categorías una sola vez
-      if (pageStack.length === 0) {
+      // Carga total de productos y categorías solo la primera vez
+      if (!initialized) {
         const allSnapshot = await getDocs(collection(db, "products"));
         const allData = allSnapshot.docs.map((doc) => doc.data());
         setTotalProductos(allData.length);
 
         const cats = Array.from(new Set(allData.map((p) => p.category)));
         setCategorias(cats);
+        setInitialized(true);
       }
     } catch (error) {
       console.error("Error al obtener productos:", error);
@@ -123,7 +125,9 @@ function Products() {
 
   const handleAddToCart = (producto) => {
     addToCart(producto);
-    toast.success("Producto agregado al carrito 🛒");
+    toast.success("Producto agregado al carrito 🛒", {
+      toastId: `cart-${producto.id}`, // ID único para evitar duplicados
+    });
     setAgregadoId(producto.id);
     setTimeout(() => setAgregadoId(null), 1000);
   };
@@ -227,45 +231,38 @@ function Products() {
             )}
           </div>
 
-          {/* Info de paginación */}
-          <div className="pagination-info">
-            <p>
-              Página <strong>{paginaActual}</strong> de{" "}
-              <strong>{totalPaginas}</strong> | Total productos:{" "}
-              <strong>{totalProductos}</strong>
-            </p>
-          </div>
+          {/* Info de paginación - Solo mostrar si hay más de 1 página */}
+          {totalPaginas > 1 && (
+            <div className="pagination-info">
+              <p>
+                Página <strong>{paginaActual}</strong> de{" "}
+                <strong>{totalPaginas}</strong> | Total productos:{" "}
+                <strong>{totalProductos}</strong>
+              </p>
+            </div>
+          )}
 
-          {/* Controles de paginación */}
-          <div className="pagination-controls">
-            <button
-              disabled={pageStack.length <= 1}
-              onClick={() => fetchProductos("prev")}
-            >
-              ← Anterior
-            </button>
-            <button
-              disabled={paginaActual >= totalPaginas}
-              onClick={() => fetchProductos("next")}
-            >
-              Siguiente →
-            </button>
-          </div>
+          {/* Controles de paginación - Solo mostrar si hay más de 1 página */}
+          {totalPaginas > 1 && (
+            <div className="pagination-controls">
+              <button
+                disabled={paginaActual <= 1}
+                onClick={() => fetchProductos("prev")}
+              >
+                ← Anterior
+              </button>
+              <button
+                disabled={paginaActual >= totalPaginas}
+                onClick={() => fetchProductos("next")}
+              >
+                Siguiente →
+              </button>
+            </div>
+          )}
         </>
       )}
 
-      <ToastContainer
-        position="top-right"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover={false}
-        limit={1}
-      />
+      {/* REMOVIDO: ToastContainer - ya está en App.jsx */}
     </div>
   );
 }

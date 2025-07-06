@@ -1,3 +1,6 @@
 // main.scss
 @import '@styles/variables';
 // @import '@styles/mixins'; // si lo necesitas más adelante
+main{
+    background-color: $primary-color;
+}
