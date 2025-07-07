@@ -1,9 +1,9 @@
+/* App.css */
 html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
   text-align: center;
-  /* background-color: #e5e4ee; */
 }
 
 .App-container {

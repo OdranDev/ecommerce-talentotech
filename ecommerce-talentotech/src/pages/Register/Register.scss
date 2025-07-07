@@ -1,49 +1,5 @@
-// Variables
-$primary-color: #10b981;
-$primary-hover: #059669;
-$primary-light: #d1fae5;
-$secondary-color: #f8fafc;
-$text-primary: #1e293b;
-$text-secondary: #64748b;
-$text-muted: #94a3b8;
-$border-color: #e2e8f0;
-$error-color: #ef4444;
-$success-color: #10b981;
-$warning-color: #f59e0b;
-$white: #ffffff;
-$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-
-// Breakpoints
-$mobile: 480px;
-$tablet: 768px;
-$desktop: 1024px;
-$large: 1280px;
-
-// Mixins
-@mixin flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@mixin transition($property: all, $duration: 0.3s, $timing: ease-in-out) {
-  transition: $property $duration $timing;
-}
-
-@mixin button-hover {
-  transform: translateY(-2px);
-  box-shadow: $shadow-lg;
-}
-
-@mixin input-focus {
-  outline: none;
-  border-color: $primary-color;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-}
-
+@import '@styles/variables';
+@import '@styles/mixins';
 // Estilos del contenedor principal
 .register-container {
   min-height: 100vh;

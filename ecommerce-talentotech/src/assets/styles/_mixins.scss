@@ -1,0 +1,37 @@
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin transition($property: all, $duration: 0.3s, $timing: ease-in-out) {
+  transition: $property $duration $timing;
+}
+
+@mixin button-hover {
+  transform: translateY(-2px);
+  box-shadow: $shadow-lg;
+}
+
+@mixin input-focus {
+  outline: none;
+  border-color: $primary-color;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  // box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+@mixin reduce-motion {
+  scroll-behavior: auto;
+}
+
+@mixin smooth-transition {
+  @include transition(all, 0.2s, ease-in-out);
+}
+
+@mixin container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
