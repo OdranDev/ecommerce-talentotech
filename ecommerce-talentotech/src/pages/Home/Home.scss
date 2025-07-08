@@ -3,6 +3,7 @@
 .home {
   padding: 0 1rem;
   text-align: center;
+  animation: fadeIn 0.4s ease-in;
 
   .hero {
     background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
@@ -61,10 +62,9 @@
     }
 
     .product-slider {
-      padding: 1rem 2.5rem; // espacio lateral para no chocar con flechas
-      // display: grid;
-      // grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      // gap: 25px;
+      padding: 1rem 2.5rem; 
+      animation: fadeIn 0.4s ease-in;
+
 
       .slider-card {
         width: 100%;
@@ -154,5 +154,17 @@
   .swiper-button-prev,
   .swiper-button-next {
     display: none !important;
+  }
+}
+
+// Animación de entrada suave
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

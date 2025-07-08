@@ -71,6 +71,7 @@ function Products() {
 
       if (docs.length === 0) {
         setTimeout(() => {
+          toast.dismiss(); // Limpiar todos los toasts previos
           toast.info("No hay más productos para mostrar.", {
             autoClose: 2000,
           });
@@ -173,9 +174,9 @@ function Products() {
       </div>
 
       {loading ? (
-        <div className="loader-container" style={{ minHeight: "300px" }}>
+        <div>
           <Loader />
-          <p>Cargando productos...</p>
+          {/* <p>Cargando productos...</p> */}
         </div>
       ) : (
         <>

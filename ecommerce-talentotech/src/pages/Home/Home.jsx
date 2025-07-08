@@ -54,7 +54,7 @@ const Home = () => {
 
   if (cargando) {
     return (
-      <div className="home">
+      <div className="home" style={{minHeight: "600px"}}>
         <section className="hero">
           <div className="hero-content">
             <h1>TalentoTech Shop</h1>
@@ -66,7 +66,7 @@ const Home = () => {
         </section>
         <h2>🏆 Productos Mejor Calificados</h2>
         <Loader />
-        <p>Cargando productos...</p>
+        {/* <p>Cargando productos...</p> */}
       </div>
     );
   }
@@ -85,7 +85,7 @@ const Home = () => {
           </Link>
         </div>
       </section>
-
+      
       {/* SLIDER */}
       <section className="featured-products">
         <h2>🏆 Productos Mejor Calificados</h2>

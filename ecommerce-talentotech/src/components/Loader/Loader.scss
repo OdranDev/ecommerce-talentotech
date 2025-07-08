@@ -1,73 +1,430 @@
-// src/components/Loader.scss
-.loader-container {
+// // ===== LOADER.SCSS =====
+// // src/components/Loader.scss
+// // Variables
+// $loader-primary-color: #00bcd4;
+// $loader-secondary-color: #2196f3;
+// $loader-size: 96px;
+// $animation-duration: 1s;
+// $animation-delay: 0.4s;
+
+// // Loader container
+// .loader-container {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   flex-direction: column;
+//   padding: 2rem;
+//   background: white;
+//   border-radius: 10px;
+//   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+// }
+
+// // Main loader element
+// .loader {
+//   position: relative;
+//   border-radius: 50%;
+//   width: $loader-size;
+//   height: $loader-size;
+//   color: $loader-primary-color;
+//   margin: 2rem auto;
+//   display: block;
+//   z-index: 9999;
+//   background: transparent;
+
+//   // Crear 8 líneas radiales con gradientes
+//   &::before,
+//   &::after {
+//     content: '';
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     width: 100%;
+//     height: 100%;
+//     border-radius: 50%;
+//     background: transparent;
+//     animation: spin $animation-duration linear infinite;
+//   }
+
+//   &::before {
+//     background: 
+//       linear-gradient(0deg, transparent 40%, $loader-primary-color 40%, $loader-primary-color 60%, transparent 60%),
+//       linear-gradient(45deg, transparent 40%, $loader-secondary-color 40%, $loader-secondary-color 60%, transparent 60%),
+//       linear-gradient(90deg, transparent 40%, $loader-primary-color 40%, $loader-primary-color 60%, transparent 60%),
+//       linear-gradient(135deg, transparent 40%, $loader-secondary-color 40%, $loader-secondary-color 60%, transparent 60%),
+//       linear-gradient(180deg, transparent 40%, $loader-primary-color 40%, $loader-primary-color 60%, transparent 60%),
+//       linear-gradient(225deg, transparent 40%, $loader-secondary-color 40%, $loader-secondary-color 60%, transparent 60%),
+//       linear-gradient(270deg, transparent 40%, $loader-primary-color 40%, $loader-primary-color 60%, transparent 60%),
+//       linear-gradient(315deg, transparent 40%, $loader-secondary-color 40%, $loader-secondary-color 60%, transparent 60%);
+//   }
+
+//   &::after {
+//     animation-delay: $animation-delay;
+//   }
+// }
+
+// // Keyframes for spinning animation
+// @keyframes spin {
+//   0% {
+//     transform: rotate(0deg);
+//   }
+//   100% {
+//     transform: rotate(360deg);
+//   }
+// }
+
+// // ===== LOADER.JSX =====
+// // Importar React desde 'react'
+// // import React from "react";
+// // import "./Loader.scss";
+
+// // export default function Loader() {
+// //   return (
+// //     <div className="loader-container">
+// //       <span className="loader"></span>
+// //     </div>
+// //   );
+// // }
+
+// CartLoader.scss
+.cart-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  
+  // Tamaños predefinidos
+  &.small {
+    .cart-loader {
+      width: 40px;
+      height: 40px;
+      
+      .cart {
+        width: 28px;
+        height: 20px;
+        border-width: 2px;
+        
+        .cart-handle {
+          width: 10px;
+          height: 14px;
+          border-width: 2px;
+          right: -10px;
+          top: -3px;
+        }
+        
+        .cart-wheel {
+          width: 5px;
+          height: 5px;
+          bottom: -10px;
+          
+          &.cart-wheel-left { left: 4px; }
+          &.cart-wheel-right { right: 4px; }
+        }
+      }
+      
+      .cart-items {
+        .item {
+          width: 4px;
+          height: 4px;
+        }
+      }
+    }
+    
+    .cart-loader-text {
+      font-size: 12px;
+    }
+  }
+  
+  &.medium {
+    .cart-loader {
+      width: 60px;
+      height: 60px;
+      
+      .cart {
+        width: 40px;
+        height: 30px;
+        border-width: 3px;
+        
+        .cart-handle {
+          width: 15px;
+          height: 20px;
+          border-width: 3px;
+          right: -15px;
+          top: -5px;
+        }
+        
+        .cart-wheel {
+          width: 8px;
+          height: 8px;
+          bottom: -15px;
+          
+          &.cart-wheel-left { left: 5px; }
+          &.cart-wheel-right { right: 5px; }
+        }
+      }
+      
+      .cart-items {
+        .item {
+          width: 6px;
+          height: 6px;
+        }
+      }
+    }
+    
+    .cart-loader-text {
+      font-size: 14px;
+    }
+  }
+  
+  &.large {
+    .cart-loader {
+      width: 80px;
+      height: 80px;
+      
+      .cart {
+        width: 55px;
+        height: 40px;
+        border-width: 4px;
+        
+        .cart-handle {
+          width: 20px;
+          height: 28px;
+          border-width: 4px;
+          right: -20px;
+          top: -7px;
+        }
+        
+        .cart-wheel {
+          width: 12px;
+          height: 12px;
+          bottom: -20px;
+          
+          &.cart-wheel-left { left: 8px; }
+          &.cart-wheel-right { right: 8px; }
+        }
+      }
+      
+      .cart-items {
+        .item {
+          width: 8px;
+          height: 8px;
+        }
+      }
+    }
+    
+    .cart-loader-text {
+      font-size: 16px;
+    }
+  }
+}
+
+.cart-loader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .cart {
+    position: relative;
+    border: 3px solid #007bff;
+    border-radius: 4px;
+    background: transparent;
+    animation: cart-move 2s ease-in-out infinite;
+    
+    .cart-handle {
+      position: absolute;
+      border: 3px solid #007bff;
+      border-right: none;
+      border-radius: 8px 0 0 8px;
+      background: transparent;
+    }
+    
+    .cart-wheel {
+      position: absolute;
+      border-radius: 50%;
+      background: #007bff;
+      animation: wheel-spin 0.8s linear infinite;
+      
+      &.cart-wheel-left {
+        animation-delay: 0s;
+      }
+      
+      &.cart-wheel-right {
+        animation-delay: -0.4s;
+      }
+    }
+  }
+  
+  .cart-items {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    
+    .item {
+      width: 6px;
+      height: 6px;
+      background: #007bff;
+      border-radius: 2px;
+      opacity: 0;
+      animation: item-bounce 2s ease-in-out infinite;
+      
+      &.item-1 {
+        animation-delay: 0.2s;
+      }
+      
+      &.item-2 {
+        animation-delay: 0.4s;
+      }
+      
+      &.item-3 {
+        animation-delay: 0.6s;
+      }
+    }
+  }
+}
+
+.cart-loader-text {
+  color: #007bff;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  margin: 0;
+  animation: text-fade 2s ease-in-out infinite;
+}
+
+// Animaciones
+@keyframes cart-move {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(8px);
+  }
+  50% {
+    transform: translateX(16px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+
+@keyframes wheel-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes item-bounce {
+  0%, 20%, 100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes text-fade {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// Variaciones de color
+.cart-loader-container {
+  &.primary {
+    .cart, .cart-handle, .cart-wheel, .item {
+      border-color: #007bff !important;
+      background-color: #007bff !important;
+    }
+    .cart-loader-text {
+      color: #007bff !important;
+    }
+  }
+  
+  &.success {
+    .cart, .cart-handle, .cart-wheel, .item {
+      border-color: #28a745 !important;
+      background-color: #28a745 !important;
+    }
+    .cart-loader-text {
+      color: #28a745 !important;
+    }
+  }
+  
+  &.warning {
+    .cart, .cart-handle, .cart-wheel, .item {
+      border-color: #ffc107 !important;
+      background-color: #ffc107 !important;
+    }
+    .cart-loader-text {
+      color: #ffc107 !important;
+    }
+  }
+  
+  &.danger {
+    .cart, .cart-handle, .cart-wheel, .item {
+      border-color: #dc3545 !important;
+      background-color: #dc3545 !important;
+    }
+    .cart-loader-text {
+      color: #dc3545 !important;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .cart-loader-container {
+    &.large {
+      .cart-loader {
+        width: 60px;
+        height: 60px;
+      }
+    }
+    
+    &.medium {
+      .cart-loader {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  }
+}
+
+// Overlay para pantalla completa
+.cart-loader-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
-  background: rgba(255, 255, 255, 0.8);
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
   display: flex;
-  justify-content: center;
   align-items: center;
-  flex-direction: column;
-}
-
-.loader {
-  position: relative;
-  transform: rotateZ(45deg);
-  perspective: 1000px;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  color: #00bcd4;
-  margin: 3rem auto;
-  display: block;
-}
-
-.loader:before,
-.loader:after {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: inherit;
-  height: inherit;
-  border-radius: 50%;
-  transform: rotateX(70deg);
-  animation: 1s spin linear infinite;
-}
-
-.loader:after {
-  color: #2196f3;
-  transform: rotateY(70deg);
-  animation-delay: .4s;
-}
-
-@keyframes spin {
-  0%, 100% {
-    box-shadow: .2em 0px 0 0px currentcolor;
-  }
-  12% {
-    box-shadow: .2em .2em 0 0 currentcolor;
-  }
-  25% {
-    box-shadow: 0 .2em 0 0px currentcolor;
-  }
-  37% {
-    box-shadow: -.2em .2em 0 0 currentcolor;
-  }
-  50% {
-    box-shadow: -.2em 0 0 0 currentcolor;
-  }
-  62% {
-    box-shadow: -.2em -.2em 0 0 currentcolor;
-  }
-  75% {
-    box-shadow: 0px -.2em 0 0 currentcolor;
-  }
-  87% {
-    box-shadow: .2em -.2em 0 0 currentcolor;
+  justify-content: center;
+  z-index: 9999;
+  
+  &.dark {
+    background: rgba(0, 0, 0, 0.8);
+    
+    .cart-loader-text {
+      color: #fff !important;
+    }
   }
 }
