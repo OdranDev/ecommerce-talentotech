@@ -1,7 +1,10 @@
 /* src/pages/Admin/AdminDashboard.css */
+@import '@styles/variables';
+@import '@styles/mixins';
 .admin-dashboard {
   padding: 2rem;
   text-align: left;
+  @include fadeIn;
 }
 
 .admin-dashboard h2 {
@@ -55,3 +58,4 @@
 .admin-card:hover {
   transform: translateY(-3px);
 }
+

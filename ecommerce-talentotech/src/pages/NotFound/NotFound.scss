@@ -1,0 +1,9 @@
+@import '@styles/variables';
+@import '@styles/mixins';
+
+.notFound{
+    padding: '2rem'; 
+    text-align: center;
+    @include fadeIn
+
+}

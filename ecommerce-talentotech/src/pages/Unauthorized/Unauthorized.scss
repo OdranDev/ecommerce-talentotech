@@ -1,0 +1,8 @@
+@import '@styles/variables';
+@import '@styles/mixins';
+
+.unAuthorized{
+    text-align: "center"; 
+    padding: "4rem";
+    @include fadeIn;
+}

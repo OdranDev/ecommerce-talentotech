@@ -1,3 +1,5 @@
+@import '@styles/variables';
+@import '@styles/mixins';
 .cart-container {
   max-width: 900px;
   margin: 2rem auto;
@@ -7,6 +9,7 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   color: #333;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  @include fadeIn;
 
   h2 {
     text-align: center;
@@ -267,17 +270,5 @@ button.qty-btn {
         background-color: #3498db;
       }
     }
-  }
-}
-
-// Animación de entrada suave
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }

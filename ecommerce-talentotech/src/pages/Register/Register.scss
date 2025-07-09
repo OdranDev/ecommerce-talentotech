@@ -8,6 +8,7 @@
   padding: 1rem;
   position: relative;
   overflow: hidden;
+  @include fadeIn;
 
   // Efecto de fondo animado
   &::before {
