@@ -8,6 +8,8 @@ import {
   FaLock,
   FaKey
 } from 'react-icons/fa';
+import { db } from '../../auth/Firebase'; // ✅ importar DB
+import { setDoc, doc } from 'firebase/firestore'; // ✅ importar funciones Firestore
 import './Register.scss';
 
 function Register() {
@@ -95,7 +97,16 @@ function Register() {
 
     setLoading(true);
     try {
-      await register(formData.email, formData.password);
+      // Registrar usuario
+      const userCredential = await register(formData.email, formData.password);
+      const user = userCredential.user;
+
+      // ✅ Guardar fullName en Firestore usando el UID como ID del documento
+      await setDoc(doc(db, "users", user.uid), {
+        fullName: formData.name,
+        email: formData.email,
+      });
+
       toast.success('¡Registro exitoso! Bienvenido');
       navigate('/');
     } catch (err) {
