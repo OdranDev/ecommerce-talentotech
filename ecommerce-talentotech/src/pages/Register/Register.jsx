@@ -2,14 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import {
-  FaUser,
-  FaEnvelope,
-  FaLock,
-  FaKey
-} from 'react-icons/fa';
-import { db } from '../../auth/Firebase'; // ✅ importar DB
-import { setDoc, doc } from 'firebase/firestore'; // ✅ importar funciones Firestore
+import { FaUser, FaEnvelope, FaLock, FaKey } from 'react-icons/fa';
 import './Register.scss';
 
 function Register() {
@@ -40,18 +33,12 @@ function Register() {
   };
 
   const evaluatePasswordStrength = (password) => {
-    if (!password) {
-      setPasswordStrength('');
-      return;
-    }
-
     let strength = 0;
     if (password.length >= 8) strength++;
     if (/[A-Z]/.test(password)) strength++;
     if (/[a-z]/.test(password)) strength++;
     if (/[0-9]/.test(password)) strength++;
     if (/[^A-Za-z0-9]/.test(password)) strength++;
-
     if (strength <= 2) setPasswordStrength('weak');
     else if (strength <= 4) setPasswordStrength('medium');
     else setPasswordStrength('strong');
@@ -59,32 +46,14 @@ function Register() {
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'El nombre es requerido';
-    }
-
-    if (!formData.email) {
-      newErrors.email = 'El correo es requerido';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'El correo no es válido';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'La contraseña es requerida';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Confirma tu contraseña';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden';
-    }
-
-    if (!acceptedTerms) {
-      newErrors.terms = 'Debes aceptar los términos y condiciones';
-    }
+    if (!formData.name.trim()) newErrors.name = 'El nombre es requerido';
+    if (!formData.email) newErrors.email = 'El correo es requerido';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'El correo no es válido';
+    if (!formData.password) newErrors.password = 'La contraseña es requerida';
+    else if (formData.password.length < 8) newErrors.password = 'Debe tener al menos 8 caracteres';
+    if (!formData.confirmPassword) newErrors.confirmPassword = 'Confirma tu contraseña';
+    else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Las contraseñas no coinciden';
+    if (!acceptedTerms) newErrors.terms = 'Debes aceptar los términos';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -92,24 +61,25 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
-
     setLoading(true);
-    try {
-      // Registrar usuario
-      const userCredential = await register(formData.email, formData.password);
-      const user = userCredential.user;
 
-      // ✅ Guardar fullName en Firestore usando el UID como ID del documento
-      await setDoc(doc(db, "users", user.uid), {
-        fullName: formData.name,
-        email: formData.email,
-      });
+    try {
+      // 🔹 Pasar los datos del usuario a la función register
+      const userCredential = await register(
+        formData.email, 
+        formData.password, 
+        {
+          fullName: formData.name, // 🔹 Pasar el nombre como fullName
+          comment: '', // 🔹 Puedes agregar un campo de comentario si lo necesitas
+          // Puedes agregar más campos aquí si los necesitas
+        }
+      );
 
       toast.success('¡Registro exitoso! Bienvenido');
       navigate('/');
     } catch (err) {
+      console.error('Error en registro:', err); // 🔹 Para debugging
       toast.error(err.message || 'Error al registrarse');
     } finally {
       setLoading(false);

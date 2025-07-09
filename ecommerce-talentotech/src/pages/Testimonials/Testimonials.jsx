@@ -17,15 +17,39 @@ export default function Testimonials() {
         
         const snapshot = await getDocs(collection(db, "users"));
         const data = snapshot.docs
-          .map(doc => ({
-            id: doc.id,
-            name: doc.data().fullName,
-            comment: doc.data().comment,
-            avatar: doc.data().avatar || null,
-            rating: doc.data().rating || 5,
-            location: doc.data().location || null,
-            date: doc.data().createdAt || new Date()
-          }))
+          .map(doc => {
+            const docData = doc.data();
+            
+            // 🔹 Manejar correctamente las fechas de Firebase
+            let date = new Date(); // fecha por defecto
+            if (docData.createdAt) {
+              // Si es un Timestamp de Firebase
+              if (docData.createdAt.toDate) {
+                date = docData.createdAt.toDate();
+              } 
+              // Si es un string o número que se puede convertir
+              else if (typeof docData.createdAt === 'string' || typeof docData.createdAt === 'number') {
+                const parsedDate = new Date(docData.createdAt);
+                if (!isNaN(parsedDate.getTime())) {
+                  date = parsedDate;
+                }
+              }
+              // Si ya es un objeto Date válido
+              else if (docData.createdAt instanceof Date && !isNaN(docData.createdAt.getTime())) {
+                date = docData.createdAt;
+              }
+            }
+
+            return {
+              id: doc.id,
+              name: docData.fullName,
+              comment: docData.comment,
+              avatar: docData.avatar || null,
+              rating: docData.rating || 5,
+              location: docData.location || null,
+              date: date
+            };
+          })
           .filter(item => item.comment && item.name) // Solo mostrar testimonios con comentario y nombre
           .sort((a, b) => new Date(b.date) - new Date(a.date)); // Ordenar por fecha más reciente
         
@@ -69,10 +93,20 @@ export default function Testimonials() {
   };
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('es-ES', {
-      month: 'short',
-      year: 'numeric'
-    });
+    // 🔹 Validación adicional para asegurar que la fecha es válida
+    if (!date || isNaN(new Date(date).getTime())) {
+      return 'Reciente'; // Texto por defecto si la fecha no es válida
+    }
+    
+    try {
+      return new Date(date).toLocaleDateString('es-ES', {
+        month: 'short',
+        year: 'numeric'
+      });
+    } catch (error) {
+      console.error('Error al formatear fecha:', error);
+      return 'Reciente';
+    }
   };
 
   const nextTestimonial = () => {
@@ -204,7 +238,7 @@ export default function Testimonials() {
                 <blockquote className="comment">
                   "{comment}"
                 </blockquote>
-              </article>
+                </article>
             ))}
           </div>
           

@@ -8,25 +8,36 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 
 const AuthContext = createContext();
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
 
-export function AuthProvider({ children }) {
+const useAuth = () => {
+  return useContext(AuthContext);
+};
+
+
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const register = async (email, password) => {
+  
+  const register = async (email, password, userData = {}) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
+    
+    
     await setDoc(doc(db, "users", res.user.uid), {
       email,
-      role: "user",
+      role: "user", // rol por defecto
+      fullName: userData.fullName || "",
+      comment: userData.comment || "",
+      createdAt: serverTimestamp(),
+      ...userData 
     });
+
+    return res;
   };
 
   const login = (email, password) =>
@@ -60,4 +71,8 @@ export function AuthProvider({ children }) {
       {!loading && children}
     </AuthContext.Provider>
   );
-}
+};
+
+// 🔹 Exportaciones como default y named exports
+export default AuthProvider;
+export { useAuth };
