@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../auth/Firebase";
 import Loader from "../../components/loader/Loader";
-import Testimonials from "./Testimonials";
+import Testimonials from "../Testimonials/Testimonials";
 import { GlobalContext } from "../../context/GlobalContext";
 import "./Home.scss";
 
@@ -128,12 +128,9 @@ const Home = () => {
           <p>No hay productos con calificación suficiente.</p>
         )}
       </section>
-
-      {/* TESTIMONIOS */}
-      <section className="testimonials">
-        <h2>Lo que dicen nuestros clientes</h2>
+      
         <Testimonials />
-      </section>
+
     </div>
   );
 };
