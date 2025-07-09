@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -14,9 +14,11 @@ import {
 import { db } from "../../auth/Firebase";
 import Loader from "../../components/loader/Loader";
 import Testimonials from "./Testimonials";
+import { GlobalContext } from "../../context/GlobalContext";
 import "./Home.scss";
 
 const Home = () => {
+  const { titulo } = useContext(GlobalContext);
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -57,7 +59,7 @@ const Home = () => {
       <div className="home" style={{minHeight: "600px"}}>
         <section className="hero">
           <div className="hero-content">
-            <h1>TalentoTech Shop</h1>
+            <h1>{ titulo }</h1>
             <p>Productos inteligentes.</p>
             <Link to="/products">
               <button className="cta-button">Ver productos</button>
@@ -78,7 +80,7 @@ const Home = () => {
       {/* HERO */}
       <section className="hero">
         <div className="hero-content">
-          <h1>TalentoTech Shop</h1>
+          <h1>{ titulo }</h1>
           <p>Branding, diseño y productos inteligentes.</p>
           <Link to="/products">
             <button className="cta-button">Ver productos</button>

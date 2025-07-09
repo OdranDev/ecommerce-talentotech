@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   FaPhone,
   FaEnvelope,
@@ -10,9 +10,11 @@ import {
   FaLinkedin,
   FaPaperPlane
 } from "react-icons/fa";
+import { GlobalContext } from "../../context/GlobalContext";
 import "./Contact.scss";
 
 export default function Contact() {
+  const { titulo } = useContext(GlobalContext);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -169,8 +171,8 @@ export default function Contact() {
                   <div className="card-icon"><FaEnvelope /></div>
                   <div className="card-content">
                     <h3>Email</h3>
-                    <p>info@miempresa.com.ar</p>
-                    <p>soporte@miempresa.com.ar</p>
+                    <p>info@{titulo}.com.ar</p>
+                    <p>soporte@{titulo}.com.ar</p>
                   </div>
                 </div>
 
