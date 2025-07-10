@@ -1,47 +1,51 @@
-// // src/components/Loader.jsx
-// import React from "react";
-// import "./Loader.scss";
-
-// export default function Loader() {
-//   return (
-//     <div className="loader-container">
-//       <span className="loader"></span>
-//     </div>
-//   );
-// }
-
-// CartLoader.jsx
 import React from 'react';
 import './Loader.scss';
 
-const CartLoader = ({ 
-  size = 'large', 
-  color = '#007bff', 
+const Loader = ({
+  size = 'medium',
+  variant = 'primary',
+  text = 'Cargando...',
   className = '',
-  text = 'Cargando...' 
+  overlay = false,
+  overlayDark = false,
+  'aria-label': ariaLabel = 'Cargando contenido'
 }) => {
-  return (
-    <div className={`cart-loader-container ${size} ${className}`}>
+  const loaderContent = (
+    <div 
+      className={`cart-loader-container ${size} ${variant} ${className}`}
+      role="status"
+      aria-label={ariaLabel}
+      aria-live="polite"
+    >
       <div className="cart-loader">
-        <div className="cart" style={{ borderColor: color }}>
-          <div className="cart-handle" style={{ borderColor: color }}></div>
-          <div className="cart-wheel cart-wheel-left" style={{ backgroundColor: color }}></div>
-          <div className="cart-wheel cart-wheel-right" style={{ backgroundColor: color }}></div>
+        <div className="cart">
+          <div className="cart-handle"></div>
+          <div className="cart-wheel cart-wheel-left"></div>
+          <div className="cart-wheel cart-wheel-right"></div>
         </div>
         <div className="cart-items">
-          <div className="item item-1" style={{ backgroundColor: color }}></div>
-          <div className="item item-2" style={{ backgroundColor: color }}></div>
-          <div className="item item-3" style={{ backgroundColor: color }}></div>
+          <div className="item item-1"></div>
+          <div className="item item-2"></div>
+          <div className="item item-3"></div>
         </div>
       </div>
-      {text && <p className="cart-loader-text" style={{ color }}>{text}</p>}
+      {text && (
+        <p className="cart-loader-text">
+          {text}
+        </p>
+      )}
     </div>
   );
+
+  if (overlay) {
+    return (
+      <div className={`cart-loader-overlay ${overlayDark ? 'dark' : ''}`}>
+        {loaderContent}
+      </div>
+    );
+  }
+
+  return loaderContent;
 };
 
-export default CartLoader;
-
-// Ejemplo de uso:
-// <CartLoader size="large" color="#e74c3c" text="Procesando compra..." />
-// <CartLoader size="small" color="#2ecc71" />
-// <CartLoader className="my-custom-loader" />
+export default Loader;
