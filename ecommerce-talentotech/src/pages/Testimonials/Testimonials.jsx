@@ -20,7 +20,7 @@ export default function Testimonials() {
           .map(doc => {
             const docData = doc.data();
             
-            // 🔹 Manejar correctamente las fechas de Firebase
+            // Manejar correctamente las fechas de Firebase
             let date = new Date(); // fecha por defecto
             if (docData.createdAt) {
               // Si es un Timestamp de Firebase
@@ -93,7 +93,7 @@ export default function Testimonials() {
   };
 
   const formatDate = (date) => {
-    // 🔹 Validación adicional para asegurar que la fecha es válida
+    // Validación adicional para asegurar que la fecha es válida
     if (!date || isNaN(new Date(date).getTime())) {
       return 'Reciente'; // Texto por defecto si la fecha no es válida
     }
@@ -120,10 +120,12 @@ export default function Testimonials() {
   if (loading) {
     return (
       <section className="testimonials-container">
-        <h2 className="section-title">Lo que dicen nuestros clientes</h2>
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p className="loading-text">Cargando testimonios...</p>
+        <div className="container">
+          <h2 className="section-title">Lo que dicen nuestros clientes</h2>
+          <div className="loading-container">
+            <div className="spinner"></div>
+            <p className="loading-text">Cargando testimonios...</p>
+          </div>
         </div>
       </section>
     );
@@ -132,15 +134,17 @@ export default function Testimonials() {
   if (error) {
     return (
       <section className="testimonials-container">
-        <h2 className="section-title">Lo que dicen nuestros clientes</h2>
-        <div className="error-container">
-          <p className="error-text">{error}</p>
-          <button 
-            className="retry-btn"
-            onClick={() => window.location.reload()}
-          >
-            Intentar nuevamente
-          </button>
+        <div className="container">
+          <h2 className="section-title">Lo que dicen nuestros clientes</h2>
+          <div className="error-container">
+            <p className="error-text">{error}</p>
+            <button 
+              className="retry-btn"
+              onClick={() => window.location.reload()}
+            >
+              Intentar nuevamente
+            </button>
+          </div>
         </div>
       </section>
     );
@@ -149,10 +153,12 @@ export default function Testimonials() {
   if (feedback.length === 0) {
     return (
       <section className="testimonials-container">
-        <h2 className="section-title">Lo que dicen nuestros clientes</h2>
-        <div className="empty-state">
-          <div className="empty-icon">💬</div>
-          <p className="empty-text">Próximamente verás aquí los testimonios de nuestros clientes.</p>
+        <div className="container">
+          <h2 className="section-title">Lo que dicen nuestros clientes</h2>
+          <div className="empty-state">
+            <div className="empty-icon">💬</div>
+            <p className="empty-text">Próximamente verás aquí los testimonios de nuestros clientes.</p>
+          </div>
         </div>
       </section>
     );
@@ -160,106 +166,108 @@ export default function Testimonials() {
 
   return (
     <section className="testimonials-container">
-      <div className="testimonials-header">
-        <h2 className="section-title">Lo que dicen nuestros clientes</h2>
-        <p className="section-subtitle">
-          Descubre por qué más de {feedback.length} personas confían en nosotros
-        </p>
-      </div>
+      <div className="container">
+        <div className="testimonials-header">
+          <h2 className="section-title">Lo que dicen nuestros clientes</h2>
+          <p className="section-subtitle">
+            Descubre por qué más de {feedback.length} personas confían en nosotros
+          </p>
+        </div>
 
-      {/* Vista Desktop - Grid */}
-      <div className="testimonials-grid desktop-view">
-        {feedback.map(({ id, comment, name, avatar, rating, location, date }) => (
-          <article className="testimonial" key={id}>
-            <div className="testimonial-header">
-              <div className="user-info">
-                <div className="avatar">
-                  {avatar ? (
-                    <img src={avatar} alt={name} />
-                  ) : (
-                    <span className="initials">{getInitials(name)}</span>
-                  )}
+        {/* Vista Desktop - Grid */}
+        <div className="testimonials-grid desktop-view">
+          {feedback.map(({ id, comment, name, avatar, rating, location, date }) => (
+            <article className="testimonial" key={id}>
+              <div className="testimonial-header">
+                <div className="user-info">
+                  <div className="avatar">
+                    {avatar ? (
+                      <img src={avatar} alt={name} />
+                    ) : (
+                      <span className="initials">{getInitials(name)}</span>
+                    )}
+                  </div>
+                  <div className="user-details">
+                    <h4 className="author">{name}</h4>
+                    {location && <p className="location">{location}</p>}
+                    <p className="date">{formatDate(date)}</p>
+                  </div>
                 </div>
-                <div className="user-details">
-                  <h4 className="author">{name}</h4>
-                  {location && <p className="location">{location}</p>}
-                  <p className="date">{formatDate(date)}</p>
+                <div className="rating">
+                  {renderStars(rating)}
                 </div>
               </div>
-              <div className="rating">
-                {renderStars(rating)}
-              </div>
+              
+              <blockquote className="comment">
+                "{comment}"
+              </blockquote>
+            </article>
+          ))}
+        </div>
+
+        {/* Vista Mobile - Carousel */}
+        <div className="testimonials-carousel mobile-view">
+          <div className="carousel-container">
+            <button 
+              className="carousel-btn prev" 
+              onClick={prevTestimonial}
+              aria-label="Testimonio anterior"
+            >
+              ❮
+            </button>
+            
+            <div className="carousel-track">
+              {feedback.map(({ id, comment, name, avatar, rating, location, date }, index) => (
+                <article 
+                  className={`testimonial ${index === currentIndex ? 'active' : ''}`}
+                  key={id}
+                >
+                  <div className="testimonial-header">
+                    <div className="user-info">
+                      <div className="avatar">
+                        {avatar ? (
+                          <img src={avatar} alt={name} />
+                        ) : (
+                          <span className="initials">{getInitials(name)}</span>
+                        )}
+                      </div>
+                      <div className="user-details">
+                        <h4 className="author">{name}</h4>
+                        {location && <p className="location">{location}</p>}
+                        <p className="date">{formatDate(date)}</p>
+                      </div>
+                    </div>
+                    <div className="rating">
+                      {renderStars(rating)}
+                    </div>
+                  </div>
+                  
+                  <blockquote className="comment">
+                    "{comment}"
+                  </blockquote>
+                </article>
+              ))}
             </div>
             
-            <blockquote className="comment">
-              "{comment}"
-            </blockquote>
-          </article>
-        ))}
-      </div>
-
-      {/* Vista Mobile - Carousel */}
-      <div className="testimonials-carousel mobile-view">
-        <div className="carousel-container">
-          <button 
-            className="carousel-btn prev" 
-            onClick={prevTestimonial}
-            aria-label="Testimonio anterior"
-          >
-            ❮
-          </button>
-          
-          <div className="carousel-track">
-            {feedback.map(({ id, comment, name, avatar, rating, location, date }, index) => (
-              <article 
-                className={`testimonial ${index === currentIndex ? 'active' : ''}`}
-                key={id}
-              >
-                <div className="testimonial-header">
-                  <div className="user-info">
-                    <div className="avatar">
-                      {avatar ? (
-                        <img src={avatar} alt={name} />
-                      ) : (
-                        <span className="initials">{getInitials(name)}</span>
-                      )}
-                    </div>
-                    <div className="user-details">
-                      <h4 className="author">{name}</h4>
-                      {location && <p className="location">{location}</p>}
-                      <p className="date">{formatDate(date)}</p>
-                    </div>
-                  </div>
-                  <div className="rating">
-                    {renderStars(rating)}
-                  </div>
-                </div>
-                
-                <blockquote className="comment">
-                  "{comment}"
-                </blockquote>
-                </article>
-            ))}
+            <button 
+              className="carousel-btn next" 
+              onClick={nextTestimonial}
+              aria-label="Siguiente testimonio"
+            >
+              ❯
+            </button>
           </div>
           
-          <button 
-            className="carousel-btn next" 
-            onClick={nextTestimonial}
-            aria-label="Siguiente testimonio"
-          >
-            ❯
-          </button>
-        </div>
-        
-        <div className="carousel-indicators">
-          {feedback.map((_, index) => (
-            <button
-              key={index}
-              className={`indicator ${index === currentIndex ? 'active' : ''}`}
-              onClick={() => setCurrentIndex(index)}
-              aria-label={`Ir al testimonio ${index + 1}`}
-            />
-          ))}
+          <div className="carousel-indicators">
+            {feedback.map((_, index) => (
+              <button
+                key={index}
+                className={`indicator ${index === currentIndex ? 'active' : ''}`}
+                onClick={() => setCurrentIndex(index)}
+                aria-label={`Ir al testimonio ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

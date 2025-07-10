@@ -12,6 +12,15 @@
   align-items: center;
 }
 
+@mixin display-grid {
+  display: grid;
+  justify-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: $spacing-lg;
+  padding: 1rem;
+  width: 100%;
+}
+
 @mixin transition($property: all, $duration: 0.3s, $timing: ease-in-out) {
   transition: $property $duration $timing;
 }

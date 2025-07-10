@@ -1,4 +1,4 @@
-@use '@styles/styles' as *;
+@use "@styles/styles" as *;
 
 .testimonials-container {
   padding: $spacing-xl 0;
@@ -17,25 +17,25 @@
       font-size: 2rem;
       font-weight: bold;
       color: $text-primary;
+      margin-bottom: $spacing-sm;
     }
 
     .section-subtitle {
       font-size: 1rem;
       color: $text-secondary;
-      margin-top: $spacing-sm;
     }
   }
 
   .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: $spacing-lg;
+    @include display-grid;
 
     .testimonial {
       background: $white;
       padding: $spacing-lg;
       border-radius: 0.5rem;
       box-shadow: $shadow-md;
+      width: 100%;
+      max-width: 350px;
       @include smooth-transition;
 
       &:hover {
@@ -44,8 +44,9 @@
 
       .testimonial-header {
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
         margin-bottom: $spacing-md;
 
         .user-info {
@@ -62,12 +63,18 @@
             color: $primary-color;
             font-size: 1rem;
             overflow: hidden;
+            flex-shrink: 0;
 
             img {
               width: 100%;
               height: 100%;
               object-fit: cover;
               border-radius: 50%;
+            }
+
+            .initials {
+              font-size: 0.875rem;
+              font-weight: 600;
             }
           }
 
@@ -82,6 +89,7 @@
             .location {
               font-size: 0.875rem;
               color: $text-muted;
+              margin-bottom: 0.1rem;
             }
 
             .date {
@@ -97,7 +105,7 @@
             color: $border-color;
 
             &.filled {
-              color: $primary-color;
+              color: #ffd700;
             }
           }
         }
@@ -106,6 +114,7 @@
       .comment {
         font-style: italic;
         color: $text-secondary;
+        line-height: 1.5;
       }
     }
   }
@@ -129,6 +138,7 @@
           color: $text-muted;
           cursor: pointer;
           padding: 0 $spacing-sm;
+          @include smooth-transition;
 
           &:hover {
             color: $primary-color;
@@ -137,19 +147,103 @@
 
         .carousel-track {
           display: flex;
-          overflow-x: hidden;
           width: 100%;
-          scroll-snap-type: x mandatory;
+          max-width: 320px;
+          overflow: hidden;
+          position: relative;
 
           .testimonial {
             flex: 0 0 100%;
-            scroll-snap-align: center;
             opacity: 0;
+            transform: translateX(100%);
             @include smooth-transition;
             padding: $spacing-lg;
+            background: $white;
+            border-radius: 0.5rem;
+            box-shadow: $shadow-md;
+            margin: 0 $spacing-xs;
+            position: absolute;
+            width: calc(100% - #{$spacing-xs * 2});
 
             &.active {
               opacity: 1;
+              transform: translateX(0);
+              position: relative;
+            }
+
+            .testimonial-header {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: $spacing-md;
+
+              .user-info {
+                display: flex;
+                gap: $spacing-md;
+
+                .avatar {
+                  width: 48px;
+                  height: 48px;
+                  border-radius: 50%;
+                  background-color: $primary-light;
+                  @include flex-center;
+                  font-weight: bold;
+                  color: $primary-color;
+                  font-size: 1rem;
+                  overflow: hidden;
+                  flex-shrink: 0;
+
+                  img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                  }
+
+                  .initials {
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                  }
+                }
+
+                .user-details {
+                  .author {
+                    font-weight: 600;
+                    color: $text-primary;
+                    font-size: 1rem;
+                    margin-bottom: 0.2rem;
+                  }
+
+                  .location {
+                    font-size: 0.875rem;
+                    color: $text-muted;
+                    margin-bottom: 0.1rem;
+                  }
+
+                  .date {
+                    font-size: 0.75rem;
+                    color: $text-muted;
+                  }
+                }
+              }
+
+              .rating {
+                .star {
+                  font-size: 1rem;
+                  color: $border-color;
+
+                  &.filled {
+                    color: #ffd700;
+                  }
+                }
+              }
+            }
+
+            .comment {
+              font-style: italic;
+              color: $text-secondary;
+              line-height: 1.5;
             }
           }
         }
@@ -159,18 +253,23 @@
         display: flex;
         justify-content: center;
         margin-top: $spacing-md;
+        gap: $spacing-xs;
 
         .indicator {
           width: 10px;
           height: 10px;
           border-radius: 50%;
           background: $border-color;
-          margin: 0 $spacing-xs;
           border: none;
           cursor: pointer;
+          @include smooth-transition;
 
           &.active {
             background: $primary-color;
+          }
+
+          &:hover {
+            background: $primary-hover;
           }
         }
       }
@@ -221,18 +320,29 @@
       margin-bottom: $spacing-sm;
     }
   }
-}
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+  .desktop-view {
+    @include display-grid;
+
+    @media (max-width: $tablet) {
+      display: none;
+    }
+  }
+
+  .mobile-view {
+    display: none;
+
+    @media (max-width: $tablet) {
+      display: block;
+    }
   }
 }
 
-.desktop-view {
-  display: block;
-
-  @media (max-width: $tablet) {
-    display: none;
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
