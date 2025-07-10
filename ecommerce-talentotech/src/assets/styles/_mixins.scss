@@ -1,4 +1,11 @@
+// styles/_mixins.scss
+
+@use "variables" as *; // accedemos a variables sin namespace
+
+//
 // Mixins
+//
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
@@ -18,7 +25,6 @@
   outline: none;
   border-color: $primary-color;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-  // box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
 @mixin reduce-motion {
@@ -38,7 +44,6 @@
 
 @mixin fadeIn {
   animation: fadeIn 0.4s ease-in;
-  // Animación de entrada suave
   @keyframes fadeIn {
     from {
       opacity: 0;

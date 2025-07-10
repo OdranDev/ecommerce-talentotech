@@ -1,0 +1,6 @@
+// styles/styles.scss
+
+@use 'variables' as *;
+@use 'mixins' as *;
+@forward 'variables';
+@forward 'mixins';

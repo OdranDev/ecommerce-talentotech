@@ -1,5 +1,5 @@
-@import '@styles/variables';
-@import '@styles/mixins';
+@use '@styles/styles' as *;
+
 // Estilos del contenedor principal
 .login-container {
   min-height: 100vh;
