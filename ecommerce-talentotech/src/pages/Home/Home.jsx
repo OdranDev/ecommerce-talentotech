@@ -54,30 +54,37 @@ const Home = () => {
 
   if (cargando) {
     return (
-      <div className="home" style={{ minHeight: "600px" }}>
+      <div className="home">
         <section className="hero">
+          <div className="hero-background">
+            <div className="hero-overlay"></div>
+          </div>
           <div className="hero-content">
-            <h1>{titulo}</h1>
+            <h1 className="hero-title">{titulo}</h1>
             <p className="hero-subtitle">
               Productos inteligentes que transforman tu experiencia
             </p>
-            <Link to="/products" className="cta-button" tabIndex="-1">
-              <button className="btn-primary" disabled>
+            <div className="hero-actions">
+              <Link to="/products" className="btn-primary btn-disabled" tabIndex="-1">
                 Ver productos
-              </button>
-            </Link>
+              </Link>
+            </div>
           </div>
         </section>
 
         <section className="featured-products">
           <div className="container">
-            <h2 className="section-title">
-              <span className="title-icon" role="img" aria-label="Trofeo">
-                🏆
-              </span>
-              Productos Mejor Calificados
-            </h2>
-            <Loader />
+            <div className="section-header">
+              <h2 className="section-title">
+                <span className="title-icon" role="img" aria-label="Trofeo">
+                  🏆
+                </span>
+                Productos Mejor Calificados
+              </h2>
+            </div>
+            <div className="loader-container">
+              <Loader />
+            </div>
           </div>
         </section>
       </div>
@@ -87,18 +94,20 @@ const Home = () => {
   if (error) {
     return (
       <div className="home">
-        <div className="error-container">
-          <div className="error-content">
-            <h2>¡Oops! Algo salió mal</h2>
-            <p className="error-message">{error}</p>
-            <button
-              onClick={() => window.location.reload()}
-              className="btn-secondary"
-            >
-              Intentar de nuevo
-            </button>
+        <section className="error-section">
+          <div className="container">
+            <div className="error-content">
+              <h2 className="error-title">¡Oops! Algo salió mal</h2>
+              <p className="error-message">{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="btn-secondary"
+              >
+                Intentar de nuevo
+              </button>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     );
   }
@@ -160,109 +169,111 @@ const Home = () => {
           </div>
 
           {topProductos.length > 0 ? (
-            <Swiper
-              modules={[Navigation, Pagination, Autoplay]}
-              spaceBetween={24}
-              slidesPerView={1}
-              breakpoints={{
-                480: { slidesPerView: 2, spaceBetween: 16 },
-                768: { slidesPerView: 3, spaceBetween: 20 },
-                1024: { slidesPerView: 4, spaceBetween: 24 },
-                1200: { slidesPerView: 5, spaceBetween: 24 },
-              }}
-              navigation={{
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-              }}
-              pagination={{
-                clickable: true,
-                el: ".swiper-pagination",
-              }}
-              autoplay={{
-                delay: 4000,
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-              }}
-              loop={topProductos.length > 4}
-              speed={600}
-              className="product-slider"
-              a11y={{
-                prevSlideMessage: "Producto anterior",
-                nextSlideMessage: "Producto siguiente",
-              }}
-            >
-              {topProductos.map((producto) => (
-                <SwiperSlide key={producto.id}>
-                  <article className="product-card">
-                    <Link
-                      to={`/products/${producto.id}`}
-                      className="product-link"
-                      aria-label={`Ver detalles de ${producto.title}`}
-                    >
-                      <div className="product-image-container">
-                        <img
-                          src={producto.image}
-                          alt={producto.title}
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.src = "/placeholder-image.jpg";
-                          }}
-                        />
-                        <div className="product-badge">
-                          <span className="badge-text">Destacado</span>
+            <div className="product-slider-container">
+              <Swiper
+                modules={[Navigation, Pagination, Autoplay]}
+                spaceBetween={24}
+                slidesPerView={1}
+                breakpoints={{
+                  480: { slidesPerView: 2, spaceBetween: 16 },
+                  768: { slidesPerView: 3, spaceBetween: 20 },
+                  1024: { slidesPerView: 4, spaceBetween: 24 },
+                  1200: { slidesPerView: 5, spaceBetween: 24 },
+                }}
+                navigation={{
+                  nextEl: ".swiper-button-next",
+                  prevEl: ".swiper-button-prev",
+                }}
+                pagination={{
+                  clickable: true,
+                  el: ".swiper-pagination",
+                }}
+                autoplay={{
+                  delay: 4000,
+                  disableOnInteraction: false,
+                  pauseOnMouseEnter: true,
+                }}
+                loop={topProductos.length > 4}
+                speed={600}
+                className="product-slider"
+                a11y={{
+                  prevSlideMessage: "Producto anterior",
+                  nextSlideMessage: "Producto siguiente",
+                }}
+              >
+                {topProductos.map((producto) => (
+                  <SwiperSlide key={producto.id}>
+                    <article className="product-card">
+                      <Link
+                        to={`/products/${producto.id}`}
+                        className="product-link"
+                        aria-label={`Ver detalles de ${producto.title}`}
+                      >
+                        <div className="product-image-container">
+                          <img
+                            src={producto.image}
+                            alt={producto.title}
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.src = "/placeholder-image.jpg";
+                            }}
+                          />
+                          <div className="product-badge">
+                            <span className="badge-text">Destacado</span>
+                          </div>
                         </div>
-                      </div>
-                      <div className="product-info">
-                        <h3 className="product-title">
-                          {producto.title.length > 35
-                            ? `${producto.title.slice(0, 35)}...`
-                            : producto.title}
-                        </h3>
-                        <div className="product-rating">
-                          <span
-                            className="rating-stars"
-                            aria-label={`${
-                              producto.rating?.average || 0
-                            } estrellas`}
-                          >
-                            {"⭐".repeat(
-                              Math.round(producto.rating?.average || 0)
-                            )}
-                          </span>
-                          <span className="rating-text">
-                            {producto.rating?.average?.toFixed(1) || 0}
-                          </span>
-                          <span className="rating-count">
-                            ({producto.rating?.count || 0})
-                          </span>
+                        <div className="product-info">
+                          <h3 className="product-title">
+                            {producto.title.length > 35
+                              ? `${producto.title.slice(0, 35)}...`
+                              : producto.title}
+                          </h3>
+                          <div className="product-rating">
+                            <span
+                              className="rating-stars"
+                              aria-label={`${
+                                producto.rating?.average || 0
+                              } estrellas`}
+                            >
+                              {"⭐".repeat(
+                                Math.round(producto.rating?.average || 0)
+                              )}
+                            </span>
+                            <span className="rating-text">
+                              {producto.rating?.average?.toFixed(1) || 0}
+                            </span>
+                            <span className="rating-count">
+                              ({producto.rating?.count || 0})
+                            </span>
+                          </div>
+                          <div className="product-price">${producto.price}</div>
                         </div>
-                        <div className="product-price">${producto.price}</div>
-                      </div>
-                    </Link>
-                  </article>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+                      </Link>
+                    </article>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+
+              {/* Navigation buttons */}
+              <div
+                className="swiper-button-prev"
+                aria-label="Producto anterior"
+              ></div>
+              <div
+                className="swiper-button-next"
+                aria-label="Producto siguiente"
+              ></div>
+              <div className="swiper-pagination"></div>
+            </div>
           ) : (
             <div className="no-products">
               <div className="no-products-icon">📦</div>
-              <h3>No hay productos disponibles</h3>
-              <p>Pronto agregaremos productos increíbles para ti.</p>
+              <h3 className="no-products-title">No hay productos disponibles</h3>
+              <p className="no-products-text">
+                Pronto agregaremos productos increíbles para ti.
+              </p>
             </div>
           )}
-
-          {/* Navigation buttons */}
-          <div
-            className="swiper-button-prev"
-            aria-label="Producto anterior"
-            style={{ left: 0 }}
-          ></div>
-          <div
-            className="swiper-button-next"
-            aria-label="Producto siguiente"
-            style={{ right: 0 }}
-          ></div>
-          <div className="swiper-pagination"></div>
         </div>
       </section>
 
@@ -278,23 +289,31 @@ const Home = () => {
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon">🚀</div>
-              <h3>Entrega Rápida</h3>
-              <p>Entrega en menos de 24 horas en área metropolitana</p>
+              <h3 className="feature-title">Entrega Rápida</h3>
+              <p className="feature-description">
+                Entrega en menos de 24 horas en área metropolitana
+              </p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">🛡️</div>
-              <h3>Garantía Total</h3>
-              <p>30 días de garantía en todos nuestros productos</p>
+              <h3 className="feature-title">Garantía Total</h3>
+              <p className="feature-description">
+                30 días de garantía en todos nuestros productos
+              </p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">💎</div>
-              <h3>Calidad Premium</h3>
-              <p>Productos seleccionados con los más altos estándares</p>
+              <h3 className="feature-title">Calidad Premium</h3>
+              <p className="feature-description">
+                Productos seleccionados con los más altos estándares
+              </p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">🎯</div>
-              <h3>Soporte 24/7</h3>
-              <p>Asistencia técnica especializada cuando la necesites</p>
+              <h3 className="feature-title">Soporte 24/7</h3>
+              <p className="feature-description">
+                Asistencia técnica especializada cuando la necesites
+              </p>
             </div>
           </div>
         </div>
@@ -307,8 +326,8 @@ const Home = () => {
       <section className="cta-section">
         <div className="container">
           <div className="cta-content">
-            <h2>¿Listo para comenzar?</h2>
-            <p>
+            <h2 className="cta-title">¿Listo para comenzar?</h2>
+            <p className="cta-subtitle">
               Únete a miles de clientes satisfechos que ya confían en nosotros
             </p>
             <div className="cta-actions">
