@@ -1,30 +1,41 @@
 @use '@styles/styles' as *;
+@use 'sass:color';
 
 // Estilos base del navbar
 .navbar {
-  display: flex;
+  @include flex-center;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
+  padding: $spacing-md;
   background-color: $NavbarYFooter-color;
-  color: white;
+  color: $white;
   position: relative;
+  font-family: $font-base;
+  @include fadeIn;
 
   .navbar-title {
     font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
+    color: $white;
   }
 
   .menu-toggle {
     display: none;
     background: none;
     border: none;
-    color: white;
+    color: $white;
     font-size: 1.5rem;
     cursor: pointer;
+    padding: $spacing-sm;
+    border-radius: 4px;
+    @include smooth-transition;
 
-    @media (max-width: 768px) {
+    &:hover {
+      @include button-hover;
+      background-color: rgba($white, 0.1);
+    }
+
+    @media (max-width: $tablet) {
       display: block;
     }
   }
@@ -34,24 +45,25 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    gap: 1rem;
+    gap: $spacing-md;
     align-items: center;
 
     li {
       position: relative;
 
       a {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: white;
+        @include flex-center;
+        gap: $spacing-sm;
+        color: $white;
         text-decoration: none;
-        padding: 0.5rem;
+        padding: $spacing-sm;
         border-radius: 4px;
-        transition: background-color 0.3s;
+        @include smooth-transition;
 
-        &:hover, &.active {
-          background-color: rgba(255, 255, 255, 0.1);
+        &:hover,
+        &.active {
+          background-color: rgba($white, 0.1);
+          @include button-hover;
         }
 
         .nav-text {
@@ -68,39 +80,38 @@
           position: absolute;
           top: -8px;
           right: -8px;
-          background-color: #ff4444;
-          color: white;
+          background-color: $error-color;
+          color: $white;
           border-radius: 50%;
           width: 20px;
           height: 20px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          @include flex-center;
           font-size: 0.7rem;
           font-weight: bold;
+          box-shadow: $shadow-sm;
+          @include fadeIn;
         }
       }
     }
 
-    // Estilos del menú de usuario
     .user-menu {
       position: relative;
 
       .user-btn {
         background: none;
         border: none;
-        color: white;
+        color: $white;
         font-size: 1.2rem;
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem;
+        @include flex-center;
+        gap: $spacing-sm;
+        padding: $spacing-sm;
         border-radius: 4px;
-        transition: background-color 0.3s;
+        @include smooth-transition;
 
         &:hover {
-          background-color: rgba(255, 255, 255, 0.1);
+          background-color: rgba($white, 0.1);
+          @include button-hover;
         }
 
         .nav-text {
@@ -112,21 +123,23 @@
         position: absolute;
         top: 100%;
         right: 0;
-        background-color: #fff;
-        padding: 0.5rem;
-        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+        background-color: $white;
+        padding: $spacing-sm;
+        box-shadow: $shadow-lg;
         border-radius: 5px;
         z-index: 1000;
         min-width: 150px;
-        border: 1px solid #e0e0e0;
+        border: 1px solid $border-color;
+        @include fadeIn;
 
         .user-email {
           font-size: 0.9rem;
-          color: #666;
+          color: $text-secondary;
           display: block;
-          margin-bottom: 0.5rem;
-          padding-bottom: 0.5rem;
-          border-bottom: 1px solid #e0e0e0;
+          margin-bottom: $spacing-sm;
+          padding-bottom: $spacing-sm;
+          border-bottom: 1px solid $border-color;
+          word-break: break-word;
         }
 
         .dropdown {
@@ -137,7 +150,7 @@
           padding: 0;
 
           li {
-            padding: 0.3rem 0;
+            padding: $spacing-xs 0;
 
             a,
             button {
@@ -145,18 +158,18 @@
               border: none;
               cursor: pointer;
               font-size: 0.9rem;
-              color: #333;
+              color: $text-primary;
               text-align: left;
               width: 100%;
-              padding: 0.5rem;
+              padding: $spacing-sm;
               border-radius: 3px;
-              transition: background-color 0.3s, color 0.3s;
+              @include smooth-transition;
               text-decoration: none;
               display: block;
 
               &:hover {
-                background-color: #f5f5f5;
-                color: #007bff;
+                background-color: $secondary-color;
+                color: $primary-color;
               }
             }
           }
@@ -164,24 +177,23 @@
       }
     }
 
-    // Responsive - Mobile
-    @media (max-width: 768px) {
+    @media (max-width: $tablet) {
       position: fixed;
-      top: 60px; // Ajusta según la altura de tu navbar
+      top: 60px;
       right: 0;
       width: 30%;
       min-width: 200px;
-      max-width: 300px; // Límite máximo de ancho
-      background-color: #333;
+      max-width: 300px;
+      background-color: $text-primary;
       flex-direction: column;
       align-items: stretch;
-      padding: 1rem;
+      padding: $spacing-md;
       transform: translateX(100%);
-      transition: transform 0.3s ease;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      @include transition(transform, 0.3s, ease);
+      box-shadow: $shadow-xl;
       max-height: calc(100vh - 60px);
       overflow-y: auto;
-      overflow-x: hidden; // Evita scroll horizontal dentro del menú
+      overflow-x: hidden;
 
       &.open {
         transform: translateX(0%);
@@ -189,28 +201,25 @@
 
       li {
         width: 100%;
-        margin-bottom: 0.5rem;
-        // Evita que los elementos se salgan
+        margin-bottom: $spacing-sm;
         box-sizing: border-box;
 
         a {
           width: 100%;
           justify-content: flex-start;
-          padding: 1rem;
+          padding: $spacing-md;
           border-radius: 4px;
-          // Evita que el texto se salga
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
           box-sizing: border-box;
 
           .nav-text {
-            margin-left: 0.5rem;
+            margin-left: $spacing-sm;
           }
         }
       }
 
-      // Estilos específicos del menú de usuario en móvil
       .user-menu {
         width: 100%;
         box-sizing: border-box;
@@ -218,7 +227,7 @@
         .user-btn {
           width: 100%;
           justify-content: flex-start;
-          padding: 1rem;
+          padding: $spacing-md;
           text-align: left;
           box-sizing: border-box;
           white-space: nowrap;
@@ -226,25 +235,24 @@
           text-overflow: ellipsis;
 
           .nav-text {
-            margin-left: 0.5rem;
+            margin-left: $spacing-sm;
           }
         }
 
         .user-dropdown {
           position: static;
           width: 100%;
-          margin-top: 0.5rem;
+          margin-top: $spacing-sm;
           margin-inline: auto;
           box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-          background-color: #444;
-          border: 1px solid #555;
+          background-color: color.adjust($text-primary, $lightness: 10%);
+          border: 1px solid color.adjust($text-primary, $lightness: 20%);
           max-width: 90%;
           box-sizing: border-box;
 
           .user-email {
-            color: #ccc;
-            border-bottom-color: #555;
-            // Evita que el email se salga
+            color: $text-disabled;
+            border-bottom-color: color.adjust($text-primary, $lightness: 20%);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -258,16 +266,16 @@
 
               a,
               button {
-                color: #fff;
-                padding: 0.75rem 1rem;
+                color: $white;
+                padding: $spacing-sm $spacing-md;
                 box-sizing: border-box;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
 
                 &:hover {
-                  background-color: #555;
-                  color: #007bff;
+                  background-color: color.adjust($text-primary, $lightness: 20%);
+                  color: $primary-color;
                 }
               }
             }
@@ -278,31 +286,108 @@
   }
 }
 
-// Asegurar que el header tenga el z-index correcto
 header {
   position: fixed;
   z-index: 100;
   width: 100%;
-  box-sizing: border-box; // Incluye padding y border en el ancho
-}
-
-// Prevenir scroll horizontal en toda la página
-html, body {
-  overflow-x: hidden; // Evita scroll horizontal global
   box-sizing: border-box;
 }
 
-// Aplicar box-sizing a todos los elementos
-*, *::before, *::after {
+html,
+body {
+  overflow-x: hidden;
   box-sizing: border-box;
 }
 
-// Prevenir scroll del body cuando el menú está abierto en móvil
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body.menu-open {
   overflow: hidden;
 
-  @media (min-width: 769px) {
-    overflow-x: hidden; // Mantiene sin scroll horizontal
-    overflow-y: auto;   // Permite scroll vertical
+  @media (min-width: calc($tablet + 1px)) {
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
+
+.navbar {
+  .menu-toggle {
+    &:focus {
+      @include input-focus;
+    }
+  }
+
+  .nav-actions {
+    a,
+    button {
+      &:focus {
+        @include input-focus;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu-toggle {
+      transition: none;
+
+      &:hover {
+        transform: none;
+      }
+    }
+
+    .nav-actions {
+      transition: none;
+
+      a,
+      button {
+        transition: none;
+
+        &:hover {
+          transform: none;
+        }
+      }
+    }
+  }
+}
+
+.navbar {
+  .nav-actions {
+    .cart-icon {
+      a {
+        &:hover .cart-badge {
+          transform: scale(1.1);
+          @include smooth-transition;
+        }
+      }
+    }
+  }
+}
+
+.user-menu {
+  .user-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    @include transition(all, 0.2s, ease-out);
+
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+
+  &:hover .user-dropdown,
+  &:focus-within .user-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+
+

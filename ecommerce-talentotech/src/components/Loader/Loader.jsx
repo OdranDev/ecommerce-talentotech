@@ -2,7 +2,7 @@ import React from 'react';
 import './Loader.scss';
 
 const Loader = ({
-  size = 'medium',
+  size = 'large',
   variant = 'primary',
   text = 'Cargando...',
   className = '',
