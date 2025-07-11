@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '@styles/styles' as *;
 
 // Estilos del contenedor principal
@@ -113,7 +114,7 @@
       }
 
       &:hover {
-        border-color: darken($border-color, 10%);
+        border-color: color.adjust($border-color, $lightness: -10%);
       }
 
       // Estados de validación
@@ -170,7 +171,7 @@
     // Efecto de hover
     &:hover {
       @include button-hover;
-      background: linear-gradient(135deg, $primary-hover, darken($primary-hover, 10%));
+      background: linear-gradient(135deg, $primary-hover, color.adjust($primary-hover, $lightness: -10%));
     }
 
     &:active {
@@ -321,47 +322,6 @@
   }
 }
 
-// Animaciones adicionales
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-// Utilidades de animación
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out;
-}
-
-.animate-slide-left {
-  animation: slideInLeft 0.6s ease-out;
-}
-
-.animate-slide-right {
-  animation: slideInRight 0.6s ease-out;
-}
-
 .forgot-password {
   text-align: right;
   margin-top: -1rem;
@@ -411,9 +371,50 @@
     @include transition(all);
 
     &:hover {
-      background: lighten($primary-light, 5%);
+      background: color.adjust($primary-light, $lightness: 5%);
       border-color: $primary-hover;
       color: $primary-hover;
     }
   }
+}
+
+// Animaciones adicionales
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Utilidades de animación
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.6s ease-out;
 }

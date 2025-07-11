@@ -1,13 +1,14 @@
+@use 'sass:color';
 @use '@styles/styles' as *;
 
 // Estilos del contenedor principal
 .register-container {
   min-height: 100vh;
-  @include flex-center;
   background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
   padding: 1rem;
   position: relative;
   overflow: hidden;
+  @include flex-center;
   @include fadeIn;
 
   // Efecto de fondo animado
@@ -215,7 +216,7 @@
       }
 
       &:hover {
-        border-color: darken($border-color, 10%);
+        border-color: color.adjust($border-color, $lightness: -10%);
       }
 
       // Estados de validación
@@ -268,17 +269,17 @@
           
           &.weak {
             width: 33%;
-            background: linear-gradient(90deg, $error-color, lighten($error-color, 10%));
+            background: linear-gradient(90deg, $error-color, color.adjust($error-color, $lightness: 10%));
           }
           
           &.medium {
             width: 66%;
-            background: linear-gradient(90deg, $warning-color, lighten($warning-color, 10%));
+            background: linear-gradient(90deg, $warning-color, color.adjust($warning-color, $lightness: 10%));
           }
           
           &.strong {
             width: 100%;
-            background: linear-gradient(90deg, $success-color, lighten($success-color, 10%));
+            background: linear-gradient(90deg, $success-color, color.adjust($success-color, $lightness: 10%));
           }
         }
       }
@@ -359,7 +360,7 @@
     // Efecto de hover
     &:hover {
       @include button-hover;
-      background: linear-gradient(135deg, $primary-hover, darken($primary-hover, 10%));
+      background: linear-gradient(135deg, $primary-hover, color.adjust($primary-hover, $lightness: -10%));
     }
 
     &:active {
