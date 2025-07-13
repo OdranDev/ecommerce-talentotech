@@ -8,46 +8,59 @@ import {
   FaTwitter,
   FaInstagram,
   FaLinkedin,
-  FaPaperPlane
+  FaPaperPlane,
 } from "react-icons/fa";
 import { GlobalContext } from "../../context/GlobalContext";
+import { useForm, ValidationError } from "@formspree/react";
 import "./Contact.scss";
 
 export default function Contact() {
   const { titulo } = useContext(GlobalContext);
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState('');
+  const [state, formSubmit] = useForm("xyzpgwbz");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus('');
+    const data = {
+      name: formData.name,
+      email: formData.email,
+      subject: formData.subject,
+      message: formData.message,
+    };
 
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
+    await formSubmit(data);
+    if (!state.errors.length) {
+      setFormData({ name: "", email: "", subject: "", message: "" });
     }
   };
+
+  if (state.succeeded) {
+    return (
+      <div className="contact-page">
+        <section className="contact-hero">
+          <div className="hero-content">
+            <h1>¡Gracias por tu mensaje!</h1>
+            <p>Te responderemos lo antes posible.</p>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="contact-page">
@@ -63,7 +76,6 @@ export default function Contact() {
       <section className="contact-main">
         <div className="container">
           <div className="contact-grid">
-
             {/* Contact Form */}
             <div className="contact-form-section">
               <h2>Envíanos un mensaje</h2>
@@ -94,6 +106,7 @@ export default function Contact() {
                     />
                   </div>
                 </div>
+                <ValidationError prefix="Email" field="email" errors={state.errors} />
 
                 <div className="form-group">
                   <label htmlFor="subject">Asunto</label>
@@ -123,33 +136,21 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className={`submit-btn ${isSubmitting ? 'loading' : ''}`}
-                  disabled={isSubmitting}
+                  className={`submit-btn ${state.submitting ? "loading" : ""}`}
+                  disabled={state.submitting}
                 >
-                  {isSubmitting ? (
+                  {state.submitting ? (
                     <>
-                      <div className="spinner"></div>
-                      Enviando...
+                      <div className="spinner"></div> Enviando...
                     </>
                   ) : (
                     <>
-                      <FaPaperPlane />
-                      Enviar mensaje
+                      <FaPaperPlane /> Enviar mensaje
                     </>
                   )}
                 </button>
 
-                {submitStatus === 'success' && (
-                  <div className="status-message success">
-                    ¡Mensaje enviado con éxito! Te contactaremos pronto.
-                  </div>
-                )}
-
-                {submitStatus === 'error' && (
-                  <div className="status-message error">
-                    Ocurrió un error al enviar tu mensaje. Intentalo de nuevo más tarde.
-                  </div>
-                )}
+                <ValidationError errors={state.errors} />
               </form>
             </div>
 
@@ -159,7 +160,9 @@ export default function Contact() {
 
               <div className="contact-cards">
                 <div className="contact-card">
-                  <div className="card-icon"><FaPhone /></div>
+                  <div className="card-icon">
+                    <FaPhone />
+                  </div>
                   <div className="card-content">
                     <h3>Teléfono</h3>
                     <p>+54 11 1234 5678</p>
@@ -168,7 +171,9 @@ export default function Contact() {
                 </div>
 
                 <div className="contact-card">
-                  <div className="card-icon"><FaEnvelope /></div>
+                  <div className="card-icon">
+                    <FaEnvelope />
+                  </div>
                   <div className="card-content">
                     <h3>Email</h3>
                     <p>info@{titulo}.com.ar</p>
@@ -177,7 +182,9 @@ export default function Contact() {
                 </div>
 
                 <div className="contact-card">
-                  <div className="card-icon"><FaMapMarkerAlt /></div>
+                  <div className="card-icon">
+                    <FaMapMarkerAlt />
+                  </div>
                   <div className="card-content">
                     <h3>Dirección</h3>
                     <p>Av. Corrientes 1234</p>
@@ -186,7 +193,9 @@ export default function Contact() {
                 </div>
 
                 <div className="contact-card">
-                  <div className="card-icon"><FaClock /></div>
+                  <div className="card-icon">
+                    <FaClock />
+                  </div>
                   <div className="card-content">
                     <h3>Horario de atención</h3>
                     <p>Lun a Vie: 9:00 a 18:00 hs</p>

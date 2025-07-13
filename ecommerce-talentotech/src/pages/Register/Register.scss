@@ -1,8 +1,9 @@
-@use 'sass:color';
-@use '@styles/styles' as *;
+@use "sass:color";
+@use "@styles/styles" as *;
 
 // Estilos del contenedor principal
 .register-container {
+  margin-top: 1rem;
   min-height: 100vh;
   background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
   padding: 1rem;
@@ -13,7 +14,7 @@
 
   // Efecto de fondo animado
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -26,26 +27,40 @@
 
   // Partículas flotantes adicionales
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 10%;
     left: 10%;
     width: 100px;
     height: 100px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 70%
+    );
     border-radius: 50%;
     animation: float 15s ease-in-out infinite;
     pointer-events: none;
   }
 
   @keyframes floatReverse {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(20px) rotate(-180deg); }
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(20px) rotate(-180deg);
+    }
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px) translateX(0px) scale(1); }
-    50% { transform: translateY(-30px) translateX(20px) scale(1.1); }
+    0%,
+    100% {
+      transform: translateY(0px) translateX(0px) scale(1);
+    }
+    50% {
+      transform: translateY(-30px) translateX(20px) scale(1.1);
+    }
   }
 
   // Responsive
@@ -56,19 +71,28 @@
 
 // Estilos del formulario
 .register-form {
+  margin: 1rem;
   background: $white;
   border-radius: 20px;
   padding: 2.5rem;
   box-shadow: $shadow-xl;
   width: 100%;
-  max-width: 450px;
+  max-width: 900px;
   position: relative;
   z-index: 1;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-
-  // Animación de entrada
   animation: slideDown 0.7s ease-out;
+
+  // Layout por defecto: CSS Grid para desktop
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr 1fr;
+  gap: 2rem;
+  grid-template-areas: 
+    "title title"
+    "features form"
+    "redirect form";
 
   @keyframes slideDown {
     from {
@@ -83,15 +107,16 @@
 
   // Título
   h2 {
+    grid-area: title;
     font-size: 2rem;
     font-weight: 700;
     color: $text-primary;
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
     position: relative;
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: -0.5rem;
       left: 50%;
@@ -103,33 +128,28 @@
     }
   }
 
+  // Contenedor del formulario
+  .form-container {
+    grid-area: form;
+    display: flex;
+    flex-direction: column;
+  }
+
   // Features list
   .features-list {
-    background: linear-gradient(135deg, rgba($primary-color, 0.08) 0%, rgba($primary-color, 0.04) 100%);
+    grid-area: features;
+    background: linear-gradient(
+      135deg,
+      rgba($primary-color, 0.08) 0%,
+      rgba($primary-color, 0.04) 100%
+    );
     border-radius: 16px;
     padding: 1.5rem;
-    margin-bottom: 2rem;
     border: 1px solid rgba($primary-color, 0.1);
     position: relative;
     overflow: hidden;
+    align-self: start;
 
-    // Efecto de brillo
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      animation: shimmer 3s infinite;
-    }
-
-    @keyframes shimmer {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
-    
     h3 {
       color: $text-primary;
       font-size: 1.1rem;
@@ -138,19 +158,20 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      
+
       &::before {
-        content: '✨';
+        content: "✨";
         font-size: 1.25rem;
       }
     }
-    
+
     ul {
       list-style: none;
       padding: 0;
       margin: 0;
-      
+
       li {
+        text-align: start;
         display: flex;
         align-items: center;
         gap: 0.75rem;
@@ -158,9 +179,9 @@
         font-size: 0.875rem;
         margin-bottom: 0.75rem;
         @include transition(all, 0.3s, ease);
-        
+
         &::before {
-          content: '✓';
+          content: "✓";
           color: $primary-color;
           font-weight: bold;
           font-size: 1rem;
@@ -173,14 +194,75 @@
           justify-content: center;
           flex-shrink: 0;
         }
-        
+
         &:hover {
           color: $text-primary;
           transform: translateX(4px);
         }
-        
+
         &:last-child {
           margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  // Contenedor de redirección
+  .container-redirection {
+    grid-area: redirect;
+    
+    // Divider
+    .divider {
+      position: relative;
+      text-align: center;
+      margin: 2rem 0 1rem 0;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          $border-color,
+          transparent
+        );
+      }
+
+      span {
+        background: $white;
+        padding: 0 1rem;
+        color: $text-muted;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    }
+
+    // Enlace de login
+    .login-link {
+      text-align: center;
+      padding-top: 1rem;
+
+      p {
+        color: $text-secondary;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+      }
+
+      a {
+        color: $primary-color;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        @include transition(all, 0.3s, ease);
+
+        &:hover {
+          color: $primary-hover;
+          text-decoration: underline;
+          transform: translateY(-1px);
         }
       }
     }
@@ -209,7 +291,7 @@
 
       &:focus {
         @include input-focus;
-        
+
         &::placeholder {
           opacity: 0.7;
         }
@@ -256,42 +338,60 @@
     // Indicador de fortaleza de contraseña
     .password-strength {
       margin-top: 0.5rem;
-      
+
       .strength-bar {
         height: 4px;
         border-radius: 2px;
         background: $border-color;
         overflow: hidden;
-        
+
         .strength-fill {
           height: 100%;
           @include transition(all, 0.4s, ease);
-          
+
           &.weak {
             width: 33%;
-            background: linear-gradient(90deg, $error-color, color.adjust($error-color, $lightness: 10%));
+            background: linear-gradient(
+              90deg,
+              $error-color,
+              color.adjust($error-color, $lightness: 10%)
+            );
           }
-          
+
           &.medium {
             width: 66%;
-            background: linear-gradient(90deg, $warning-color, color.adjust($warning-color, $lightness: 10%));
+            background: linear-gradient(
+              90deg,
+              $warning-color,
+              color.adjust($warning-color, $lightness: 10%)
+            );
           }
-          
+
           &.strong {
             width: 100%;
-            background: linear-gradient(90deg, $success-color, color.adjust($success-color, $lightness: 10%));
+            background: linear-gradient(
+              90deg,
+              $success-color,
+              color.adjust($success-color, $lightness: 10%)
+            );
           }
         }
       }
-      
+
       .strength-text {
         font-size: 0.75rem;
         margin-top: 0.25rem;
         font-weight: 500;
-        
-        &.weak { color: $error-color; }
-        &.medium { color: $warning-color; }
-        &.strong { color: $success-color; }
+
+        &.weak {
+          color: $error-color;
+        }
+        &.medium {
+          color: $warning-color;
+        }
+        &.strong {
+          color: $success-color;
+        }
       }
     }
   }
@@ -326,13 +426,13 @@
       &:hover {
         color: $text-primary;
       }
-      
+
       a {
         color: $primary-color;
         text-decoration: none;
         font-weight: 500;
         @include transition(all, 0.3s, ease);
-        
+
         &:hover {
           color: $primary-hover;
           text-decoration: underline;
@@ -360,7 +460,11 @@
     // Efecto de hover
     &:hover {
       @include button-hover;
-      background: linear-gradient(135deg, $primary-hover, color.adjust($primary-hover, $lightness: -10%));
+      background: linear-gradient(
+        135deg,
+        $primary-hover,
+        color.adjust($primary-hover, $lightness: -10%)
+      );
     }
 
     &:active {
@@ -374,7 +478,7 @@
       opacity: 0.8;
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         top: 50%;
         left: 50%;
@@ -388,7 +492,9 @@
       }
 
       @keyframes spin {
-        to { transform: translate(-50%, -50%) rotate(360deg); }
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
       }
     }
 
@@ -398,56 +504,6 @@
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
-    }
-  }
-
-  // Enlace de login
-  .login-link {
-    text-align: center;
-    
-    p {
-      color: $text-secondary;
-      margin-bottom: 0.5rem;
-      font-size: 0.875rem;
-    }
-    
-    a {
-      color: $primary-color;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      @include transition(all, 0.3s, ease);
-      
-      &:hover {
-        color: $primary-hover;
-        text-decoration: underline;
-        transform: translateY(-1px);
-      }
-    }
-  }
-
-  // Divider
-  .divider {
-    position: relative;
-    text-align: center;
-    margin: 2rem 0;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, $border-color, transparent);
-    }
-
-    span {
-      background: $white;
-      padding: 0 1rem;
-      color: $text-muted;
-      font-size: 0.875rem;
-      font-weight: 500;
     }
   }
 
@@ -479,60 +535,85 @@
     }
   }
 
-  // Responsive
+  // RESPONSIVE DESIGN
+  // Tablet: Mantener grid pero ajustar espacios
   @media (max-width: $tablet) {
     padding: 2rem;
-    max-width: 400px;
-    
+    max-width: 700px;
+    gap: 1.5rem;
+
     h2 {
       font-size: 1.75rem;
     }
-    
+
     .features-list {
       padding: 1.25rem;
     }
+
+    .form-container {
+      .input-group {
+        margin-bottom: 1.25rem;
+      }
+    }
   }
 
+  // Mobile: Cambiar a flexbox column
   @media (max-width: $mobile) {
+    display: flex;
+    flex-direction: column;
     padding: 1.5rem;
     max-width: 360px;
     border-radius: 16px;
-    
+    gap: 1.5rem;
+
     h2 {
       font-size: 1.5rem;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
+      order: 1;
     }
-    
-    .input-group {
-      margin-bottom: 1.25rem;
-      
-      input {
-        padding: 0.875rem 1rem;
-        font-size: 0.9rem;
-      }
-    }
-    
-    .btn-primary {
-      padding: 1rem 1.25rem;
-      font-size: 0.9rem;
-    }
-    
+
     .features-list {
+      order: 2;
       padding: 1rem;
-      margin-bottom: 1.5rem;
-      
+      margin-bottom: 0;
+
       h3 {
         font-size: 1rem;
       }
-      
+
       ul li {
         font-size: 0.8rem;
       }
     }
-    
-    .terms-checkbox {
-      label {
-        font-size: 0.8rem;
+
+    .form-container {
+      order: 3;
+      
+      .input-group {
+        margin-bottom: 1.25rem;
+
+        input {
+          font-size: 0.9rem;
+        }
+      }
+
+      .btn-primary {
+        padding: 1rem 1.25rem;
+        font-size: 0.9rem;
+      }
+
+      .terms-checkbox {
+        label {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    .container-redirection {
+      order: 4;
+      
+      .divider {
+        margin: 1.5rem 0 1rem 0;
       }
     }
   }
@@ -540,8 +621,12 @@
 
 // Animaciones adicionales
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInUp {
@@ -567,8 +652,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 // Utilidades de animación
