@@ -1,61 +1,101 @@
+@use 'sass:color';
 @use '@styles/styles' as *;
 
 .contact-page {
   @include fadeIn;
 
   .contact-hero {
-    background-color: #f0f0f0;
+    background: linear-gradient(135deg, $primary-color, $primary-dark);
     padding: 4rem 2rem;
     text-align: center;
+    color: $white;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
 
     .hero-content {
-      max-width: 800px;
-      margin: 0 auto;
+      @include container;
+      position: relative;
+      z-index: 2;
 
       h1 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
+        font-size: clamp(2rem, 5vw, 3rem);
+        font-weight: 700;
+        margin-bottom: $spacing-md;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        line-height: 1.2;
       }
 
       p {
-        font-size: 1.2rem;
-        color: #555;
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        color: color.adjust($white, $alpha: -0.1);
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
       }
     }
   }
 
   .contact-main {
-    padding: 3rem 1rem;
+    padding: 4rem $spacing-md;
+    background-color: $secondary-color;
 
     .container {
-      max-width: 1200px;
-      margin: 0 auto;
+      @include container;
     }
 
     .contact-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      gap: 3rem;
+      align-items: start;
 
-      @media (max-width: 768px) {
+      @media (max-width: $tablet) {
         grid-template-columns: 1fr;
+        gap: 2rem;
       }
     }
 
     .contact-form-section,
     .contact-info-section {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      background: $white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: $shadow-lg;
+      @include smooth-transition;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-xl;
+      }
+
+      h2 {
+        color: $text-primary;
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        border-bottom: 3px solid $primary-color;
+        padding-bottom: $spacing-sm;
+      }
     }
 
     .form-row {
       display: flex;
-      gap: 1rem;
+      gap: $spacing-md;
 
-      @media (max-width: 600px) {
+      @media (max-width: $mobile) {
         flex-direction: column;
+        gap: 0;
       }
     }
 
@@ -63,100 +103,227 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      margin-bottom: 1rem;
+      margin-bottom: $spacing-lg;
 
       label {
-        margin-bottom: 0.5rem;
-        font-weight: bold;
+        margin-bottom: $spacing-sm;
+        font-weight: 600;
+        color: $text-primary;
+        font-size: 0.95rem;
+        letter-spacing: 0.025em;
       }
 
       input,
       textarea {
-        padding: 0.8rem;
-        border: 1px solid #ccc;
-        border-radius: 5px;
+        padding: 1rem;
+        border: 2px solid $border-color;
+        border-radius: 8px;
         font-size: 1rem;
+        font-family: $font-base;
+        color: $text-primary;
+        background-color: $white;
+        @include smooth-transition;
+
+        &::placeholder {
+          color: $text-muted;
+        }
+
+        &:focus {
+          @include input-focus;
+        }
+
+        &:hover {
+          border-color: color.adjust($border-color, $lightness: -10%);
+        }
+
+        &:invalid {
+          border-color: $error-color;
+        }
+
+        &:valid {
+          border-color: $success-color;
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 120px;
+        line-height: 1.6;
       }
     }
 
     .submit-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background-color: #007bff;
-      color: white;
-      padding: 0.75rem 1.5rem;
+      @include flex-center;
+      gap: $spacing-sm;
+      background: linear-gradient(135deg, $primary-color, $primary-dark);
+      color: $white;
+      padding: 1rem 2rem;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
+      width: 100%;
+      @include smooth-transition;
 
-      &.loading {
-        opacity: 0.6;
+      &:hover:not(:disabled) {
+        @include button-hover;
+        background: linear-gradient(135deg, $primary-hover, $primary-dark);
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+
+      &.loading,
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
         pointer-events: none;
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid transparent;
+        border-top: 2px solid $white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
     }
 
     .status-message {
-      margin-top: 1rem;
-      padding: 0.75rem;
-      border-radius: 5px;
-      font-weight: bold;
+      margin-top: $spacing-md;
+      padding: 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+      @include smooth-transition;
 
       &.success {
-        background-color: #d4edda;
-        color: #155724;
+        background-color: color.adjust($success-color, $lightness: 40%);
+        color: $success-dark;
+        border: 1px solid color.adjust($success-color, $lightness: 20%);
       }
 
       &.error {
-        background-color: #f8d7da;
-        color: #721c24;
+        background-color: color.adjust($error-color, $lightness: 40%);
+        color: color.adjust($error-color, $lightness: -20%);
+        border: 1px solid color.adjust($error-color, $lightness: 20%);
       }
     }
 
     .contact-cards {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: $spacing-lg;
 
       .contact-card {
         display: flex;
-        gap: 1rem;
+        gap: $spacing-md;
+        padding: $spacing-md;
+        border-radius: 8px;
+        @include smooth-transition;
+
+        &:hover {
+          background-color: color.adjust($primary-color, $lightness: 45%);
+          transform: translateX(5px);
+        }
 
         .card-icon {
-          font-size: 1.8rem;
-          color: #007bff;
+          @include flex-center;
+          width: 50px;
+          height: 50px;
+          background: linear-gradient(135deg, $primary-color, $primary-dark);
+          color: $white;
+          border-radius: 50%;
+          font-size: 1.25rem;
+          flex-shrink: 0;
         }
 
         .card-content {
+          flex: 1;
+
           h3 {
-            margin-bottom: 0.2rem;
+            color: $text-primary;
             font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: $spacing-xs;
           }
 
           p {
+            color: $text-secondary;
             margin: 0;
+            line-height: 1.5;
+            font-size: 0.95rem;
+
+            &:not(:last-child) {
+              margin-bottom: $spacing-xs;
+            }
+          }
+
+          a {
+            color: $primary-color;
+            text-decoration: none;
+            @include smooth-transition;
+
+            &:hover {
+              color: $primary-hover;
+              text-decoration: underline;
+            }
           }
         }
       }
     }
 
     .social-section {
-      margin-top: 2rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid $border-color;
 
       h3 {
-        margin-bottom: 0.5rem;
+        color: $text-primary;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: $spacing-md;
       }
 
       .social-links {
         display: flex;
-        gap: 1rem;
+        gap: $spacing-md;
+        flex-wrap: wrap;
 
-        a {
-          font-size: 1.5rem;
-          color: #555;
+        .social-link {
+          @include flex-center;
+          width: 50px;
+          height: 50px;
+          background-color: $secondary-color;
+          color: $text-secondary;
+          border-radius: 50%;
+          font-size: 1.25rem;
+          text-decoration: none;
+          @include smooth-transition;
 
           &:hover {
-            color: #007bff;
+            background-color: $primary-color;
+            color: $white;
+            transform: translateY(-3px);
+            box-shadow: $shadow-md;
+          }
+
+          &:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
           }
         }
       }
@@ -164,14 +331,104 @@
   }
 
   .map-section {
-    margin-top: 3rem;
+    margin-top: 0;
+    padding: 0;
+    background-color: $white;
 
     .map-container {
+      position: relative;
+      width: 100%;
+      height: 450px;
+      border-radius: 0;
+      overflow: hidden;
+      box-shadow: $shadow-lg;
+
       iframe {
         width: 100%;
+        height: 100%;
         border: none;
-        border-radius: 8px;
+        filter: grayscale(30%);
+        @include smooth-transition;
+
+        &:hover {
+          filter: grayscale(0%);
+        }
       }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
+        pointer-events: none;
+        z-index: 1;
+      }
+    }
+  }
+}
+
+// Mejoras de accesibilidad y responsive
+@media (max-width: $mobile) {
+  .contact-page {
+    .contact-hero {
+      padding: 3rem 1rem;
+    }
+
+    .contact-main {
+      padding: 2rem $spacing-sm;
+
+      .contact-form-section,
+      .contact-info-section {
+        padding: 1.5rem;
+      }
+
+      .contact-cards .contact-card {
+        flex-direction: column;
+        text-align: center;
+        gap: $spacing-sm;
+
+        .card-icon {
+          align-self: center;
+        }
+      }
+
+      .social-section .social-links {
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// Reducir animaciones para usuarios que lo prefieren
+@media (prefers-reduced-motion: reduce) {
+  .contact-page {
+    @include reduce-motion;
+    
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+// Modo de alto contraste
+@media (prefers-contrast: high) {
+  .contact-page {
+    .contact-hero {
+      background: $NavbarYFooter-color;
+    }
+
+    .submit-btn {
+      background: $NavbarYFooter-color;
+      border: 2px solid $white;
+    }
+
+    .contact-card:hover {
+      background-color: $border-color;
     }
   }
 }
