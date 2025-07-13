@@ -1,4 +1,3 @@
-// IMPORTACIONES (mismas que tú tienes)
 import React, { useEffect, useState, useContext } from "react";
 import {
   collection,
@@ -11,17 +10,20 @@ import {
 import { db } from "../../auth/Firebase.js";
 import { CartContext } from "../../context/CartContext.jsx";
 import { GlobalContext } from "../../context/GlobalContext.jsx";
+import { useSearch } from "../../context/SearchContext.jsx";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify"; // Solo importar toast, no ToastContainer
+import { toast } from "react-toastify";
 import { BsCartPlus } from "react-icons/bs";
 import Loader from "../../components/loader/Loader.jsx";
 import "./Products.scss";
+import SearchProducts from "./SearchProducts/SearchProducts.jsx";
 
 const PRODUCTS_PER_PAGE = 6;
 
 function Products() {
   const { addToCart } = useContext(CartContext);
   const { titulo } = useContext(GlobalContext);
+  const { busqueda } = useSearch();
 
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("all");
   const [productos, setProductos] = useState([]);
@@ -41,7 +43,7 @@ function Products() {
   const fetchProductos = async (direction = "next") => {
     try {
       setLoading(true);
-      toast.dismiss(); // Limpiar todos los toasts previos
+      toast.dismiss();
 
       let q = query(
         collection(db, "products"),
@@ -71,7 +73,7 @@ function Products() {
 
       if (docs.length === 0) {
         setTimeout(() => {
-          toast.dismiss(); // Limpiar todos los toasts previos
+          toast.dismiss();
           toast.info("No hay más productos para mostrar.", {
             autoClose: 2000,
           });
@@ -115,19 +117,41 @@ function Products() {
     fetchProductos();
   }, []);
 
-  useEffect(() => {
-    const filtrados =
-      categoriaSeleccionada === "all"
-        ? productos
-        : productos.filter((p) => p.category === categoriaSeleccionada);
+  // Función para filtrar productos por búsqueda y categoría
+  const filtrarProductos = () => {
+    let filtrados = productos;
 
+    // Filtrar por categoría
+    if (categoriaSeleccionada !== "all") {
+      filtrados = filtrados.filter((p) => p.category === categoriaSeleccionada);
+    }
+
+    // Filtrar por búsqueda
+    if (busqueda.trim()) {
+      const terminoBusqueda = busqueda.toLowerCase().trim();
+      filtrados = filtrados.filter((producto) => {
+        const titulo = producto.title?.toLowerCase() || "";
+        const categoria = producto.category?.toLowerCase() || "";
+        const descripcion = producto.description?.toLowerCase() || "";
+        
+        return titulo.includes(terminoBusqueda) || 
+               categoria.includes(terminoBusqueda) ||
+               descripcion.includes(terminoBusqueda);
+      });
+    }
+
+    return filtrados;
+  };
+
+  useEffect(() => {
+    const filtrados = filtrarProductos();
     setProductosFiltrados(filtrados);
-  }, [categoriaSeleccionada, productos]);
+  }, [categoriaSeleccionada, productos, busqueda]);
 
   const handleAddToCart = (producto) => {
     addToCart(producto);
     toast.success("Producto agregado al carrito 🛒", {
-      toastId: `cart-${producto.id}`, // ID único para evitar duplicados
+      toastId: `cart-${producto.id}`,
     });
     setAgregadoId(producto.id);
     setTimeout(() => setAgregadoId(null), 1000);
@@ -137,23 +161,32 @@ function Products() {
     <div className="products-page">
       <h2>{titulo || "Todos los Productos"}</h2>
 
-      {/* Filtro de Categorías */}
-      <div className="category-filter">
-        <label htmlFor="categoria">Filtrar por categoría:</label>
-        <select
-          id="categoria"
-          value={categoriaSeleccionada}
-          onChange={(e) => setCategoriaSeleccionada(e.target.value)}
-          className="category-select"
-        >
-          <option value="all">Todos</option>
-          {categorias.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat.charAt(0).toUpperCase() + cat.slice(1)}
-            </option>
-          ))}
-        </select>
+      <div className="SearchContainer">
+        {/* Filtros */}
+        <div className="filters-container">
+          {/* Filtro de Categorías */}
+          <div className="category-filter">
+            <label htmlFor="categoria">Filtrar por categoría:</label>
+            <select
+              id="categoria"
+              value={categoriaSeleccionada}
+              onChange={(e) => setCategoriaSeleccionada(e.target.value)}
+              className="category-select"
+            >
+              <option value="all">Todos</option>
+              {categorias.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
+        {/* Componente de búsqueda */}
+        <SearchProducts />
+        
+        {/* Chips de Categorías */}
         <div className="category-chips">
           <button
             className={categoriaSeleccionada === "all" ? "chip active" : "chip"}
@@ -176,7 +209,6 @@ function Products() {
       {loading ? (
         <div>
           <Loader />
-          {/* <p>Cargando productos...</p> */}
         </div>
       ) : (
         <>
@@ -228,12 +260,19 @@ function Products() {
                 </div>
               ))
             ) : (
-              <p>No hay productos para esta categoría.</p>
+              <div className="no-products">
+                <p>
+                  {busqueda 
+                    ? `No se encontraron productos para "${busqueda}"`
+                    : "No hay productos para esta categoría."
+                  }
+                </p>
+              </div>
             )}
           </div>
 
-          {/* Info de paginación - Solo mostrar si hay más de 1 página */}
-          {totalPaginas > 1 && (
+          {/* Info de paginación - Solo mostrar si hay más de 1 página y no hay búsqueda */}
+          {totalPaginas > 1 && !busqueda && (
             <div className="pagination-info">
               <p>
                 Página <strong>{paginaActual}</strong> de{" "}
@@ -243,8 +282,8 @@ function Products() {
             </div>
           )}
 
-          {/* Controles de paginación - Solo mostrar si hay más de 1 página */}
-          {totalPaginas > 1 && (
+          {/* Controles de paginación - Solo mostrar si hay más de 1 página y no hay búsqueda */}
+          {totalPaginas > 1 && !busqueda && (
             <div className="pagination-controls">
               <button
                 disabled={paginaActual <= 1}
@@ -262,8 +301,6 @@ function Products() {
           )}
         </>
       )}
-
-      {/* REMOVIDO: ToastContainer - ya está en App.jsx */}
     </div>
   );
 }

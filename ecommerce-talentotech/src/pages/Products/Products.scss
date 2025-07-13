@@ -1,5 +1,5 @@
-@use 'sass:color';
-@use '@styles/styles' as *;
+@use "sass:color";
+@use "@styles/styles" as *;
 
 .products-page {
   padding: $spacing-xl;
@@ -13,144 +13,153 @@
     margin-bottom: $spacing-xl;
     color: $text-primary;
     font-weight: 600;
-    
+
     @media (max-width: $mobile) {
       font-size: 1.5rem;
       margin-bottom: $spacing-lg;
     }
   }
 
-  // Filtro de categoría
-  .category-filter {
-    margin-bottom: $spacing-xl;
+  .SearchContainer {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: $spacing-sm;
-
-    label {
-      font-weight: 500;
-      color: $text-secondary;
-      font-size: 0.9rem;
-      
-      @media (max-width: $tablet) {
-        display: none;
-      }
-    }
-  }
-
-  .category-select {
-    margin: 0 $spacing-md;
-    padding: $spacing-sm $spacing-md;
-    border-radius: 8px;
-    font-size: 1rem;
-    border: 2px solid $border-color;
-    background-color: $white;
-    color: $text-primary;
-    @include smooth-transition;
-    cursor: pointer;
-    min-width: 150px;
-
-    &:focus {
-      @include input-focus;
-      border-color: $primary-color;
+    justify-content: space-between;
+    @media (max-width: $mobile) {
+      display: block;
     }
 
-    &:hover {
-      border-color: color.adjust($primary-color, $lightness: 10%);
-    }
-
-    option {
-      border: none;
-      padding: $spacing-sm;
-    }
-  }
-
-  .category-chips {
-    display: none;
-    flex-wrap: wrap;
-    gap: $spacing-sm;
-    margin-top: $spacing-md;
-    justify-content: center;
-
-    .chip {
-      padding: $spacing-sm $spacing-md;
-      border: 2px solid $border-color;
-      background-color: $white;
-      border-radius: 25px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      @include smooth-transition;
-      font-weight: 500;
-      position: relative;
-      overflow: hidden;
-
-      // Efecto de ondulación
-      &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: color.adjust($primary-color, $alpha: -0.8);
-        transform: translate(-50%, -50%);
-        @include smooth-transition;
-      }
-
-      &:hover {
-        background-color: color.adjust($primary-color, $lightness: 45%);
-        border-color: $primary-color;
-        color: $primary-color;
-        transform: translateY(-2px);
-        box-shadow: $shadow-sm;
-
-        &::before {
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      &:focus {
-        outline: 2px solid $primary-color;
-        outline-offset: 2px;
-      }
-
-      &.active {
-        background-color: $primary-color;
-        color: $white;
-        border-color: $primary-color;
-        font-weight: 600;
-        box-shadow: $shadow-md;
-
-        &:hover {
-          background-color: $primary-hover;
-          transform: translateY(-1px);
-        }
-      }
-
-      // Mejor contraste para accesibilidad
-      &:active {
-        transform: translateY(0);
-      }
-    }
-  }
-
-  // Media queries mejoradas
-  @media (max-width: $desktop) {
+    // Filtro de categoría
     .category-filter {
-      flex-direction: column;
+      margin-bottom: $spacing-xl;
+      display: flex;
       align-items: center;
-      gap: $spacing-md;
+      justify-content: flex-start;
+      gap: $spacing-sm;
+
+      label {
+        font-weight: 500;
+        color: $text-secondary;
+        font-size: 0.9rem;
+
+        @media (max-width: $tablet) {
+          display: none;
+        }
+      }
     }
 
     .category-select {
-      display: none;
+      margin: 0 $spacing-md;
+      padding: $spacing-sm $spacing-md;
+      border-radius: 8px;
+      font-size: 1rem;
+      border: 2px solid $border-color;
+      background-color: $white;
+      color: $text-primary;
+      @include smooth-transition;
+      cursor: pointer;
+      min-width: 150px;
+
+      &:focus {
+        @include input-focus;
+        border-color: $primary-color;
+      }
+
+      &:hover {
+        border-color: color.adjust($primary-color, $lightness: 10%);
+      }
+
+      option {
+        border: none;
+        padding: $spacing-sm;
+      }
     }
 
     .category-chips {
-      display: flex;
+      display: none;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+      margin-top: $spacing-md;
+      justify-content: center;
+
+      .chip {
+        padding: $spacing-sm $spacing-md;
+        border: 2px solid $border-color;
+        background-color: $white;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        @include smooth-transition;
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
+
+        // Efecto de ondulación
+        &::before {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-radius: 50%;
+          background: color.adjust($primary-color, $alpha: -0.8);
+          transform: translate(-50%, -50%);
+          @include smooth-transition;
+        }
+
+        &:hover {
+          background-color: color.adjust($primary-color, $lightness: 45%);
+          border-color: $primary-color;
+          color: $primary-color;
+          transform: translateY(-2px);
+          box-shadow: $shadow-sm;
+
+          &::before {
+            width: 100%;
+            height: 100%;
+          }
+        }
+
+        &:focus {
+          outline: 2px solid $primary-color;
+          outline-offset: 2px;
+        }
+
+        &.active {
+          background-color: $primary-color;
+          color: $white;
+          border-color: $primary-color;
+          font-weight: 600;
+          box-shadow: $shadow-md;
+
+          &:hover {
+            background-color: $primary-hover;
+            transform: translateY(-1px);
+          }
+        }
+
+        // Mejor contraste para accesibilidad
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+
+  @media (max-width: $mobile) {
+    .SearchContainer {
+      .category-filter {
+        flex-direction: column;
+        align-items: center;
+        gap: $spacing-md;
+      }
+
+      .category-select {
+        display: none;
+      }
+
+      .category-chips {
+        display: flex;
+      }
     }
   }
 
@@ -183,7 +192,7 @@
     padding: $spacing-xl;
     color: $text-muted;
     font-size: 1.1rem;
-    
+
     &::before {
       content: "🔍";
       display: block;
@@ -211,15 +220,17 @@
 
     // Efecto de fondo sutil
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, 
-        color.adjust($primary-color, $alpha: -0.97) 0%, 
-        color.adjust($primary-color, $alpha: -0.95) 100%);
+      background: linear-gradient(
+        135deg,
+        color.adjust($primary-color, $alpha: -0.97) 0%,
+        color.adjust($primary-color, $alpha: -0.95) 100%
+      );
       opacity: 0;
       @include smooth-transition;
       pointer-events: none;
@@ -254,16 +265,16 @@
       padding: $spacing-sm;
       background-color: color.adjust($secondary-color, $lightness: 2%);
       border-radius: 8px;
-      
+
       p {
         font-weight: 600;
         margin: 0;
-        
+
         &:first-child {
           color: $warning-color;
           font-size: 0.9rem;
         }
-        
+
         &:last-child {
           color: $success-color;
           font-size: 1.1rem;
@@ -330,7 +341,7 @@
         overflow: hidden;
 
         &::before {
-          content: '';
+          content: "";
           position: absolute;
           top: 50%;
           left: 50%;
@@ -423,10 +434,10 @@
   // Ajustes móviles específicos
   @media (max-width: $mobile) {
     padding: $spacing-md;
-    
+
     .product-card {
       padding: $spacing-md;
-      
+
       img {
         height: 120px;
       }
@@ -434,11 +445,11 @@
       h3 {
         font-size: 1.1rem;
       }
-      
+
       .container-price-rating {
         flex-direction: column;
         gap: $spacing-xs;
-        
+
         p {
           font-size: 0.9rem;
         }
@@ -463,7 +474,7 @@
   flex-direction: column;
   padding: $spacing-xl * 2;
   gap: $spacing-md;
-  
+
   p {
     color: $text-muted;
     font-size: 1.1rem;
@@ -507,16 +518,18 @@
     overflow: hidden;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, 
-        transparent, 
-        color.adjust($primary-color, $alpha: -0.8), 
-        transparent);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        color.adjust($primary-color, $alpha: -0.8),
+        transparent
+      );
       @include smooth-transition;
     }
 
@@ -560,21 +573,21 @@
         transform: none;
       }
     }
-    
+
     .category-chips .chip:hover {
       transform: none;
     }
-    
+
     .pagination-controls button:hover:not(:disabled) {
       transform: none;
     }
-    
+
     .btn-detail:hover,
     .btn-add:hover:not(:disabled) {
       transform: none;
     }
   }
-  
+
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

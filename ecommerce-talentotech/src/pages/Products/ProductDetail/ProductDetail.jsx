@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
-import { CartContext } from "../../context/CartContext.jsx";
+import { CartContext } from "../../../context/CartContext.jsx";
 import { toast } from "react-toastify";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../auth/Firebase";
-import useUser from "../../hooks/useUser";
+import { db } from "../../../auth/Firebase.js";
+import useUser from "../../../hooks/useUser.js";
 import "./ProductDetail.scss";
-import { useProducts } from "../../context/ProductsContext";
+import { useProducts } from "../../../context/ProductsContext.jsx";
 
 function ProductDetail() {
   const { id } = useParams();

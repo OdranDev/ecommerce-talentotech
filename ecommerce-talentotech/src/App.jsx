@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
-import ProductDetail from "./pages/Products/ProductDetail";
+import ProductDetail from "./pages/Products/ProductDetail/ProductDetail";
 import Cart from "./pages/Cart/Cart";
 import Profile from "./pages/Profile/Profile";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
@@ -19,81 +19,84 @@ import Contact from "./pages/Contact/Contact";
 import Register from "./pages/Register/Register";
 import UserList from "./pages/Admin/UserList/UserList";
 import ProductsListAdmin from "./pages/Admin/ProductsListAdmin/ProductsListAdmin";
+import { SearchProvider } from "./context/SearchContext";
 import "./App.css";
 
 function App() {
   return (
-    <div className="App-container">
-      <Navbar />
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<ProductDetail />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/contact" element={<Contact />} />
+    <SearchProvider>
+      <div className="App-container">
+        <Navbar />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/contact" element={<Contact />} />
 
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PublicRoute>
-                <Register />
-              </PublicRoute>
-            }
-          />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <PublicRoute>
+                  <Register />
+                </PublicRoute>
+              }
+            />
 
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute rolesPermitidos={["user", "cliente", "basic"]}>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute rolesPermitidos={["user", "cliente", "basic"]}>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/admin"
-            element={
-              <PrivateRoute adminOnly={true}>
-                <AdminDashboard />
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/admin"
+              element={
+                <PrivateRoute adminOnly={true}>
+                  <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/admin/users"
-            element={
-              <PrivateRoute adminOnly={true}>
-                <UserList />
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/admin/users"
+              element={
+                <PrivateRoute adminOnly={true}>
+                  <UserList />
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/admin/products"
-            element={
-              <PrivateRoute adminOnly={true}>
-                <ProductsListAdmin />
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/admin/products"
+              element={
+                <PrivateRoute adminOnly={true}>
+                  <ProductsListAdmin />
+                </PrivateRoute>
+              }
+            />
 
-          <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
 
-        <ToastContainer position="top-right" autoClose={1800} />
-      </main>
-      <Footer />
-    </div>
+          <ToastContainer position="top-right" autoClose={1800} />
+        </main>
+        <Footer />
+      </div>
+    </SearchProvider>
   );
 }
 

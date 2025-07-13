@@ -55,22 +55,39 @@ const Home = () => {
   if (cargando) {
     return (
       <div className="home">
-        <section className="hero">
-          <div className="hero-background">
-            <div className="hero-overlay"></div>
-          </div>
-          <div className="hero-content">
-            <h1 className="hero-title">{titulo}</h1>
-            <p className="hero-subtitle">
-              Productos inteligentes que transforman tu experiencia
-            </p>
-            <div className="hero-actions">
-              <Link to="/products" className="btn-primary btn-disabled" tabIndex="-1">
-                Ver productos
-              </Link>
+        <section className="hero" role="banner">
+        <div className="hero-background">
+          <div className="hero-overlay"></div>
+        </div>
+        <div className="hero-content">
+          <h1 className="hero-title">{titulo}</h1>
+          <p className="hero-subtitle">
+            Branding, diseño y productos inteligentes que potencian tu negocio
+          </p>
+          <div className="hero-stats">
+            <div className="stat">
+              <span className="stat-number">{productos.length}+</span>
+              <span className="stat-label">Productos</span>
+            </div>
+            <div className="stat">
+              <span className="stat-number">500+</span>
+              <span className="stat-label">Clientes</span>
+            </div>
+            <div className="stat">
+              <span className="stat-number">4.8</span>
+              <span className="stat-label">Valoración</span>
             </div>
           </div>
-        </section>
+          <div className="hero-actions">
+            <Link to="/products" className="btn-primary">
+              Explorar productos
+            </Link>
+            <Link to="/about" className="btn-secondary">
+              Conoce más
+            </Link>
+          </div>
+        </div>
+      </section>
 
         <section className="featured-products">
           <div className="container">

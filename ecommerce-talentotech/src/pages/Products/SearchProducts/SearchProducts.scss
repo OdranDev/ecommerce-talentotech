@@ -1,0 +1,267 @@
+@use 'sass:color';
+@use '@styles/styles' as *;
+
+.search-products {
+  margin-bottom: $spacing-xl;
+  @include fadeIn;
+
+  // Desktop y tablet: barra compacta al lado del filtro
+  @media (min-width: $desktop) {
+    padding: 1px;
+  }
+
+  .search-input-container {
+    position: relative;
+    @include flex-center;
+    background-color: $white;
+    border: 2px solid $border-color;
+    border-radius: 12px;
+    padding: $spacing-sm;
+    @include smooth-transition;
+    box-shadow: $shadow-sm;
+    
+    // Desktop: ancho compacto por defecto, crece con focus
+    @media (min-width: $desktop) {
+      margin: 0;
+      transition: width 3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      
+      &:focus-within {
+        width: 400px;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+    }
+    
+    // Tablet: similar a desktop pero más ancho
+    @media (min-width: $tablet) and (max-width: $desktop) {
+      width: 180px;
+      margin: 0;
+      transition: width 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      
+      &:focus-within {
+        width: 350px;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+    }
+    
+    // Mobile: ancho completo como antes
+    @media (max-width: $tablet) {
+      max-width: 100%;
+      margin: 0 auto;
+      
+      &:focus-within {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+    }
+
+    &:hover {
+      border-color: color.adjust($primary-color, $lightness: 10%);
+      box-shadow: $shadow-md;
+    }
+
+    .search-icon {
+      color: $text-muted;
+      font-size: 1.2rem;
+      margin-right: $spacing-sm;
+      @include smooth-transition;
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: $spacing-sm;
+      font-size: 1rem;
+      color: $text-primary;
+      background: transparent;
+      font-family: $font-base;
+
+      &::placeholder {
+        color: $text-muted;
+        font-style: italic;
+      }
+
+      &:focus {
+        color: $text-primary;
+      }
+    }
+
+    .clear-search-btn {
+      background: none;
+      border: none;
+      color: $text-muted;
+      cursor: pointer;
+      padding: $spacing-xs;
+      border-radius: 50%;
+      @include flex-center;
+      @include smooth-transition;
+      margin-left: $spacing-xs;
+      font-size: 1.3rem;
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+
+      &:hover {
+        background-color: color.adjust($error-color, $lightness: 45%);
+        color: $error-color;
+        transform: scale(1.1);
+      }
+
+      &:focus {
+        outline: 2px solid $error-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+
+    // Estado activo cuando hay búsqueda
+    &.has-search {
+      border-color: $primary-color;
+      
+      .search-icon {
+        color: $primary-color;
+      }
+    }
+
+    @media (max-width: $tablet) {
+      max-width: 100%;
+      margin: 0 $spacing-md;
+    }
+
+    @media (max-width: $mobile) {
+      margin: 0;
+      padding: $spacing-xs $spacing-sm;
+      
+      .search-input {
+        font-size: 0.9rem;
+        padding: $spacing-xs;
+      }
+      
+      .search-icon {
+        font-size: 1.1rem;
+        margin-right: $spacing-xs;
+      }
+    }
+  }
+
+  .search-indicator {
+    margin-top: $spacing-md;
+    text-align: center;
+    @include fadeIn;
+
+    p {
+      display: inline-flex;
+      align-items: center;
+      gap: $spacing-sm;
+      background-color: color.adjust($primary-color, $lightness: 45%);
+      color: $primary-color;
+      padding: $spacing-sm $spacing-md;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 1px solid color.adjust($primary-color, $lightness: 20%);
+      box-shadow: $shadow-sm;
+
+      strong {
+        color: $primary-dark;
+        font-weight: 600;
+      }
+
+      .clear-search-link {
+        background: none;
+        border: none;
+        color: $primary-color;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: 15px;
+        @include smooth-transition;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+
+        &:hover {
+          background-color: color.adjust($primary-color, $lightness: 35%);
+          text-decoration: none;
+          transform: scale(1.05);
+        }
+
+        &:focus {
+          outline: 2px solid $primary-color;
+          outline-offset: 2px;
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+
+    @media (max-width: $mobile) {
+      margin-top: $spacing-sm;
+      
+      p {
+        flex-direction: column;
+        gap: $spacing-xs;
+        padding: $spacing-xs $spacing-sm;
+        font-size: 0.85rem;
+        
+        .clear-search-link {
+          font-size: 0.8rem;
+          padding: $spacing-xs;
+        }
+      }
+    }
+  }
+
+  // Animación de entrada para el indicador de búsqueda
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // Mejoras de accesibilidad
+  .search-input-container:focus-within {
+    .search-icon {
+      color: $primary-color;
+    }
+  }
+
+  // Estados de hover mejorados
+  .search-input-container:hover {
+    .search-icon {
+      color: $primary-color;
+    }
+  }
+
+  // Mejoras para usuarios con preferencias de movimiento reducido
+  @media (prefers-reduced-motion: reduce) {
+    .search-input-container {
+      transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out !important;
+    }
+    
+    .clear-search-btn:hover {
+      transform: none;
+    }
+    
+    .clear-search-link:hover {
+      transform: none;
+    }
+    
+    .search-input-container:hover {
+      box-shadow: $shadow-sm;
+    }
+  }
+}
