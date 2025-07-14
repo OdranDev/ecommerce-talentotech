@@ -1,8 +1,134 @@
 @use '@styles/styles' as *;
 
-
-.unAuthorized{
-    text-align: "center"; 
-    padding: "4rem";
+.unauthorized {
+    min-height: 100vh;
+    background: linear-gradient(135deg, $secondary-color 0%, $primary-light 100%);
+    padding: $spacing-md;
+    @include flex-center;
     @include fadeIn;
+  
+  &__container {
+    @include flex-center;
+    flex-direction: column;
+    max-width: 500px;
+    width: 100%;
+    background: $white;
+    border-radius: 16px;
+    box-shadow: $shadow-xl;
+    padding: $spacing-xl * 2;
+    text-align: center;
+    
+    @media (max-width: $mobile) {
+      padding: $spacing-xl;
+      margin: $spacing-md;
+    }
+  }
+  
+  &__icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, $error-color, #ef4444);
+    border-radius: 50%;
+    @include flex-center;
+    margin-bottom: $spacing-xl;
+    @include smooth-transition;
+    
+    svg {
+      width: 48px;
+      height: 48px;
+      color: $white;
+    }
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  
+  &__content {
+    margin-bottom: $spacing-xl;
+  }
+  
+  &__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: $spacing-md;
+    font-family: $font-base;
+    
+    @media (max-width: $mobile) {
+      font-size: 2rem;
+    }
+  }
+  
+  &__message {
+    font-size: 1.125rem;
+    color: $text-secondary;
+    margin-bottom: $spacing-sm;
+    line-height: 1.6;
+  }
+  
+  &__submessage {
+    font-size: 0.875rem;
+    color: $text-muted;
+    line-height: 1.5;
+  }
+  
+  &__actions {
+    display: flex;
+    gap: $spacing-md;
+    width: 100%;
+    
+    @media (max-width: $mobile) {
+      flex-direction: column;
+    }
+  }
+  
+  &__button {
+    @include flex-center;
+    gap: $spacing-sm;
+    padding: $spacing-md $spacing-lg;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+    flex: 1;
+    @include smooth-transition;
+    
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+    
+    &--primary {
+      background: $primary-color;
+      color: $white;
+      
+      &:hover {
+        background: $primary-hover;
+        @include button-hover;
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+    
+    &--secondary {
+      background: $secondary-color;
+      color: $text-primary;
+      border: 1px solid $border-color;
+      
+      &:hover {
+        background: $white;
+        border-color: $primary-color;
+        @include button-hover;
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
 }

@@ -5,7 +5,7 @@ function PrivateRoute({ children, adminOnly = false }) {
   const { user, role } = useAuth();
 
   if (!user) return <Navigate to="/login" />;
-  if (adminOnly && role !== 'admin') return <Navigate to="/" />;
+  if (adminOnly && role !== 'admin') return <Navigate to="/unauthorized" />;
 
   return children;
 }
