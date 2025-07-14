@@ -1,5 +1,5 @@
-@use '@styles/styles' as *;
-@use 'sass:color';
+@use "@styles/styles" as *;
+@use "sass:color";
 
 // Estilos base del navbar
 .navbar {
@@ -90,6 +90,10 @@
           font-weight: bold;
           box-shadow: $shadow-sm;
           @include fadeIn;
+          @media (max-width: $mobile) {
+            top: 0px;
+            right: 0px;
+          }
         }
       }
     }
@@ -180,15 +184,14 @@
     @media (max-width: $tablet) {
       position: fixed;
       top: 60px;
-      right: 0;
+      right: 0; // Vuelve a la derecha
       width: 30%;
       min-width: 200px;
       max-width: 300px;
-      background-color: $text-primary;
       flex-direction: column;
       align-items: stretch;
       padding: $spacing-md;
-      transform: translateX(100%);
+      transform: translateX(100%); // Desliza desde la derecha
       @include transition(transform, 0.3s, ease);
       box-shadow: $shadow-xl;
       max-height: calc(100vh - 60px);
@@ -197,6 +200,7 @@
 
       &.open {
         transform: translateX(0%);
+        background-color: #1e3b33;
       }
 
       li {
@@ -274,7 +278,10 @@
                 text-overflow: ellipsis;
 
                 &:hover {
-                  background-color: color.adjust($text-primary, $lightness: 20%);
+                  background-color: color.adjust(
+                    $text-primary,
+                    $lightness: 20%
+                  );
                   color: $primary-color;
                 }
               }
@@ -329,29 +336,6 @@ body.menu-open {
       }
     }
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    .menu-toggle {
-      transition: none;
-
-      &:hover {
-        transform: none;
-      }
-    }
-
-    .nav-actions {
-      transition: none;
-
-      a,
-      button {
-        transition: none;
-
-        &:hover {
-          transform: none;
-        }
-      }
-    }
-  }
 }
 
 .navbar {
@@ -389,5 +373,25 @@ body.menu-open {
   }
 }
 
+// Overlay para cerrar el menú al hacer clic fuera
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  @include transition(all, 0.3s, ease);
 
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
 
+  @media (min-width: calc($tablet + 1px)) {
+    display: none;
+  }
+}
