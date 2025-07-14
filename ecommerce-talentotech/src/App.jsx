@@ -27,6 +27,7 @@ function App() {
     <SearchProvider>
       <div className="App-container">
         <Navbar />
+        <ToastContainer position="top-right" autoClose={1800} />
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -91,8 +92,6 @@ function App() {
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-
-          <ToastContainer position="top-right" autoClose={1800} />
         </main>
         <Footer />
       </div>
