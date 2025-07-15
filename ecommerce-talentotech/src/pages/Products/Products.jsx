@@ -18,7 +18,7 @@ import Loader from "../../components/loader/Loader.jsx";
 import "./Products.scss";
 import SearchProducts from "./SearchProducts/SearchProducts.jsx";
 
-const PRODUCTS_PER_PAGE = 6;
+const PRODUCTS_PER_PAGE = 10; // Cambiado de 6 a 10
 
 function Products() {
   const { addToCart } = useContext(CartContext);
@@ -32,12 +32,12 @@ function Products() {
   const [agregadoId, setAgregadoId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastVisible, setLastVisible] = useState(null);
-  const [pageStack, setPageStack] = useState([]);
+  const [pageStack, setPageStack] = useState([]); // Inicializado como array vacío
   const [totalProductos, setTotalProductos] = useState(0);
   const [initialized, setInitialized] = useState(false);
 
-  // Corregir la lógica de paginación
-  const paginaActual = pageStack.length > 0 ? pageStack.length : 1;
+  // Corregir la lógica de paginación - empezar desde página 1
+  const paginaActual = pageStack.length + 1; // Cambio aquí: +1 para empezar desde página 1
   const totalPaginas = Math.ceil(totalProductos / PRODUCTS_PER_PAGE);
 
   const fetchProductos = async (direction = "next") => {
@@ -58,14 +58,23 @@ function Products() {
           startAfter(lastVisible),
           limit(PRODUCTS_PER_PAGE)
         );
-      } else if (direction === "prev" && pageStack.length > 1) {
+      } else if (direction === "prev" && pageStack.length > 0) { // Cambio aquí: > 0 en lugar de > 1
         const previous = pageStack[pageStack.length - 2];
-        q = query(
-          collection(db, "products"),
-          orderBy("createdAt", "desc"),
-          startAfter(previous),
-          limit(PRODUCTS_PER_PAGE)
-        );
+        if (previous) {
+          q = query(
+            collection(db, "products"),
+            orderBy("createdAt", "desc"),
+            startAfter(previous),
+            limit(PRODUCTS_PER_PAGE)
+          );
+        } else {
+          // Si no hay documento anterior, cargar la primera página
+          q = query(
+            collection(db, "products"),
+            orderBy("createdAt", "desc"),
+            limit(PRODUCTS_PER_PAGE)
+          );
+        }
       }
 
       const snapshot = await getDocs(q);
@@ -252,7 +261,7 @@ function Products() {
             )}
           </div>
 
-          {/* Info de paginación - Solo mostrar si hay más de 1 página y no hay búsqueda */}
+          {/* Info de paginación - Mostrar desde la página 1 si hay más de 1 página y no hay búsqueda */}
           {totalPaginas > 1 && !busqueda && (
             <div className="pagination-info">
               <p>
@@ -263,7 +272,7 @@ function Products() {
             </div>
           )}
 
-          {/* Controles de paginación - Solo mostrar si hay más de 1 página y no hay búsqueda */}
+          {/* Controles de paginación - Mostrar si hay más de 1 página y no hay búsqueda */}
           {totalPaginas > 1 && !busqueda && (
             <div className="pagination-controls">
               <button
