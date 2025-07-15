@@ -6,6 +6,7 @@ import GlobalProvider from "./context/GlobalContext.jsx";
 import CartProvider from "./context/CartContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { ProductsProvider } from "./context/ProductsContext";
+import { HelmetProvider } from "react-helmet-async";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -14,7 +15,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <ProductsProvider>
           <AuthProvider>
             <CartProvider>
-              <App />
+              <HelmetProvider>
+                <App />
+              </HelmetProvider>
             </CartProvider>
           </AuthProvider>
         </ProductsProvider>

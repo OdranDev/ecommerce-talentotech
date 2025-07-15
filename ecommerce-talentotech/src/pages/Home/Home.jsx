@@ -10,6 +10,8 @@ import { db } from "../../auth/Firebase";
 import Loader from "../../components/loader/Loader";
 import Testimonials from "../Testimonials/Testimonials";
 import { GlobalContext } from "../../context/GlobalContext";
+import { Helmet } from "react-helmet-async";
+
 import "./Home.scss";
 
 const Home = () => {
@@ -56,38 +58,38 @@ const Home = () => {
     return (
       <div className="home">
         <section className="hero" role="banner">
-        <div className="hero-background">
-          <div className="hero-overlay"></div>
-        </div>
-        <div className="hero-content">
-          <h1 className="hero-title">{titulo}</h1>
-          <p className="hero-subtitle">
-            Branding, diseño y productos inteligentes que potencian tu negocio
-          </p>
-          <div className="hero-stats">
-            <div className="stat">
-              <span className="stat-number">{productos.length}+</span>
-              <span className="stat-label">Productos</span>
+          <div className="hero-background">
+            <div className="hero-overlay"></div>
+          </div>
+          <div className="hero-content">
+            <h1 className="hero-title">{titulo}</h1>
+            <p className="hero-subtitle">
+              Branding, diseño y productos inteligentes que potencian tu negocio
+            </p>
+            <div className="hero-stats">
+              <div className="stat">
+                <span className="stat-number">{productos.length}+</span>
+                <span className="stat-label">Productos</span>
+              </div>
+              <div className="stat">
+                <span className="stat-number">500+</span>
+                <span className="stat-label">Clientes</span>
+              </div>
+              <div className="stat">
+                <span className="stat-number">4.8</span>
+                <span className="stat-label">Valoración</span>
+              </div>
             </div>
-            <div className="stat">
-              <span className="stat-number">500+</span>
-              <span className="stat-label">Clientes</span>
-            </div>
-            <div className="stat">
-              <span className="stat-number">4.8</span>
-              <span className="stat-label">Valoración</span>
+            <div className="hero-actions">
+              <Link to="/products" className="btn-primary">
+                Explorar productos
+              </Link>
+              <Link to="/about" className="btn-secondary">
+                Conoce más
+              </Link>
             </div>
           </div>
-          <div className="hero-actions">
-            <Link to="/products" className="btn-primary">
-              Explorar productos
-            </Link>
-            <Link to="/about" className="btn-secondary">
-              Conoce más
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
 
         <section className="featured-products">
           <div className="container">
@@ -131,6 +133,16 @@ const Home = () => {
 
   return (
     <div className="home">
+      <Helmet>
+        <title>Inicio | Mi Tienda Inteligente</title>
+        <meta
+          name="description"
+          content="Explora productos inteligentes, descubre lo más destacado y conoce por qué somos líderes en calidad, soporte y entrega rápida."
+        />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://www.mitienda.com/" />
+      </Helmet>
+
       {/* HERO SECTION */}
       <section className="hero" role="banner">
         <div className="hero-background">
@@ -285,7 +297,9 @@ const Home = () => {
           ) : (
             <div className="no-products">
               <div className="no-products-icon">📦</div>
-              <h3 className="no-products-title">No hay productos disponibles</h3>
+              <h3 className="no-products-title">
+                No hay productos disponibles
+              </h3>
               <p className="no-products-text">
                 Pronto agregaremos productos increíbles para ti.
               </p>

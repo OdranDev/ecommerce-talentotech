@@ -7,36 +7,12 @@
   h2 {
     font-size: 2rem;
     margin-bottom: $spacing-lg;
-    color: $text-primary;
+    color: $primary-dark;
     text-align: center;
   }
 
   .SearchContainer {
     margin-bottom: $spacing-lg;
-
-    .filters-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: $spacing-sm;
-      margin-bottom: $spacing-md;
-
-      .category-filter {
-        label {
-          margin-right: $spacing-sm;
-          font-weight: 500;
-          color: $text-primary;
-        }
-
-        select {
-          padding: $spacing-sm;
-          border: 1px solid $border-color;
-          border-radius: 4px;
-          font-size: 1rem;
-          @include input-focus;
-        }
-      }
-    }
 
     .category-chips {
       display: flex;
@@ -75,7 +51,7 @@
   }
 
   .product-card {
-    background-color: $white;
+    background-color: $primary-dark;
     padding: $spacing-md;
     border-radius: 12px;
     box-shadow: $shadow-md;
@@ -97,21 +73,24 @@
       height: 200px;
       object-fit: contain;
       margin-bottom: $spacing-md;
+      background-color: $white;
+      border-radius: 12px;
+
     }
 
     h3 {
       font-size: 1.1rem;
       margin-bottom: $spacing-sm;
-      color: $text-primary;
+      color: $white;
       min-height: 48px;
       line-height: 1.2;
     }
 
     .container-price-rating {
       font-size: 0.9rem;
-      color: $text-muted;
+      color: $white;
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       margin-bottom: $spacing-md;
 
       span {
@@ -128,6 +107,7 @@
       .btn-detail,
       .btn-add {
         padding: $spacing-sm;
+        border: 2px solid $primary-hover;
         border-radius: 6px;
         font-weight: 500;
         font-size: 0.9rem;

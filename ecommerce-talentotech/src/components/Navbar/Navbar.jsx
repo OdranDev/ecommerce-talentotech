@@ -7,6 +7,7 @@ import { RiShoppingCartFill } from "react-icons/ri";
 import { AiTwotoneShop } from "react-icons/ai";
 import { useAuth } from "../../context/AuthContext";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
 
 import "./Navbar.scss";
 
@@ -14,7 +15,7 @@ export default function Navbar() {
   const { titulo } = useContext(GlobalContext);
   const { cartItems } = useContext(CartContext);
   const { user, role, logout } = useAuth();
-
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -73,6 +74,7 @@ export default function Navbar() {
     logout();
     closeMenu();
     closeDropdown();
+    navigate("/");
   };
 
   return (

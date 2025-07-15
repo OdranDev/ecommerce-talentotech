@@ -12,6 +12,10 @@
   font-family: $font-base;
   @include fadeIn;
 
+  a{
+    text-decoration: none;
+  }
+
   .navbar-title {
     font-size: 1.5rem;
     font-weight: bold;

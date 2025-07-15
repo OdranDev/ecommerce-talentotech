@@ -163,25 +163,6 @@ function Products() {
 
       <div className="SearchContainer">
         {/* Filtros */}
-        <div className="filters-container">
-          {/* Filtro de Categorías */}
-          <div className="category-filter">
-            <label htmlFor="categoria">Filtrar por categoría:</label>
-            <select
-              id="categoria"
-              value={categoriaSeleccionada}
-              onChange={(e) => setCategoriaSeleccionada(e.target.value)}
-              className="category-select"
-            >
-              <option value="all">Todos</option>
-              {categorias.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
 
         {/* Componente de búsqueda */}
         <SearchProducts />

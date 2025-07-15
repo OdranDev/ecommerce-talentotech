@@ -15,19 +15,18 @@ function Cart() {
   const [isClearingAll, setIsClearingAll] = useState(false);
 
   if (cartItems.length === 0) {
-  return (
-    <div className="cart-empty">
-      <section className="empty-state">
-        <h2>Tu carrito está vacío</h2>
-        <p>¡Explora nuestros productos y encuentra lo que más te gusta!</p>
-        <Link to="/products">
-          <button className="cta-button">Ver productos</button>
-        </Link>
-      </section>
-    </div>
-  );
-}
-
+    return (
+      <div className="cart-empty">
+        <section className="empty-state">
+          <h2>Tu carrito está vacío</h2>
+          <p>¡Explora nuestros productos y encuentra lo que más te gusta!</p>
+          <Link to="/products">
+            <button className="cta-button">Ver productos</button>
+          </Link>
+        </section>
+      </div>
+    );
+  }
 
   const total = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -139,13 +138,22 @@ function Cart() {
                 </span>
               </div>
             </div>
-            <button
-              className="remove-btn"
-              onClick={() => confirmRemove(item.id)}
-              disabled={isClearingAll}
-            >
-              Eliminar
-            </button>
+            <div className="action-buttons">
+              <button
+                className="remove-btn"
+                onClick={() => confirmRemove(item.id)}
+                disabled={isClearingAll}
+              >
+                Eliminar
+              </button>
+              <button
+                className="pay-btn"
+                onClick={() => confirmPay(item.id)}
+                disabled={isClearingAll}
+              >
+                Pagar
+              </button>
+            </div>
           </li>
         ))}
       </ul>

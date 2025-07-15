@@ -3,6 +3,8 @@
 
 .search-products {
   margin-bottom: $spacing-xl;
+  max-width: 90%;
+  margin-inline: auto;
   @include fadeIn;
 
   // Desktop y tablet: barra compacta al lado del filtro
@@ -32,14 +34,14 @@
       }
     }
     
-    // Tablet: similar a desktop pero más ancho
+    // Tablet
     @media (min-width: $tablet) and (max-width: $desktop) {
       width: 180px;
       margin: 0;
       transition: width 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
       
       &:focus-within {
-        width: 350px;
+        width: 50%;
         border-color: $primary-color;
         box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
       }
