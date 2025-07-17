@@ -1,11 +1,12 @@
 @use "@styles/styles" as *;
 
 .cart-container {
-  @include container;
   padding: $spacing-xl 0;
   font-family: $font-base;
   color: $text-primary;
   max-width: 93%;
+  @include fadeIn;
+  @include container;
 
   h2 {
     font-size: 2rem;
@@ -21,14 +22,15 @@
   }
 
   .cart-items {
-    margin: 0;
-    padding: 0;
     display: grid;
     gap: $spacing-lg;
+    padding: 0;
+    margin: 0;
 
     li {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      grid-template-rows: auto auto;
       gap: $spacing-md;
       background-color: $secondary-color;
       border: 1px solid $border-color;
@@ -44,7 +46,7 @@
 
       img {
         width: 100%;
-        max-width: 120px;
+        max-width: 100px;
         height: auto;
         object-fit: contain;
         border-radius: 0.5rem;
@@ -64,15 +66,15 @@
         .qty-row {
           display: flex;
           flex-wrap: wrap;
-          gap: $spacing-sm;
           align-items: center;
+          gap: $spacing-sm;
+          justify-content: center;
 
           span {
             font-size: 0.95rem;
           }
 
           .subtotal {
-            margin-left: auto;
             font-weight: 500;
             font-size: 0.95rem;
             color: $text-secondary;
@@ -103,11 +105,13 @@
           }
         }
       }
+
       .action-buttons {
+        grid-column: span 2;
         display: flex;
+        flex-wrap: wrap;
         gap: $spacing-sm;
         margin-top: auto;
-        flex-wrap: wrap;
 
         button {
           flex: 1;
@@ -177,7 +181,7 @@
 
   .clear-cart-btn {
     display: block;
-    margin: $spacing-xl auto 0;
+    margin: $spacing-xl auto $spacing-md;
     background-color: $primary-dark;
     color: $white;
     border: none;
@@ -200,6 +204,7 @@
 }
 
 .cart-empty {
+  @include fadeIn;
   @include flex-center;
   height: 70vh;
   text-align: center;
@@ -272,10 +277,11 @@
 
     .clear-cart-btn {
       font-size: 1.125rem;
+      margin-bottom: 1rem;
     }
   }
 
   .cart-empty .empty-state {
-    padding: $spacing-xl $spacing-xxl;
+    padding: $spacing-xl $spacing-xl;
   }
 }

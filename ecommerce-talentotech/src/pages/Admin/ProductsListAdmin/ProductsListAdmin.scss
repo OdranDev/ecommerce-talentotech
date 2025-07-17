@@ -1,55 +1,512 @@
-@use '@styles/styles' as *;
+@use "@styles/styles" as *;
 
 .products-admin {
-  margin-top: 60px;
-  padding: 2rem;
+  @include container;
+  padding: $spacing-xl;
+  margin-top: 1rem;
+  background: linear-gradient(
+    135deg,
+    #{$secondary-color} 0%,
+    #{$primary-light} 100%
+  );
   @include fadeIn;
 
-  .form-agregar,
-  .lista-productos {
-    margin-top: 2rem;
-    background: #f9f9f9;
-    padding: 1rem;
+  .products-admin-header {
+    @include flex-center;
+    justify-content: space-between;
+    margin-bottom: $spacing-xl;
+    padding: $spacing-lg;
+    background: $white;
     border-radius: 12px;
-  }
+    box-shadow: $shadow-sm;
+    border: 1px solid $border-color;
 
-  input,
-  textarea {
-    max-width: 96%;
-    margin-inline: auto;
-    margin-block: 0.5rem;
-    display: block;
-    padding: 0.5rem;
-    width: 100%;
+    @media (max-width: 480px){
+      flex-direction: column;
+    }
 
-  }
-
-  button {
-    margin: 0.5rem 0.25rem;
-    padding: 0.4rem 1rem;
-    border: none;
-    background-color: #333;
-    color: white;
-    cursor: pointer;
-    border-radius: 6px;
-
-    &:hover {
-      background-color: #555;
+    h2 {
+      color: $text-primary;
+      font-family: $font-base;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
     }
   }
 
-  // .productosExistentes {
-  //   display: flex;
-  // }
+  .btn-back {
+    @include smooth-transition;
+    background-color: $text-secondary;
+    color: $white;
+    padding: $spacing-sm $spacing-md;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-bottom: $spacing-lg;
+
+    &:hover {
+      background-color: $text-primary;
+      transform: translateX(-2px);
+    }
+  }
+
+  h2 {
+    color: $text-primary;
+    font-size: 2rem;
+    margin-bottom: $spacing-xl;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  // Formulario agregar
+  .form-agregar {
+    background: $white;
+    padding: $spacing-xl;
+    border-radius: 16px;
+    box-shadow: $shadow-md;
+    margin-bottom: $spacing-xl;
+    border: 1px solid $border-color;
+
+    h3 {
+      color: $text-primary;
+      font-size: 1.5rem;
+      margin-bottom: $spacing-lg;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .form-producto {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: $spacing-md;
+      align-items: start;
+
+      @media (max-width: $tablet) {
+        grid-template-columns: 1fr;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: $spacing-md;
+        border: 2px solid $border-color;
+        border-radius: 12px;
+        font-size: 1rem;
+        @include smooth-transition;
+        background-color: $secondary-color;
+        color: $text-primary;
+
+        &:focus {
+          @include input-focus;
+          background-color: $white;
+        }
+
+        &::placeholder {
+          color: $text-muted;
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 120px;
+        grid-column: 1 / -1;
+      }
+
+      .form-buttons {
+        grid-column: 1 / -1;
+        display: flex;
+        gap: $spacing-md;
+        justify-content: center;
+        margin-top: $spacing-md;
+
+        @media (max-width: $mobile) {
+          flex-direction: column;
+        }
+      }
+    }
+  }
+
+  // Botones principales
+  .btn-primary {
+    background-color: $primary-color;
+    color: $white;
+    padding: $spacing-md $spacing-xl;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    @include smooth-transition;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+      background-color: $primary-hover;
+      @include button-hover;
+    }
+  }
+
+  .btn-secondary {
+    background-color: $text-secondary;
+    color: $white;
+    padding: $spacing-md $spacing-xl;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    @include smooth-transition;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+      background-color: $text-primary;
+      @include button-hover;
+    }
+  }
+
+  // Lista de productos
   .lista-productos {
+    .productosExistentes {
+      color: $text-primary;
+      font-size: 1.5rem;
+      margin-bottom: $spacing-lg;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .pagination-info {
+      background: $primary-light;
+      padding: $spacing-md;
+      border-radius: 12px;
+      margin: $spacing-lg 0;
+      text-align: center;
+      color: $text-primary;
+      font-weight: 500;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+
+      strong {
+        color: $primary-color;
+      }
+    }
+
+    .no-resultados {
+      text-align: center;
+      color: $text-muted;
+      font-size: 1.2rem;
+      padding: $spacing-xl;
+      background: $secondary-color;
+      border-radius: 12px;
+      margin: $spacing-lg 0;
+
+      strong {
+        color: $primary-color;
+      }
+    }
+
     .productsContainer {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: $spacing-lg;
       justify-items: center;
+      margin-bottom: $spacing-xl;
+
       .producto-item {
-        max-width: 320px;
-        border-bottom: 1px solid #ddd;
-        padding: 1rem 0;
+        width: 100%;
+        max-width: 350px;
+        min-height: 480px;
+        background: $white;
+        border-radius: 16px;
+        box-shadow: $shadow-md;
+        @include smooth-transition;
+        border: 1px solid $border-color;
+        overflow: hidden;
+
+        &:hover {
+          @include button-hover;
+          border-color: $primary-color;
+        }
+
+        .form-producto {
+          padding: $spacing-lg;
+
+          input,
+          textarea {
+            margin-bottom: $spacing-md;
+          }
+
+          .form-buttons {
+            display: flex;
+            gap: $spacing-sm;
+            justify-content: center;
+            margin-top: $spacing-md;
+
+            button {
+              flex: 1;
+              max-width: 120px;
+            }
+          }
+        }
+
+        .producto-display {
+          padding: $spacing-lg;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          height: 100%;
+
+          img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background: $secondary-color;
+            border-radius: 12px;
+            border: 1px solid $border-color;
+            margin-bottom: $spacing-md;
+          }
+
+          h4 {
+            color: $text-primary;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: $spacing-sm;
+            min-height: 48px;
+            line-height: 1.3;
+            display: flex;
+            align-items: center;
+            text-align: center;
+          }
+
+          .categoria {
+            color: $primary-color;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: $spacing-md;
+            padding: $spacing-xs $spacing-sm;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+          }
+
+          .descripcion {
+            color: $text-secondary;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: $spacing-md;
+            flex-grow: 1;
+          }
+
+          .container-rate-price-stock {
+            display: flex;
+            flex-wrap: wrap;
+            gap: $spacing-sm;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: $spacing-md;
+            padding: $spacing-sm;
+            background: $secondary-color;
+            border-radius: 12px;
+            border: 1px solid $border-color;
+
+            .rating {
+              color: $warning-color;
+              font-weight: 500;
+              font-size: 0.9rem;
+            }
+
+            .price {
+              color: $success-color;
+              font-weight: 700;
+              font-size: 1.1rem;
+            }
+
+            .stock {
+              color: $text-muted;
+              font-weight: 500;
+              font-size: 0.9rem;
+            }
+          }
+
+          .producto-actions {
+            display: flex;
+            gap: $spacing-sm;
+            width: 100%;
+            justify-content: center;
+
+            .btn-edit {
+              background-color: $warning-color;
+              color: $white;
+              padding: $spacing-sm $spacing-md;
+              border: none;
+              border-radius: 8px;
+              cursor: pointer;
+              font-weight: 500;
+              flex: 1;
+              max-width: 100px;
+              @include smooth-transition;
+
+              &:hover {
+                background-color: #b45309;
+                @include button-hover;
+              }
+            }
+
+            .btn-delete {
+              background-color: $error-color;
+              color: $white;
+              padding: $spacing-sm $spacing-md;
+              border: none;
+              border-radius: 8px;
+              cursor: pointer;
+              font-weight: 500;
+              flex: 1;
+              max-width: 100px;
+              @include smooth-transition;
+
+              &:hover {
+                background-color: #b91c1c;
+                @include button-hover;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Paginación
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: $spacing-sm;
+    margin: $spacing-xl 0;
+    flex-wrap: wrap;
+
+    .pagination-btn {
+      padding: $spacing-sm $spacing-md;
+      border: 2px solid $border-color;
+      background: $white;
+      color: $text-primary;
+      cursor: pointer;
+      border-radius: 12px;
+      font-weight: 500;
+      @include smooth-transition;
+      box-shadow: $shadow-sm;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: $secondary-color;
+        color: $text-muted;
+      }
+
+      &:hover:not(:disabled) {
+        background: $primary-color;
+        color: $white;
+        border-color: $primary-color;
+        @include button-hover;
+      }
+    }
+
+    .pagination-numbers {
+      display: flex;
+      gap: $spacing-xs;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .pagination-number {
+        padding: $spacing-sm $spacing-md;
+        border: 2px solid $border-color;
+        background: $white;
+        color: $text-primary;
+        cursor: pointer;
+        border-radius: 12px;
+        min-width: 44px;
+        text-align: center;
+        font-weight: 500;
+        @include smooth-transition;
+        box-shadow: $shadow-sm;
+
+        &.active {
+          background: $primary-color;
+          color: $white;
+          border-color: $primary-color;
+          box-shadow: $shadow-md;
+        }
+
+        &:hover:not(.active) {
+          background: $primary-light;
+          border-color: $primary-color;
+          color: $primary-color;
+          @include button-hover;
+        }
+      }
+
+      .pagination-dots {
+        padding: 0 $spacing-sm;
+        color: $text-muted;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: $tablet) {
+  .products-admin {
+    padding: $spacing-md;
+
+    .form-agregar {
+      padding: $spacing-lg;
+    }
+
+    .lista-productos .productsContainer {
+      grid-template-columns: 1fr;
+      gap: $spacing-md;
+    }
+
+    .pagination-controls {
+      .pagination-numbers {
+        gap: $spacing-xs;
+      }
+    }
+  }
+}
+
+@media (max-width: $mobile) {
+  .products-admin {
+    padding: $spacing-sm;
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    .form-agregar {
+      padding: $spacing-md;
+
+      .form-producto {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .lista-productos .productsContainer .producto-item {
+      min-height: auto;
+
+      .producto-display .producto-actions {
+        gap: $spacing-md;
+      }
+    }
+
+    .pagination-controls {
+      gap: $spacing-lg;
+
+      .pagination-numbers {
+        order: 1;
       }
     }
   }

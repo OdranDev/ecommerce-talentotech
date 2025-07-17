@@ -28,7 +28,6 @@
       transition: width 3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
       
       &:focus-within {
-        width: 400px;
         border-color: $primary-color;
         box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
       }
@@ -209,7 +208,6 @@
       margin-top: $spacing-sm;
       
       p {
-        flex-direction: column;
         gap: $spacing-xs;
         padding: $spacing-xs $spacing-sm;
         font-size: 0.85rem;

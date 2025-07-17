@@ -1,4 +1,4 @@
-@use '@styles/styles' as *;
+@use "@styles/styles" as *;
 
 .products-page {
   @include container;
@@ -73,9 +73,9 @@
       height: 200px;
       object-fit: contain;
       margin-bottom: $spacing-md;
-      background-color: $white;
+      background-color: $fondo-color-img;
       border-radius: 12px;
-
+      border: 1px solid $white;
     }
 
     h3 {
@@ -84,17 +84,27 @@
       color: $white;
       min-height: 48px;
       line-height: 1.2;
+      max-width: 90%;
     }
 
     .container-price-rating {
       font-size: 0.9rem;
       color: $white;
       display: flex;
-      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+      justify-content: space-between;
       margin-bottom: $spacing-md;
 
       span {
         font-weight: 500;
+        white-space: nowrap;
+      }
+
+      .price {
+        color: $success-color;
+        font-weight: bold;
+        font-size: 1rem;
       }
     }
 

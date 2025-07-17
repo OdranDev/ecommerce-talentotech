@@ -33,7 +33,10 @@ const AdminDashboard = () => {
           <h3>Órdenes</h3>
           <p>Revisar pedidos de los clientes.</p>
           <Link to="/admin/ordenes">
-            <button>Ver Órdenes</button>
+            <button className="construccion">
+              Ver Órdenes
+              <span className="tooltip-text">Página en construcción</span>
+            </button>
           </Link>
         </div>
       </div>

@@ -8,6 +8,8 @@ import { AiTwotoneShop } from "react-icons/ai";
 import { useAuth } from "../../context/AuthContext";
 import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 import "./Navbar.scss";
 
@@ -70,11 +72,85 @@ export default function Navbar() {
     };
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    closeMenu();
-    closeDropdown();
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      const result = await Swal.fire({
+        title: '¿Cerrar sesión?',
+        text: '¿Estás seguro que deseas cerrar tu sesión?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cerrar sesión',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true,
+        customClass: {
+          popup: 'swal-popup',
+          title: 'swal-title',
+          content: 'swal-content',
+          confirmButton: 'swal-confirm',
+          cancelButton: 'swal-cancel'
+        }
+      });
+
+      if (result.isConfirmed) {
+        // Mostrar loading mientras se procesa el logout
+        Swal.fire({
+          title: 'Cerrando sesión...',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          willOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        // Simular un pequeño delay para mejor UX
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        // Ejecutar logout
+        await logout();
+        
+        // Cerrar menús
+        closeMenu();
+        closeDropdown();
+        
+        // Cerrar el loading
+        Swal.close();
+        
+        // Mostrar toast de éxito
+        toast.success('¡Sesión cerrada exitosamente!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        
+        // Redirigir al home
+        navigate("/");
+      }
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      
+      // Cerrar cualquier modal de loading
+      Swal.close();
+      
+      // Mostrar toast de error
+      toast.error('Error al cerrar sesión. Intenta nuevamente.', {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
   };
 
   return (

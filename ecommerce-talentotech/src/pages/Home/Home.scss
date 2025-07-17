@@ -8,7 +8,7 @@
   // Hero Section
   .hero {
     position: relative;
-    min-height: 80vh;
+    min-height: 66vh;
     overflow: hidden;
     margin-bottom: 4rem;
     @include flex-center;
@@ -100,7 +100,6 @@
         }
 
         @media (max-width: $mobile) {
-          flex-direction: column;
           gap: 1.5rem;
         }
 
@@ -190,7 +189,7 @@
 
   // Featured Products Section
   .featured-products {
-    padding: 4rem 0;
+    padding: 2rem 0;
     position: relative;
 
     @media (max-width: $tablet) {

@@ -1,10 +1,17 @@
 // styles/_mixins.scss
+@use "variables" as *;
 
-@use "variables" as *; // accedemos a variables sin namespace
-
-//
-// Mixins
-//
+// Keyframes definition (outside of mixin)
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 @mixin flex-center {
   display: flex;
@@ -53,14 +60,4 @@
 
 @mixin fadeIn {
   animation: fadeIn 0.4s ease-in;
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 }

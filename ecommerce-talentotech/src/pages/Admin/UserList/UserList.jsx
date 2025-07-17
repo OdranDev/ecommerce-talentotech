@@ -5,8 +5,6 @@ import {
   getDocs,
   query,
   orderBy,
-  limit,
-  startAfter,
   doc,
   updateDoc,
 } from "firebase/firestore";
@@ -17,45 +15,32 @@ import useUser from "../../../hooks/useUser";
 import "./UserList.scss";
 import Loader from "../../../components/loader/Loader";
 
-const USERS_PER_PAGE = 5;
+const USERS_PER_PAGE = 12;
 
 function UserList() {
   const [users, setUsers] = useState([]);
-  const [lastVisible, setLastVisible] = useState(null);
-  const [firstVisible, setFirstVisible] = useState(null);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [usuariosTotales, setUsuariosTotales] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [pageStack, setPageStack] = useState([]); // para retroceder
   const { user } = useUser();
 
-  const fetchUsers = async (direction = "next") => {
+  const totalPaginas = Math.ceil(usuariosTotales / USERS_PER_PAGE);
+
+  const fetchUsers = async (pagina = 1) => {
     try {
       setLoading(true);
-      let q = query(collection(db, "users"), orderBy("email"), limit(USERS_PER_PAGE));
 
-      if (direction === "next" && lastVisible) {
-        q = query(q, startAfter(lastVisible));
-      } else if (direction === "prev" && pageStack.length > 1) {
-        const previous = pageStack[pageStack.length - 2];
-        q = query(collection(db, "users"), orderBy("email"), startAfter(previous), limit(USERS_PER_PAGE));
-      }
+      const q = query(collection(db, "users"), orderBy("email"));
+      const snapshot = await getDocs(q);
+      const allUsers = snapshot.docs;
 
-      const querySnapshot = await getDocs(q);
-      const docs = querySnapshot.docs;
+      const startIndex = (pagina - 1) * USERS_PER_PAGE;
+      const endIndex = startIndex + USERS_PER_PAGE;
+      const currentUsers = allUsers.slice(startIndex, endIndex);
 
-      if (docs.length > 0) {
-        setUsers(docs.map(doc => ({ id: doc.id, ...doc.data() })));
-
-        setFirstVisible(docs[0]);
-        setLastVisible(docs[docs.length - 1]);
-
-        if (direction === "next") {
-          setPageStack(prev => [...prev, docs[0]]);
-        } else if (direction === "prev") {
-          setPageStack(prev => prev.slice(0, -1));
-        }
-      } else {
-        toast.info("No hay más usuarios.");
-      }
+      setUsers(currentUsers.map(doc => ({ id: doc.id, ...doc.data() })));
+      setUsuariosTotales(allUsers.length);
+      setPaginaActual(pagina);
     } catch (error) {
       console.error(error);
       toast.error("Error al cargar usuarios");
@@ -80,15 +65,43 @@ function UserList() {
       try {
         await updateDoc(doc(db, "users", userId), { role: newRole });
         toast.success("Rol actualizado correctamente");
-        fetchUsers("refresh");
+        fetchUsers(paginaActual);
       } catch (err) {
         toast.error("Error al actualizar el rol");
       }
     }
   };
 
+  const irAPagina = (pagina) => {
+    if (pagina >= 1 && pagina <= totalPaginas) {
+      fetchUsers(pagina);
+    }
+  };
+
+  const irAPaginaAnterior = () => {
+    if (paginaActual > 1) {
+      fetchUsers(paginaActual - 1);
+    }
+  };
+
+  const irAPaginaSiguiente = () => {
+    if (paginaActual < totalPaginas) {
+      fetchUsers(paginaActual + 1);
+    }
+  };
+
+  const generarNumerosPaginas = () => {
+    const pages = [];
+    const start = Math.max(1, paginaActual - 2);
+    const end = Math.min(totalPaginas, paginaActual + 2);
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
   useEffect(() => {
-    fetchUsers();
+    fetchUsers(1);
   }, []);
 
   return (
@@ -98,16 +111,19 @@ function UserList() {
           <button className="btn-back">← Volver</button>
         </Link>
         <h2>👥 Gestión de Usuarios</h2>
+        <h3 className="totalUsuarios">
+          Cantidad de usuarios registrados ({usuariosTotales})
+        </h3>
       </div>
 
       {loading ? (
         <div className="loader-container" style={{ minHeight: "300px" }}>
           <Loader />
-          <p>Cargando usuarios...</p>
         </div>
       ) : (
         <>
           <div className="user-table">
+            {/* Tabla para escritorio */}
             <div className="table-desktop">
               <table>
                 <thead>
@@ -136,6 +152,7 @@ function UserList() {
               </table>
             </div>
 
+            {/* Cards para móvil */}
             <div className="table-mobile">
               {users.map((u) => (
                 <div
@@ -152,15 +169,66 @@ function UserList() {
             </div>
           </div>
 
-          <div className="pagination-controls">
-            <button
-              disabled={pageStack.length <= 1}
-              onClick={() => fetchUsers("prev")}
-            >
-              ← Anterior
-            </button>
-            <button onClick={() => fetchUsers("next")}>Siguiente →</button>
-          </div>
+          {/* Controles de paginación */}
+          {totalPaginas > 1 && (
+            <div className="pagination-controls">
+              <button
+                disabled={paginaActual <= 1}
+                onClick={irAPaginaAnterior}
+                className="pagination-btn"
+              >
+                ← Anterior
+              </button>
+
+              <div className="pagination-numbers">
+                {paginaActual > 3 && (
+                  <>
+                    <button
+                      onClick={() => irAPagina(1)}
+                      className="pagination-number"
+                    >
+                      1
+                    </button>
+                    {paginaActual > 4 && <span className="pagination-dots">...</span>}
+                  </>
+                )}
+
+                {generarNumerosPaginas().map((numero) => (
+                  <button
+                    key={numero}
+                    onClick={() => irAPagina(numero)}
+                    className={`pagination-number ${
+                      numero === paginaActual ? "active" : ""
+                    }`}
+                  >
+                    {numero}
+                  </button>
+                ))}
+
+                {paginaActual < totalPaginas - 2 && (
+                  <>
+                    {paginaActual < totalPaginas - 3 && (
+                      <span className="pagination-dots">...</span>
+                    )}
+                    <button
+                      onClick={() => irAPagina(totalPaginas)}
+                      className="pagination-number"
+                    >
+                      {totalPaginas}
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <button
+                disabled={paginaActual >= totalPaginas}
+                onClick={irAPaginaSiguiente}
+                className="pagination-btn"
+              >
+                Siguiente →
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

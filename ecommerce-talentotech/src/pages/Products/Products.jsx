@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import {
   collection,
   getDocs,
@@ -18,7 +18,7 @@ import Loader from "../../components/loader/Loader.jsx";
 import "./Products.scss";
 import SearchProducts from "./SearchProducts/SearchProducts.jsx";
 
-const PRODUCTS_PER_PAGE = 10; // Cambiado de 6 a 10
+const PRODUCTS_PER_PAGE = 12;
 
 function Products() {
   const { addToCart } = useContext(CartContext);
@@ -29,106 +29,48 @@ function Products() {
   const [productos, setProductos] = useState([]);
   const [productosFiltrados, setProductosFiltrados] = useState([]);
   const [categorias, setCategorias] = useState([]);
-  const [agregadoId, setAgregadoId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastVisible, setLastVisible] = useState(null);
-  const [pageStack, setPageStack] = useState([]); // Inicializado como array vacío
+  const [pageStack, setPageStack] = useState([]);
   const [totalProductos, setTotalProductos] = useState(0);
   const [initialized, setInitialized] = useState(false);
+  
+  // Nuevas variables para manejo correcto de paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [todosLosProductos, setTodosLosProductos] = useState([]); // Para filtros locales
 
-  // Corregir la lógica de paginación - empezar desde página 1
-  const paginaActual = pageStack.length + 1; // Cambio aquí: +1 para empezar desde página 1
-  const totalPaginas = Math.ceil(totalProductos / PRODUCTS_PER_PAGE);
+  const agregadoIdRef = useRef(null);
 
-  const fetchProductos = async (direction = "next") => {
+  // Función para obtener todos los productos una sola vez
+  const fetchTodosLosProductos = async () => {
     try {
-      setLoading(true);
-      toast.dismiss();
-
-      let q = query(
-        collection(db, "products"),
-        orderBy("createdAt", "desc"),
-        limit(PRODUCTS_PER_PAGE)
+      const snapshot = await getDocs(
+        query(collection(db, "products"), orderBy("title", "asc"))
       );
-
-      if (direction === "next" && lastVisible) {
-        q = query(
-          collection(db, "products"),
-          orderBy("createdAt", "desc"),
-          startAfter(lastVisible),
-          limit(PRODUCTS_PER_PAGE)
-        );
-      } else if (direction === "prev" && pageStack.length > 0) { // Cambio aquí: > 0 en lugar de > 1
-        const previous = pageStack[pageStack.length - 2];
-        if (previous) {
-          q = query(
-            collection(db, "products"),
-            orderBy("createdAt", "desc"),
-            startAfter(previous),
-            limit(PRODUCTS_PER_PAGE)
-          );
-        } else {
-          // Si no hay documento anterior, cargar la primera página
-          q = query(
-            collection(db, "products"),
-            orderBy("createdAt", "desc"),
-            limit(PRODUCTS_PER_PAGE)
-          );
-        }
-      }
-
-      const snapshot = await getDocs(q);
-      const docs = snapshot.docs;
-
-      if (docs.length === 0) {
-        setTimeout(() => {
-          toast.dismiss();
-          toast.info("No hay más productos para mostrar.", {
-            autoClose: 2000,
-          });
-        }, 100);
-        return;
-      }
-
-      const productosData = docs.map((doc) => ({
+      
+      const productosData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
 
-      setProductos(productosData);
-      setLastVisible(docs[docs.length - 1]);
+      setTodosLosProductos(productosData);
+      setTotalProductos(productosData.length);
 
-      if (direction === "next") {
-        setPageStack((prev) => [...prev, docs[0]]);
-      } else if (direction === "prev") {
-        setPageStack((prev) => prev.slice(0, -1));
-      }
-
-      // Carga total de productos y categorías solo la primera vez
-      if (!initialized) {
-        const allSnapshot = await getDocs(collection(db, "products"));
-        const allData = allSnapshot.docs.map((doc) => doc.data());
-        setTotalProductos(allData.length);
-
-        const cats = Array.from(new Set(allData.map((p) => p.category)));
-        setCategorias(cats);
-        setInitialized(true);
-      }
+      // Extraer categorías únicas
+      const cats = Array.from(new Set(productosData.map((p) => p.category)));
+      setCategorias(cats);
+      
+      return productosData;
     } catch (error) {
-      console.error("Error al obtener productos:", error);
+      console.error("Error al obtener todos los productos:", error);
       toast.error("Error al cargar productos.");
-    } finally {
-      setLoading(false);
+      return [];
     }
   };
 
-  useEffect(() => {
-    fetchProductos();
-  }, []);
-
-  // Función para filtrar productos por búsqueda y categoría
-  const filtrarProductos = () => {
-    let filtrados = productos;
+  // Función para filtrar productos
+  const filtrarProductos = (productos) => {
+    let filtrados = [...productos];
 
     // Filtrar por categoría
     if (categoriaSeleccionada !== "all") {
@@ -137,46 +79,118 @@ function Products() {
 
     // Filtrar por búsqueda
     if (busqueda.trim()) {
-      const terminoBusqueda = busqueda.toLowerCase().trim();
-      filtrados = filtrados.filter((producto) => {
-        const titulo = producto.title?.toLowerCase() || "";
-        const categoria = producto.category?.toLowerCase() || "";
-        const descripcion = producto.description?.toLowerCase() || "";
-        
-        return titulo.includes(terminoBusqueda) || 
-               categoria.includes(terminoBusqueda) ||
-               descripcion.includes(terminoBusqueda);
-      });
+      const termino = busqueda.toLowerCase().trim();
+      filtrados = filtrados.filter(
+        (p) =>
+          p.title?.toLowerCase().includes(termino) ||
+          p.category?.toLowerCase().includes(termino) ||
+          p.description?.toLowerCase().includes(termino)
+      );
     }
+
+    // Mantener orden alfabético
+    filtrados.sort((a, b) => a.title.localeCompare(b.title));
 
     return filtrados;
   };
 
+  // Función para obtener productos paginados
+  const obtenerProductosPaginados = (productosFiltrados, pagina) => {
+    const inicio = (pagina - 1) * PRODUCTS_PER_PAGE;
+    const fin = inicio + PRODUCTS_PER_PAGE;
+    return productosFiltrados.slice(inicio, fin);
+  };
+
+  // Efecto inicial para cargar todos los productos
   useEffect(() => {
-    const filtrados = filtrarProductos();
+    const cargarProductos = async () => {
+      setLoading(true);
+      toast.dismiss();
+      
+      const productos = await fetchTodosLosProductos();
+      setInitialized(true);
+      setLoading(false);
+    };
+
+    cargarProductos();
+  }, []);
+
+  // Efecto para filtrar y paginar cuando cambian los filtros
+  useEffect(() => {
+    if (!initialized) return;
+
+    // Filtrar productos
+    const filtrados = filtrarProductos(todosLosProductos);
+    
+    // Resetear a página 1 cuando cambian los filtros
+    setPaginaActual(1);
+    
+    // Obtener productos para la página actual
+    const productosPaginados = obtenerProductosPaginados(filtrados, 1);
+    
     setProductosFiltrados(filtrados);
-  }, [categoriaSeleccionada, productos, busqueda]);
+    setProductos(productosPaginados);
+    
+  }, [categoriaSeleccionada, busqueda, todosLosProductos, initialized]);
+
+  // Efecto para cambiar página
+  useEffect(() => {
+    if (!initialized) return;
+
+    const filtrados = filtrarProductos(todosLosProductos);
+    const productosPaginados = obtenerProductosPaginados(filtrados, paginaActual);
+    
+    setProductos(productosPaginados);
+  }, [paginaActual]);
+
+  // Funciones de navegación
+  const irAPagina = (nuevaPagina) => {
+    setPaginaActual(nuevaPagina);
+  };
+
+  const irAPaginaAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
+  };
+
+  const irAPaginaSiguiente = () => {
+    const totalPaginas = Math.ceil(productosFiltrados.length / PRODUCTS_PER_PAGE);
+    if (paginaActual < totalPaginas) {
+      setPaginaActual(paginaActual + 1);
+    }
+  };
 
   const handleAddToCart = (producto) => {
-    addToCart(producto);
-    toast.success("Producto agregado al carrito 🛒", {
-      toastId: `cart-${producto.id}`,
-    });
-    setAgregadoId(producto.id);
-    setTimeout(() => setAgregadoId(null), 1000);
+    try {
+      if (!producto) return;
+
+      addToCart(producto);
+      toast.success("Producto agregado al carrito 🛒", {
+        toastId: `cart-${producto.id}`,
+      });
+
+      agregadoIdRef.current = producto.id;
+
+      setTimeout(() => {
+        agregadoIdRef.current = null;
+      }, 1000);
+    } catch (error) {
+      console.error("Error al agregar al carrito:", error);
+      toast.error("Error al agregar producto.");
+    }
   };
+
+  // Cálculos para la paginación
+  const totalPaginasCalculadas = Math.ceil(productosFiltrados.length / PRODUCTS_PER_PAGE);
+  const totalProductosFiltrados = productosFiltrados.length;
 
   return (
     <div className="products-page">
       <h2>{titulo || "Todos los Productos"}</h2>
 
       <div className="SearchContainer">
-        {/* Filtros */}
-
-        {/* Componente de búsqueda */}
         <SearchProducts />
-        
-        {/* Chips de Categorías */}
         <div className="category-chips">
           <button
             className={categoriaSeleccionada === "all" ? "chip active" : "chip"}
@@ -197,30 +211,36 @@ function Products() {
       </div>
 
       {loading ? (
-        <div>
-          <Loader />
-        </div>
+        <Loader />
       ) : (
         <>
-          {/* Grid de Productos */}
           <div className="products-grid">
-            {productosFiltrados.length > 0 ? (
-              productosFiltrados.map((producto) => (
+            {productos.length > 0 ? (
+              productos.map((producto) => (
                 <div key={producto.id} className="product-card">
-                  <img src={producto.image} alt={producto.title} />
+                  <img
+                    src={producto.image}
+                    alt={producto.title}
+                    onError={(e) => (e.target.src = "../../assets/react.svg")}
+                  />
                   <h3>{producto.title}</h3>
                   <div className="container-price-rating">
-                    <p>
-                      {producto.rating?.average ? (
-                        <>
+                    {producto.rating?.average ? (
+                      <>
+                        <div>
                           <span>{producto.rating.average.toFixed(1)} ⭐</span>
                           <span> ({producto.rating.count || 0})</span>
-                        </>
-                      ) : (
-                        <span>Sin calificaciones</span>
-                      )}
-                    </p>
-                    <p>${producto.price.toFixed(2)}</p>
+                        </div>
+                        <span className="price">
+                          ${producto.price.toFixed(2)}
+                        </span>
+                        <span className="stock">
+                          Disp. {producto.stock} und
+                        </span>
+                      </>
+                    ) : (
+                      <span>Sin calificaciones</span>
+                    )}
                   </div>
 
                   <div className="button-container">
@@ -232,12 +252,12 @@ function Products() {
                     </Link>
                     <button
                       className={`btn-add ${
-                        agregadoId === producto.id ? "added" : ""
+                        agregadoIdRef.current === producto.id ? "added" : ""
                       }`}
                       onClick={() => handleAddToCart(producto)}
-                      disabled={agregadoId === producto.id}
+                      disabled={agregadoIdRef.current === producto.id}
                     >
-                      {agregadoId === producto.id ? (
+                      {agregadoIdRef.current === producto.id ? (
                         "Agregado ✅"
                       ) : (
                         <>
@@ -252,42 +272,42 @@ function Products() {
             ) : (
               <div className="no-products">
                 <p>
-                  {busqueda 
+                  {busqueda
                     ? `No se encontraron productos para "${busqueda}"`
-                    : "No hay productos para esta categoría."
-                  }
+                    : "No hay productos para esta categoría."}
                 </p>
               </div>
             )}
           </div>
 
-          {/* Info de paginación - Mostrar desde la página 1 si hay más de 1 página y no hay búsqueda */}
-          {totalPaginas > 1 && !busqueda && (
-            <div className="pagination-info">
-              <p>
-                Página <strong>{paginaActual}</strong> de{" "}
-                <strong>{totalPaginas}</strong> | Total productos:{" "}
-                <strong>{totalProductos}</strong>
-              </p>
-            </div>
-          )}
-
-          {/* Controles de paginación - Mostrar si hay más de 1 página y no hay búsqueda */}
-          {totalPaginas > 1 && !busqueda && (
-            <div className="pagination-controls">
-              <button
-                disabled={paginaActual <= 1}
-                onClick={() => fetchProductos("prev")}
-              >
-                ← Anterior
-              </button>
-              <button
-                disabled={paginaActual >= totalPaginas}
-                onClick={() => fetchProductos("next")}
-              >
-                Siguiente →
-              </button>
-            </div>
+          {totalPaginasCalculadas > 1 && (
+            <>
+              <div className="pagination-info">
+                <p>
+                  Página <strong>{paginaActual}</strong> de{" "}
+                  <strong>{totalPaginasCalculadas}</strong> | 
+                  {busqueda || categoriaSeleccionada !== "all" ? (
+                    <> Productos filtrados: <strong>{totalProductosFiltrados}</strong> de <strong>{totalProductos}</strong></>
+                  ) : (
+                    <> Total productos: <strong>{totalProductos}</strong></>
+                  )}
+                </p>
+              </div>
+              <div className="pagination-controls">
+                <button
+                  disabled={paginaActual <= 1}
+                  onClick={irAPaginaAnterior}
+                >
+                  ← Anterior
+                </button>
+                <button
+                  disabled={paginaActual >= totalPaginasCalculadas}
+                  onClick={irAPaginaSiguiente}
+                >
+                  Siguiente →
+                </button>
+              </div>
+            </>
           )}
         </>
       )}

@@ -399,3 +399,329 @@ body.menu-open {
     display: none;
   }
 }
+
+// ===========================================
+// ESTILOS PARA SWEETALERT2
+// ===========================================
+
+// Estilos personalizados para SweetAlert2
+:global(.swal2-container) {
+  z-index: 9999 !important;
+  
+  .swal2-popup {
+    border-radius: 12px !important;
+    padding: $spacing-xl !important;
+    box-shadow: $shadow-xl !important;
+    border: 1px solid $border-color !important;
+    font-family: $font-base !important;
+    
+    &.swal2-modal {
+      @include fadeIn;
+    }
+  }
+
+  .swal2-title {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    color: $text-primary !important;
+    margin-bottom: $spacing-md !important;
+    font-family: $font-base !important;
+  }
+
+  .swal2-html-container {
+    font-size: 1rem !important;
+    color: $text-secondary !important;
+    font-family: $font-base !important;
+    line-height: 1.5 !important;
+  }
+
+  .swal2-icon {
+    &.swal2-question {
+      border-color: $primary-color !important;
+      color: $primary-color !important;
+    }
+
+    &.swal2-success {
+      border-color: $success-color !important;
+      
+      .swal2-success-ring {
+        border-color: rgba($success-color, 0.3) !important;
+      }
+      
+      .swal2-success-line {
+        background-color: $success-color !important;
+      }
+    }
+
+    &.swal2-error {
+      border-color: $error-color !important;
+      color: $error-color !important;
+    }
+
+    &.swal2-warning {
+      border-color: $warning-color !important;
+      color: $warning-color !important;
+    }
+  }
+
+  .swal2-actions {
+    gap: $spacing-md !important;
+    margin-top: $spacing-lg !important;
+
+    .swal2-confirm {
+      background-color: $primary-color !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: $spacing-sm $spacing-lg !important;
+      font-size: 0.9rem !important;
+      font-weight: 500 !important;
+      @include smooth-transition;
+      font-family: $font-base !important;
+      box-shadow: $shadow-sm !important;
+
+      &:hover {
+        background-color: $primary-hover !important;
+        @include button-hover;
+      }
+
+      &:focus {
+        @include input-focus;
+      }
+    }
+
+    .swal2-cancel {
+      background-color: $secondary-color !important;
+      color: $text-primary !important;
+      border: 1px solid $border-color !important;
+      border-radius: 8px !important;
+      padding: $spacing-sm $spacing-lg !important;
+      font-size: 0.9rem !important;
+      font-weight: 500 !important;
+      @include smooth-transition;
+      font-family: $font-base !important;
+      box-shadow: $shadow-sm !important;
+
+      &:hover {
+        background-color: $text-secondary !important;
+        color: $white !important;
+        @include button-hover;
+      }
+
+      &:focus {
+        @include input-focus;
+      }
+    }
+  }
+
+  .swal2-loading {
+    .swal2-loader {
+      border-color: $primary-color transparent $primary-color transparent !important;
+    }
+  }
+
+  .swal2-backdrop {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+  }
+}
+
+// ===========================================
+// ESTILOS PARA REACT-TOASTIFY
+// ===========================================
+
+// Estilos personalizados para react-toastify
+:global(.Toastify__toast-container) {
+  z-index: 9999;
+  font-family: $font-base;
+
+  .Toastify__toast {
+    border-radius: 8px;
+    box-shadow: $shadow-lg;
+    font-family: $font-base;
+    font-size: 0.9rem;
+    padding: $spacing-md;
+    min-height: 64px;
+    @include smooth-transition;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-xl;
+    }
+
+    // Toast de éxito
+    &.Toastify__toast--success {
+      background-color: $success-color;
+      color: $white;
+      border-left: 4px solid $success-dark;
+
+      .Toastify__toast-icon {
+        color: $white;
+      }
+
+      .Toastify__progress-bar {
+        background-color: rgba($white, 0.7);
+      }
+    }
+
+    // Toast de error
+    &.Toastify__toast--error {
+      background-color: $error-color;
+      color: $white;
+      border-left: 4px solid color.adjust($error-color, $lightness: -10%);
+
+      .Toastify__toast-icon {
+        color: $white;
+      }
+
+      .Toastify__progress-bar {
+        background-color: rgba($white, 0.7);
+      }
+    }
+
+    // Toast de advertencia
+    &.Toastify__toast--warning {
+      background-color: $warning-color;
+      color: $white;
+      border-left: 4px solid color.adjust($warning-color, $lightness: -10%);
+
+      .Toastify__toast-icon {
+        color: $white;
+      }
+
+      .Toastify__progress-bar {
+        background-color: rgba($white, 0.7);
+      }
+    }
+
+    // Toast de información
+    &.Toastify__toast--info {
+      background-color: $primary-color;
+      color: $white;
+      border-left: 4px solid $primary-dark;
+
+      .Toastify__toast-icon {
+        color: $white;
+      }
+
+      .Toastify__progress-bar {
+        background-color: rgba($white, 0.7);
+      }
+    }
+  }
+
+  .Toastify__close-button {
+    color: rgba($white, 0.8);
+    opacity: 0.8;
+    @include smooth-transition;
+
+    &:hover {
+      opacity: 1;
+      color: $white;
+    }
+  }
+
+  .Toastify__progress-bar {
+    height: 3px;
+  }
+}
+
+// Responsive para toasts
+@media (max-width: $mobile) {
+  :global(.Toastify__toast-container) {
+    width: 100vw;
+    padding: 0 $spacing-sm;
+    left: 0;
+    margin: 0;
+
+    .Toastify__toast {
+      margin-bottom: $spacing-sm;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+// ===========================================
+// ANIMACIONES ADICIONALES
+// ===========================================
+
+// Animación para el loading de SweetAlert2
+@keyframes swal2-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Animación para la entrada de toasts
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// Animación para la salida de toasts
+@keyframes toastSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+:global(.Toastify__toast) {
+  animation: toastSlideIn 0.3s ease-out;
+}
+
+:global(.Toastify__toast--close) {
+  animation: toastSlideOut 0.3s ease-out;
+}
+
+// ===========================================
+// ESTILOS PARA LOGOUT BUTTON
+// ===========================================
+
+// Estilo especial para el botón de logout en el dropdown
+.user-dropdown {
+  .dropdown {
+    li {
+      button {
+        // Estilo especial para el botón de logout
+        &:hover {
+          background-color: rgba($error-color, 0.1) !important;
+          color: $error-color !important;
+        }
+
+        &:focus {
+          @include input-focus;
+          border-color: $error-color !important;
+        }
+      }
+    }
+  }
+}
+
+// En mobile, estilos para el botón de logout
+@media (max-width: $tablet) {
+  .user-dropdown {
+    .dropdown {
+      li {
+        button {
+          &:hover {
+            background-color: rgba($error-color, 0.2) !important;
+            color: $white !important;
+          }
+        }
+      }
+    }
+  }
+}
